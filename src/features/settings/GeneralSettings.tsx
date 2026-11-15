@@ -106,17 +106,6 @@ export function GeneralSettings(props: Props) {
           onSelect={() => setSelected("shareImages")}
         />
         <SettingsOption
-          icon={<CircleArrowUp size={18} strokeWidth={1.8} />}
-          name={t("updates.settings.title")}
-          status={
-            <span className="settings-option-status">
-              {preferences.checkUpdates ? t("updates.settings.statusOn") : t("updates.settings.statusOff")}
-            </span>
-          }
-          selected={selected === "updates"}
-          onSelect={() => setSelected("updates")}
-        />
-        <SettingsOption
           icon={<Database size={18} strokeWidth={1.8} />}
           name={t("settings.general.data")}
           status={
@@ -131,6 +120,17 @@ export function GeneralSettings(props: Props) {
           status={<span className="settings-option-status">{t("welcome.settings.again")}</span>}
           selected={false}
           onSelect={onShowWelcome}
+        />
+        <SettingsOption
+          icon={<CircleArrowUp size={18} strokeWidth={1.8} />}
+          name={t("updates.settings.title")}
+          status={
+            <span className="settings-option-status">
+              {preferences.checkUpdates ? t("updates.settings.statusOn") : t("updates.settings.statusOff")}
+            </span>
+          }
+          selected={selected === "updates"}
+          onSelect={() => setSelected("updates")}
         />
       </section>
 

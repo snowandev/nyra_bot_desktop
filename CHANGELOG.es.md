@@ -2,6 +2,14 @@
 
 Lo que cambia en cada versión de Nyra Bot. Las mismas notas en inglés están en [CHANGELOG.md](CHANGELOG.md).
 
+## 0.9.1 · 2026-11-15
+
+### Mejoras
+- Un nombre de modelo largo ya no ensancha la caja de mensajes: se corta con «…» y se ve entero al pasar el ratón.
+
+### Arreglos
+- La barra rápida ya no muestra una banda gris debajo en Windows.
+
 ## 0.9.0 · 2026-11-15
 
 ### Novedades

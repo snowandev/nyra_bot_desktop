@@ -8,7 +8,7 @@
 
 Nyra Bot es una app de escritorio para hablar con modelos de IA. Funciona en macOS, Windows y Linux, con modelos que corren en tu equipo o en la nube. Puedes cambiar de modelo en mitad de una conversación sin perder el historial.
 
-> Nyra está en una versión temprana (0.9.0).
+> Nyra está en una versión temprana (0.9.1).
 
 ## Descargar Nyra
 
@@ -83,11 +83,7 @@ En macOS, Nyra te pide los permisos de micrófono, grabación de pantalla y acce
 
 ## Compilar Nyra desde el código
 
-Si prefieres compilarla tú, necesitas [Node.js](https://nodejs.org) 24 o posterior, [Rust](https://www.rust-lang.org/tools/install) y las herramientas de tu sistema:
-
-- **macOS:** Xcode Command Line Tools (`xcode-select --install`)
-- **Windows:** Microsoft C++ Build Tools y WebView2 (ya viene con Windows 11)
-- **Linux:** `webkit2gtk-4.1` y los paquetes que indica la [guía de requisitos de Tauri](https://tauri.app/start/prerequisites/)
+Si prefieres compilarla tú, necesitas [Node.js](https://nodejs.org) 24 o posterior y [Rust](https://www.rust-lang.org/tools/install).
 
 ```bash
 git clone https://github.com/snowandev/nyra_bot_desktop.git

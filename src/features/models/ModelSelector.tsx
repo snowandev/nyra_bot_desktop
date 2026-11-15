@@ -28,6 +28,7 @@ export function ModelSelector(props: Props) {
   const { isAuto, selectAuto } = useProviderSettingsContext();
   const showsAuto = withAuto && isAuto;
   const progress = overallProgress(useModelDownloadsContext().downloads);
+  const label = showsAuto ? t("models.menu.auto") : (selected?.name ?? t("models.menu.choose"));
 
   return (
     <div className="model-selector" ref={rootRef}>
@@ -37,9 +38,10 @@ export function ModelSelector(props: Props) {
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         onClick={toggle}
+        title={label}
       >
         <BrandIcon size={16} className="brand-mark" />
-        {showsAuto ? t("models.menu.auto") : (selected?.name ?? t("models.menu.choose"))}
+        <span className="model-selector-name">{label}</span>
         {progress.count > 0 && <ProgressRing percent={progress.percent} size={16} />}
         <ChevronDown size={14} strokeWidth={2} />
       </button>

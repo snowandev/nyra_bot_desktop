@@ -17,6 +17,14 @@
   font-weight: 600;
 }
 
+/* A long model name ends in "…" rather than widening the composer's row; the full name is in its tooltip */
+.model-selector-name {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .model-selector-trigger:hover {
   background: var(--surface-raised);
 }

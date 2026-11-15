@@ -2,6 +2,14 @@
 
 What changes in each version of Nyra Bot. The same notes in Spanish are in [CHANGELOG.es.md](CHANGELOG.es.md).
 
+## 0.9.1 · 2026-11-15
+
+### Improvements
+- A long model name no longer widens the message box: it ends in "…" and shows in full when you hover over it.
+
+### Fixes
+- The quick bar no longer shows a gray band underneath on Windows.
+
 ## 0.9.0 · 2026-11-15
 
 ### New
