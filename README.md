@@ -1,4 +1,8 @@
-# Nyra Bot
+<p align="center">
+  <img src="src-tauri/icons/128x128@2x.png" alt="Icono de Nyra Bot" width="128" height="128">
+</p>
+
+<h1 align="center">Nyra Bot</h1>
 
 Nyra Bot es una app de escritorio para hablar con modelos de IA. Funciona en macOS, Windows y Linux, con modelos que corren en tu equipo (Ollama y LM Studio) o en la nube (Claude, OpenAI y Gemini). Puedes cambiar de modelo en mitad de una conversación sin perder el historial.
 
