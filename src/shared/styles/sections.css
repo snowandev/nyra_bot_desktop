@@ -1,0 +1,152 @@
+/* Collapsible sections with a header and a list (SidebarSection): the sidebars' groups, folders and projects, and
+   the model menu's providers */
+
+/* "Fijados" and "Chats": headers that collapse and expand their list */
+.sidebar-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-section.spaced {
+  margin-top: 14px;
+}
+
+.sidebar-section-toggle {
+  width: 100%;
+  min-height: 28px;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-bottom: 4px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  text-align: left;
+}
+
+.sidebar-section-toggle:hover {
+  color: var(--text-soft);
+  background: var(--border);
+}
+
+.section-diamond {
+  width: 5px;
+  height: 5px;
+  flex-shrink: 0;
+  transform: rotate(45deg);
+  background: currentColor;
+}
+
+.sidebar-section-count {
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.sidebar-section-chevron {
+  flex-shrink: 0;
+  margin-left: auto;
+  transition: transform 0.15s ease;
+}
+
+.sidebar-section-chevron.collapsed {
+  transform: rotate(-90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-section-chevron {
+    transition: none;
+  }
+}
+
+.sidebar-section-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar-section-header {
+  position: relative;
+}
+
+.sidebar-section-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The user's own folders keep their name as written; the app's sections stay in small caps */
+.sidebar-section.folder .sidebar-section-toggle {
+  letter-spacing: 0.01em;
+  text-transform: none;
+  font-size: calc(12.5px * var(--font-scale));
+  color: var(--text-soft);
+}
+
+.sidebar-section.folder .sidebar-section-title {
+  flex: 1;
+}
+
+/* A header button just before the chevron, which stays in the same column as every other section's.
+   The toggle reserves its place with an empty span (sidebar-section-aside-space). */
+.sidebar-section-aside-space {
+  flex-shrink: 0;
+  width: 28px;
+  margin-left: auto;
+}
+
+.sidebar-section.has-aside > .sidebar-section-header .sidebar-section-chevron {
+  margin-left: 0;
+}
+
+.sidebar-section-aside {
+  position: absolute;
+  top: 0;
+  right: 32px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+}
+
+/* The "⋯" takes the counter's place on hover, so the name keeps its width */
+.sidebar-section.folder > .sidebar-section-header:hover .sidebar-section-count,
+.sidebar-section.folder > .sidebar-section-header:focus-within .sidebar-section-count {
+  opacity: 0;
+}
+
+.sidebar-section.folder > .sidebar-section-header:hover .conversation-menu-trigger,
+.sidebar-section.folder > .sidebar-section-header:focus-within .conversation-menu-trigger {
+  opacity: 1;
+}
+
+/* A thin guide shows which conversations are inside without spending width */
+.sidebar-section.folder .sidebar-section-list {
+  position: relative;
+  padding-left: 10px;
+}
+
+.sidebar-section.folder .sidebar-section-list::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 15px;
+  width: 1px;
+  background: var(--surface-raised);
+}
+
+/* Not ".drop-target": that name already belongs to the chat's "drop files here" overlay */
+.sidebar-section.is-drop-target > .sidebar-section-header .sidebar-section-toggle {
+  outline: 1.5px dashed var(--accent);
+  outline-offset: -1.5px;
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--text);
+}
+
+.sidebar-section-drop {
+  flex-shrink: 0;
+  color: var(--accent);
+  font-size: calc(11px * var(--font-scale));
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: none;
+}

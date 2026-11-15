@@ -1,0 +1,134 @@
+/* Model selector */
+
+.model-selector {
+  position: relative;
+}
+
+.model-selector-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--border-control);
+  border-radius: 10px;
+  background: var(--surface-hover);
+  font-size: calc(13px * var(--font-scale));
+  font-weight: 600;
+}
+
+.model-selector-trigger:hover {
+  background: var(--surface-raised);
+}
+
+.model-menu {
+  position: absolute;
+  left: 0;
+  z-index: 5;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  box-shadow: 0 18px 40px var(--shadow-strong);
+  /* Never taller than the room on its side (useFitPlacement) */
+  max-height: min(360px, var(--fit-height, 360px));
+}
+
+/* Only the list scrolls; the search field and "Gestionar modelos" stay in view */
+.model-menu-list {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.model-menu-list [role="group"] {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.model-menu-search {
+  flex-shrink: 0;
+  margin: 2px 2px 4px;
+}
+
+.model-menu-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 4px 10px 10px;
+  font-size: calc(13px * var(--font-scale));
+  color: var(--text-placeholder);
+}
+
+.model-menu[data-placement="up"] {
+  bottom: calc(100% + 8px);
+}
+
+.model-menu[data-placement="down"] {
+  top: calc(100% + 8px);
+}
+
+.model-menu .section-label {
+  padding: 8px 10px 6px;
+}
+
+.model-option {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 48px;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  text-align: left;
+}
+
+.model-option:hover,
+.model-option.selected {
+  background: var(--surface-hover);
+}
+
+.model-option-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.model-option-name {
+  font-weight: 600;
+  font-size: calc(14px * var(--font-scale));
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.model-option-description {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: calc(12px * var(--font-scale));
+  color: var(--text-placeholder);
+}
+
+.model-option-check {
+  color: var(--accent);
+  opacity: 0;
+}
+
+.model-option.selected .model-option-check {
+  opacity: 1;
+}

@@ -1,0 +1,131 @@
+/* Writing a name in place (NameEditor) and confirming in place (InlineConfirm), where the row or header was */
+
+/* Creating or renaming in place */
+
+.folder-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 2px 0 4px;
+}
+
+.folder-editor-field {
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+  border: 1.5px solid var(--accent);
+  border-radius: 9px;
+  background: var(--bg);
+  color: var(--accent);
+}
+
+.folder-editor-field.invalid {
+  border-color: var(--danger);
+}
+
+.folder-editor-field input {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: calc(13px * var(--font-scale));
+  font-weight: 700;
+  outline: none;
+}
+
+.folder-editor-counter {
+  color: var(--text-muted);
+  font-size: calc(11px * var(--font-scale));
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.folder-editor-counter.over {
+  color: var(--danger);
+}
+
+.folder-editor-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  padding: 0 4px;
+  color: var(--danger);
+  font-size: calc(11.5px * var(--font-scale));
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.folder-editor-error svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.folder-editor-hint {
+  padding: 0 4px;
+  color: var(--text-muted);
+  font-size: calc(11.5px * var(--font-scale));
+}
+
+.folder-editor-hint kbd {
+  padding: 0 5px;
+  border: 1px solid var(--border-strong);
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: calc(10.5px * var(--font-scale));
+  font-weight: 800;
+}
+
+/* Deleting a folder, in place of its header */
+
+.folder-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 2px 0 4px;
+  padding: 12px;
+  border: 1px solid rgba(var(--danger-rgb), 0.45);
+  border-radius: 12px;
+  background: rgba(var(--danger-rgb), 0.08);
+}
+
+.folder-confirm > strong {
+  color: var(--text);
+  font-size: calc(13.5px * var(--font-scale));
+  line-height: 1.35;
+}
+
+.folder-confirm-name {
+  display: inline-block;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+
+.folder-confirm p {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+  line-height: 1.45;
+}
+
+.folder-confirm p strong {
+  color: var(--text);
+}
+
+.folder-confirm-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.folder-confirm-actions > button {
+  flex: 1;
+  min-height: 34px;
+  padding: 0 10px;
+  font-size: calc(12.5px * var(--font-scale));
+}

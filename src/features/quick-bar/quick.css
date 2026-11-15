@@ -1,0 +1,736 @@
+/* The quick chat bar, in its own window (nyra_design/nyra-chat-rapido.html). The app's colours, plus the floating
+   window's own: translucent over the system's blur, or solid where the desktop can't draw transparency. */
+
+:root,
+[data-theme="dark"] {
+  --win-bg: rgba(36, 33, 47, 0.94);
+  --win-solid: #24212f;
+  --win-border: rgba(255, 255, 255, 0.09);
+  --win-border-solid: #4a4466;
+  --win-line: rgba(255, 255, 255, 0.07);
+  --quick-on-accent: #1d1a27;
+}
+
+[data-theme="light"] {
+  --win-bg: rgba(251, 250, 255, 0.95);
+  --win-solid: #fbfaff;
+  --win-border: rgba(31, 27, 46, 0.1);
+  --win-border-solid: #c9bfe3;
+  --win-line: rgba(31, 27, 46, 0.08);
+  --quick-on-accent: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* The window is transparent: only the bar is drawn */
+html,
+body.quick {
+  margin: 0;
+  background: transparent;
+  overflow: hidden;
+  font-family: var(--font-app);
+  color: var(--text);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.quick-window {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-radius: 16px;
+  border: 1px solid var(--win-border);
+  background: var(--win-bg);
+  color: var(--text);
+  overflow: hidden;
+}
+
+/* Linux: square and opaque, with a border instead of the shadow the window manager can't draw */
+.quick-window.solid {
+  border-radius: 0;
+  border-color: var(--win-border-solid);
+  background: var(--win-solid);
+}
+
+.quick-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  min-height: 64px;
+  padding: 12px 12px 12px 14px;
+  flex-shrink: 0;
+}
+
+.quick-handle {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--brand);
+  cursor: grab;
+}
+
+.quick-field {
+  flex: 1;
+  min-width: 0;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+}
+
+.quick-field textarea {
+  width: 100%;
+  min-height: 40px;
+  max-height: 106px;
+  padding: 9px 2px;
+  border: 0;
+  background: transparent;
+  outline: none;
+  resize: none;
+  font-family: var(--font-chat);
+  font-size: 15px;
+  line-height: 22px;
+  color: var(--text);
+  overflow-y: auto;
+}
+
+.quick-field textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.quick-capture {
+  width: 28px;
+  height: 28px;
+  margin-bottom: 6px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.quick-capture:hover:not(:disabled) {
+  background: var(--surface-raised);
+  color: var(--text);
+}
+
+.quick-capture[aria-pressed="true"] {
+  background: rgba(var(--accent-rgb), 0.14);
+  color: var(--accent);
+}
+
+.quick-capture:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.quick-model {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 32px;
+  /* The box is what matters in the bar: the model keeps a short label, the full name in its tooltip */
+  max-width: 120px;
+  margin-bottom: 4px;
+  padding: 0 6px 0 8px;
+  flex-shrink: 0;
+  border: 1px solid var(--win-line);
+  border-radius: 10px;
+  background: var(--surface);
+  font-family: var(--font-app);
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--text-soft);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.quick-model:hover {
+  background: var(--surface-raised);
+  color: var(--text);
+}
+
+.quick-model-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.quick-model-name.mono {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.quick-send {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 12px;
+  background: var(--accent);
+  color: var(--quick-on-accent);
+  cursor: pointer;
+}
+
+.quick-send[aria-disabled="true"] {
+  background: var(--surface-raised);
+  color: var(--text-muted);
+  cursor: default;
+}
+
+/* The chat that opens above the bar: never taller than its size allows (set from quick.rs, 520 px until then), the
+   messages scroll */
+.quick-window {
+  max-height: 520px;
+}
+
+.quick-chat {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  animation: quick-open 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes quick-open {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.quick-chat ~ .quick-bar,
+.quick-no-model ~ .quick-bar {
+  border-top: 1px solid var(--win-line);
+}
+
+.quick-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 8px 0 14px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--win-line);
+}
+
+.quick-header-mark {
+  color: var(--brand);
+  flex-shrink: 0;
+}
+
+.quick-header-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.quick-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  font-family: var(--font-app);
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--text-soft);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.quick-action:hover {
+  background: var(--surface-raised);
+  color: var(--text);
+}
+
+.quick-action.icon {
+  width: 30px;
+  padding: 0;
+  justify-content: center;
+}
+
+.quick-messages {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 14px 20px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14px);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 14px);
+}
+
+.quick-user-message {
+  align-self: flex-end;
+  max-width: 82%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.quick-user-message .attachment-list {
+  justify-content: flex-end;
+}
+
+.quick-attachments {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px 0;
+  flex-shrink: 0;
+}
+
+.quick-chat ~ .quick-attachments,
+.quick-picker ~ .quick-attachments,
+.quick-no-model ~ .quick-attachments {
+  border-top: 1px solid var(--win-line);
+}
+
+/* The files and the bar read as one box: the line goes above the files instead */
+.quick-window .quick-attachments ~ .quick-bar {
+  border-top: none;
+}
+
+.quick-user {
+  max-width: 100%;
+  padding: 8px 12px;
+  border-radius: 14px 14px 4px 14px;
+  background: var(--surface-raised);
+  font-family: var(--font-chat);
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.quick-reply {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.quick-reply-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* The chat's Markdown, a size smaller to fit the bar */
+.quick-reply-body .markdown {
+  font-size: 14px;
+  line-height: 1.6;
+  gap: 8px;
+}
+
+.quick-waiting {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 10px;
+  border: 1px solid var(--win-line);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-soft);
+}
+
+.quick-dots {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.quick-dots i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--text-soft);
+  animation: quick-dot 1s infinite ease-in-out;
+}
+
+.quick-dots i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.quick-dots i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes quick-dot {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.quick-document {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.quick-document-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--accent-tint);
+  color: var(--accent);
+}
+
+.quick-document-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.quick-document-text b {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.quick-document-text small {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.quick-error {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border: 1px solid rgba(var(--danger-rgb), 0.4);
+  border-radius: 12px;
+  background: rgba(var(--danger-rgb), 0.09);
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.quick-error > svg {
+  color: var(--danger);
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+.quick-error b {
+  color: var(--text);
+}
+
+.quick-error-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.quick-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 11px;
+  border: 1px solid var(--border-strong);
+  border-radius: 9px;
+  background: var(--surface);
+  font-family: var(--font-app);
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--text);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.quick-button.primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--quick-on-accent);
+}
+
+.quick-no-model {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px 14px;
+}
+
+.quick-no-model-text {
+  flex: 1;
+}
+
+.quick-no-model-text b {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 800;
+}
+
+.quick-no-model-text small {
+  display: block;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.quick-model.empty {
+  color: var(--text-muted);
+}
+
+.quick-send.stop {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.quick-field textarea:disabled {
+  cursor: not-allowed;
+}
+
+.quick-header-title small {
+  margin-left: 6px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.quick-action:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.quick-action:disabled:hover {
+  background: transparent;
+  color: var(--text-soft);
+}
+
+/* "Nueva" in a conversation taken up again, when an old topic is easiest to go on with by mistake */
+.quick-action.highlighted {
+  background: var(--accent-tint);
+  color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent-line, var(--accent));
+}
+
+.quick-separator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--text-muted);
+}
+
+.quick-separator::before,
+.quick-separator::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--win-line);
+}
+
+.quick-model[aria-expanded="true"] {
+  background: var(--surface-raised);
+  color: var(--text);
+}
+
+.quick-model:disabled {
+  cursor: default;
+}
+
+.quick-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 0;
+  padding: 8px 8px 6px;
+  overflow-y: auto;
+  animation: quick-open 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.quick-picker [role="listbox"]:focus-visible {
+  outline-offset: -2px;
+  border-radius: 10px;
+}
+
+.quick-picker ~ .quick-bar {
+  border-top: 1px solid var(--win-line);
+}
+
+.quick-picker-group {
+  padding: 8px 10px 4px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.quick-picker-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 36px;
+  padding: 0 10px;
+  border-radius: 9px;
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.quick-picker-option[aria-selected="true"] {
+  font-weight: 800;
+}
+
+.quick-picker-option.active {
+  background: var(--surface-raised);
+}
+
+.quick-picker-option .mono {
+  font-size: 12.5px;
+}
+
+.quick-picker-check {
+  width: 16px;
+  display: flex;
+  color: var(--accent);
+}
+
+.quick-picker-meta {
+  margin-left: auto;
+  font-size: 11.5px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.quick-picker-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  padding: 8px 10px 4px;
+  border-top: 1px solid var(--win-line);
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.quick-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--font-app);
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quick-picker {
+    animation: none;
+  }
+
+  .quick-chat {
+    animation: none;
+  }
+
+  .quick-dots i {
+    animation: none;
+  }
+}
+
+/* The "/" list and the chosen skill go in the window's flow, above the bar: the window grows to fit them, as it does
+   for the chat, instead of a floating list that the window would cut */
+.quick-window .skill-command-menu {
+  position: static;
+  max-width: none;
+  /* The room it is given is the window's, which grows up to 520 px with the bar below */
+  max-height: 300px;
+  margin: 0 0 6px;
+  box-shadow: none;
+}
+
+.quick-skill {
+  display: flex;
+  padding: 0 4px 6px;
+}
+
+/* «Automático» asking before it takes the conversation to a cloud, above the bar */
+.quick-offer {
+  margin-bottom: 8px;
+}
+
+.quick-offer-text {
+  flex: 1 1 260px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.quick-offer-text b {
+  font-weight: 800;
+}
+
+.quick-offer-text span {
+  color: var(--text-muted);
+}
+
+/* Files dragged over the window: the bar shows where they go */
+.quick-bar.dropping {
+  border-radius: 16px;
+  box-shadow: inset 0 0 0 2px var(--accent);
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Since macOS 15, reaching another computer of the network (Ollama or LM Studio on a server at home) needs the
+	     user's permission, and the system only asks for it when the app says why -->
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Nyra se conecta a Ollama u otros servidores de modelos que tengas en tu red local.</string>
+	<!-- Without it macOS doesn't let the app open the microphone at all, and never asks the user -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Nyra escucha el micrófono solo mientras dictas, y transcribe lo que dices en tu equipo.</string>
+</dict>
+</plist>

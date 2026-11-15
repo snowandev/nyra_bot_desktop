@@ -1,0 +1,745 @@
+/* Changes Nyra proposes to the connected folder (nyra_design/nyra-cambios.html). Neutral on purpose: the state shows
+   in the shape, dashed while nothing is written and solid once applied, and the colors belong to added and removed. */
+
+.diff-added-count {
+  color: var(--diff-added);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.diff-removed-count {
+  color: var(--diff-removed);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.change-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 19px;
+  padding: 0 7px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  color: var(--text-soft);
+  font-size: calc(10.5px * var(--font-scale));
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.change-tag.new {
+  border-color: var(--diff-added-strong);
+  color: var(--diff-added);
+}
+
+.change-tag.ok {
+  border-color: var(--diff-added-strong);
+  background: var(--diff-added-bg);
+  color: var(--diff-added);
+}
+
+.change-tag.warning {
+  border-color: rgba(var(--highlight-rgb), 0.45);
+  background: rgba(var(--highlight-rgb), 0.08);
+  color: var(--highlight);
+}
+
+/* "Corrigiendo…": the spinner fits the tag */
+.change-tag .workspace-spinner.small {
+  width: 9px;
+  height: 9px;
+  border-width: 1.5px;
+}
+
+.change-tag.seen {
+  padding: 0;
+  border-color: transparent;
+  color: var(--text-muted);
+}
+
+/* The proposal in the reply */
+
+.change-proposals {
+  display: flex;
+  flex-direction: column;
+  max-width: 720px;
+  margin-top: 4px;
+  overflow: hidden;
+  border: 1px solid var(--surface-raised);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.change-proposals-header,
+.change-proposals-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  padding: 10px 12px 10px 14px;
+  font-size: calc(13px * var(--font-scale));
+}
+
+.change-proposals-header {
+  border-bottom: 1px solid var(--surface-raised);
+  color: var(--text-muted);
+}
+
+.change-proposals-header strong {
+  color: var(--text);
+  font-weight: 800;
+}
+
+.change-proposals-progress {
+  margin-left: auto;
+}
+
+.change-proposals-footer {
+  border-top: 1px solid var(--surface-raised);
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+}
+
+.change-proposals-footer > span {
+  flex: 1;
+  min-width: 0;
+}
+
+.change-proposals-footer .ghost-button {
+  align-self: center;
+}
+
+.change-proposals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+}
+
+.change-proposals-list.preparing {
+  max-width: 720px;
+  padding: 0;
+}
+
+.change-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  min-width: 0;
+  padding: 10px 10px 10px 12px;
+  border: 1.5px dashed var(--border-strong);
+  border-radius: 11px;
+  background: var(--bg);
+}
+
+.change-card.open {
+  box-shadow: 0 0 0 2px var(--accent-line);
+}
+
+.change-card.applied {
+  border-style: solid;
+  border-color: var(--surface-raised);
+}
+
+.change-card.discarded .change-card-path {
+  opacity: 0.75;
+  text-decoration: line-through;
+  text-decoration-color: var(--text-muted);
+}
+
+.change-card.problem {
+  border-style: solid;
+  border-color: rgba(var(--highlight-rgb), 0.45);
+  background: rgba(var(--highlight-rgb), 0.06);
+}
+
+.change-card.preparing {
+  border-color: var(--surface-raised);
+}
+
+.change-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border: 1px solid var(--surface-raised);
+  border-radius: 9px;
+  background: var(--surface);
+  color: var(--text-soft);
+}
+
+.change-card.applied .change-card-icon {
+  border-color: var(--diff-added-strong);
+  color: var(--diff-added);
+}
+
+.change-card.problem .change-card-icon {
+  color: var(--highlight);
+}
+
+.change-card.protected .change-card-icon {
+  color: var(--text-muted);
+}
+
+.change-card-text {
+  display: flex;
+  flex: 1 1 200px;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.change-card-path {
+  overflow: hidden;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: calc(12.5px * var(--font-scale));
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.change-card-dir {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.change-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+}
+
+.change-card-actions {
+  display: flex;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.change-card-actions .ghost-button {
+  align-self: center;
+}
+
+.change-card-actions .primary-button.small:disabled,
+.change-card-actions .outline-button.small:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.change-apply-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.change-apply-tip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  z-index: 5;
+  padding: 5px 9px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: 0 8px 20px var(--shadow);
+  color: var(--text-soft);
+  font-size: calc(12px * var(--font-scale));
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%);
+  transition: opacity 0.12s;
+}
+
+.change-apply-wrap:hover .change-apply-tip {
+  opacity: 1;
+}
+
+.change-card-reason {
+  margin: 4px 0 0 58px;
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+  line-height: 1.45;
+}
+
+.change-card-reason.error {
+  color: var(--danger);
+}
+
+/* Above the composer */
+
+.pending-changes {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 6px 4px 12px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+}
+
+.pending-changes > svg {
+  flex-shrink: 0;
+}
+
+.pending-changes > span {
+  flex: 1;
+  min-width: 0;
+}
+
+.pending-changes strong {
+  color: var(--text);
+}
+
+.pending-changes .ghost-button {
+  align-self: center;
+}
+
+/* The review, next to the chat */
+
+/* The chat keeps room for Nyra's explanation and the composer; the review takes the rest */
+.chat-main.reviewing .chat-pane {
+  flex: 0 0 38%;
+  /* Enough for the composer's bar: "+", the model, the folder chip, the context ring and Send */
+  min-width: 490px;
+}
+
+.change-review {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 520px;
+  min-height: 0;
+  border-left: 1px solid var(--surface-raised);
+  background: var(--bg);
+}
+
+.change-review-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 10px 10px 16px;
+  border-bottom: 1px solid var(--surface-raised);
+}
+
+.change-review-back {
+  display: none;
+}
+
+.change-review-title {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.change-review-path {
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: calc(13px * var(--font-scale));
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.change-review-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+}
+
+.change-review-folder {
+  color: var(--workspace);
+  vertical-align: -2px;
+}
+
+.change-review-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 6px 10px 0;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--surface-raised);
+}
+
+.change-review-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 0 10px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-size: calc(12.5px * var(--font-scale));
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.change-review-tab[aria-selected="true"] {
+  border-bottom-color: var(--accent);
+  color: var(--text);
+}
+
+.change-review-tab-done {
+  color: var(--diff-added);
+}
+
+.change-review-tab-dot {
+  width: 7px;
+  height: 7px;
+  border: 1.5px solid var(--text-muted);
+  border-radius: 50%;
+}
+
+.change-review-tab-dot.seen {
+  background: var(--text-muted);
+}
+
+.change-review-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px 8px 16px;
+  border-bottom: 1px solid var(--surface-raised);
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+}
+
+.change-review-legend {
+  display: inline-flex;
+  gap: 10px;
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+}
+
+.change-review-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.change-review-nav span {
+  min-width: 110px;
+  color: var(--text);
+  font-weight: 800;
+  text-align: center;
+}
+
+.change-review-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 10px 12px 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(var(--highlight-rgb), 0.45);
+  border-radius: 12px;
+  background: rgba(var(--highlight-rgb), 0.08);
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+  line-height: 1.5;
+}
+
+.change-review-notice > svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--highlight);
+}
+
+.change-review-notice p {
+  margin: 0;
+}
+
+.change-review-notice strong {
+  color: var(--text);
+}
+
+.change-review-notice small {
+  display: block;
+  margin-top: 8px;
+  color: var(--text-muted);
+}
+
+.change-review-notice pre,
+.diff-failed-box pre {
+  margin: 4px 0 0;
+  padding: 8px 10px;
+  overflow-x: auto;
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: calc(12px * var(--font-scale));
+  white-space: pre-wrap;
+}
+
+.change-review-error {
+  margin: 10px 16px 0;
+  color: var(--danger);
+  font-size: calc(12.5px * var(--font-scale));
+}
+
+.change-review-diff {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  margin-top: 8px;
+  overflow: auto;
+  background: var(--bg-sidebar);
+}
+
+.change-review-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 16px;
+  color: var(--text-muted);
+  font-size: calc(13px * var(--font-scale));
+}
+
+.change-review-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px 12px 16px;
+  border-top: 1px solid var(--surface-raised);
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+}
+
+.change-review-footer > span {
+  flex: 1;
+  min-width: 0;
+}
+
+.change-review-footer .ghost-button {
+  align-self: center;
+}
+
+.change-review-footer kbd {
+  margin-left: 4px;
+  padding: 0 5px;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.15);
+  font-family: var(--font-app);
+  font-size: calc(11px * var(--font-scale));
+}
+
+.change-review-ok {
+  color: var(--diff-added);
+  vertical-align: -2px;
+}
+
+/* Where the chat would be too narrow next to it, the review covers it, with "‹ Chat" to go back */
+@media (max-width: 1240px) {
+  .chat-main.reviewing .chat-pane {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .change-review {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 12;
+    width: 100%;
+    min-width: 0;
+    border-left: 0;
+  }
+
+  .change-review-back {
+    display: inline-flex;
+  }
+}
+
+/* The diff */
+
+.diff {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-family: var(--font-mono);
+  font-size: calc(12.5px * var(--font-scale));
+  line-height: 1.55;
+}
+
+.diff-col-n {
+  width: 48px;
+}
+
+.diff-col-g {
+  width: 18px;
+}
+
+.diff td {
+  padding: 0 8px 0 0;
+  vertical-align: top;
+}
+
+.diff .n {
+  padding-right: 8px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  user-select: none;
+}
+
+.diff .g {
+  padding: 0;
+  font-weight: 800;
+  text-align: center;
+  user-select: none;
+}
+
+.diff .c {
+  color: var(--text);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.diff td.removed,
+.diff tr.diff-line.removed td {
+  background: var(--diff-removed-bg);
+}
+
+.diff td.added,
+.diff tr.diff-line.added td {
+  background: var(--diff-added-bg);
+}
+
+.diff td.g.removed,
+.diff tr.diff-line.removed .g {
+  color: var(--diff-removed);
+}
+
+.diff td.g.added,
+.diff tr.diff-line.added .g {
+  color: var(--diff-added);
+}
+
+/* A line that only exists on one side: hatched, so it doesn't read as an empty line of the file */
+.diff td.empty {
+  background: repeating-linear-gradient(135deg, transparent 0 6px, var(--surface) 6px 7px);
+}
+
+.diff td.side {
+  border-left: 1px solid var(--surface-raised);
+}
+
+.diff mark {
+  border-radius: 2px;
+  background: var(--diff-removed-strong);
+  color: inherit;
+}
+
+.diff td.added mark,
+.diff tr.diff-line.added mark {
+  background: var(--diff-added-strong);
+}
+
+.diff tr.current td:first-child {
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.diff-header td {
+  padding: 10px 8px 4px 16px;
+  background: var(--bg);
+  color: var(--text-soft);
+  font-family: var(--font-app);
+  font-size: calc(12px * var(--font-scale));
+  font-weight: 800;
+}
+
+.diff-header.current td {
+  color: var(--text);
+}
+
+.diff-header-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.diff-header-mark i {
+  width: 8px;
+  height: 8px;
+  background: var(--border-strong);
+  transform: rotate(45deg);
+}
+
+.diff-header.current .diff-header-mark i {
+  background: var(--accent);
+}
+
+.diff-fold td {
+  padding: 0;
+  background: var(--surface);
+}
+
+.diff-fold button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 30px;
+  padding: 0 16px;
+  border: 0;
+  background: transparent;
+  color: var(--text-soft);
+  font-family: var(--font-app);
+  font-size: calc(12px * var(--font-scale));
+  font-weight: 800;
+  text-align: left;
+}
+
+.diff-fold button:hover {
+  background: var(--surface-raised);
+  color: var(--text);
+}
+
+.diff-failed td {
+  background: rgba(var(--highlight-rgb), 0.08);
+}
+
+.diff-failed-box {
+  margin: 6px 16px 8px;
+  padding: 10px 12px;
+  border: 1px solid rgba(var(--highlight-rgb), 0.45);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text-soft);
+  font-family: var(--font-app);
+  font-size: calc(12.5px * var(--font-scale));
+  white-space: normal;
+}
+
+.diff-failed-box strong {
+  color: var(--text);
+}
+
+.diff-failed-box small {
+  display: block;
+  margin-top: 8px;
+  color: var(--text-muted);
+}

@@ -1,0 +1,490 @@
+/* Files panel */
+
+.chat-main {
+  position: relative;
+  flex-direction: row;
+}
+
+.chat-pane {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.files-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 8px 0 10px;
+  border: 1px solid var(--surface-raised);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-soft);
+  font-size: calc(13px * var(--font-scale));
+  font-weight: 700;
+}
+
+.files-button:hover,
+.files-button.active {
+  background: var(--surface-raised);
+  color: var(--text);
+}
+
+.files-button.active {
+  border-color: var(--accent);
+}
+
+.files-count {
+  min-width: 22px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: var(--border);
+  color: var(--text-soft);
+  font-size: calc(12px * var(--font-scale));
+  font-weight: 800;
+  line-height: 20px;
+  text-align: center;
+}
+
+.files-count.has-files {
+  background: var(--accent);
+  color: var(--text-on-accent);
+}
+
+.files-panel {
+  width: 320px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-sidebar);
+  border-left: 1px solid var(--border);
+}
+
+/* On narrow windows the panel floats over the chat instead of squeezing it */
+@media (max-width: 1100px) {
+  .files-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    box-shadow: -18px 0 40px var(--shadow);
+  }
+}
+
+.files-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 49px;
+  padding: 0 8px 0 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.files-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.files-panel-title h2 {
+  margin: 0;
+  font-size: calc(15px * var(--font-scale));
+  font-weight: 800;
+}
+
+.files-tabs {
+  display: flex;
+  gap: 2px;
+  margin: 12px 12px 0;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--border);
+}
+
+.files-tab {
+  flex: 1;
+  min-width: 0;
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: calc(12.5px * var(--font-scale));
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.files-tab:hover {
+  color: var(--text);
+}
+
+.files-tab[aria-selected="true"] {
+  background: var(--surface-raised);
+  color: var(--text);
+}
+
+.files-tab-count {
+  color: var(--text-muted);
+  font-size: calc(11px * var(--font-scale));
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.files-list {
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  padding: 12px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.file-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 68px;
+  padding: 8px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  text-align: left;
+}
+
+.file-row:hover {
+  background: var(--border);
+}
+
+.file-row.selected {
+  background: var(--border);
+  border-color: var(--accent);
+}
+
+.file-row-thumb {
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  border: 1px solid var(--surface-raised);
+  object-fit: cover;
+}
+
+.file-row-name {
+  font-size: calc(14px * var(--font-scale));
+}
+
+.file-row-text {
+  gap: 3px;
+}
+
+.file-row-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.file-row-line .file-row-meta {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* File state after a summary, and references to earlier files */
+
+.files-list.grouped {
+  gap: 14px;
+}
+
+.files-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.files-group-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 8px 0;
+  color: var(--text-muted);
+  font-size: calc(11px * var(--font-scale));
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.files-group-header .diamond {
+  width: 5px;
+  height: 5px;
+  transform: rotate(45deg);
+  background: var(--text-muted);
+}
+
+.files-group-count {
+  margin-left: auto;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.files-group-note {
+  margin: -2px 8px 2px;
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+  line-height: 1.4;
+}
+
+.files-group-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.file-item {
+  position: relative;
+}
+
+.file-item:hover .file-row {
+  background: var(--border);
+}
+
+/* Room for the buttons on the right: re-send (only for summarized files) and the "⋯" menu */
+.file-row.with-actions-1 {
+  padding-right: 48px;
+}
+
+.file-row.with-actions-2 {
+  padding-right: 84px;
+}
+
+/* Centered with top/bottom, not a transform: a transform would become the frame of the menu's fixed position */
+.file-actions {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.file-item:hover .conversation-menu-trigger,
+.file-item:focus-within .conversation-menu-trigger {
+  opacity: 1;
+}
+
+.reference-button {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--surface-raised);
+  color: var(--text);
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.file-item:hover .reference-button,
+.file-item:focus-within .reference-button {
+  opacity: 1;
+}
+
+.reference-button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.reference-button[aria-disabled="true"] {
+  border-color: var(--surface-raised);
+  color: var(--success);
+  cursor: default;
+}
+
+.file-state {
+  --state-color: var(--success);
+  position: relative;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 20px;
+  padding: 0 7px 0 5px;
+  border: 1px solid var(--surface-raised);
+  border-radius: 999px;
+  color: var(--text-soft);
+  font-size: calc(11px * var(--font-scale));
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.file-state svg {
+  color: var(--state-color);
+}
+
+.file-state.summarized {
+  --state-color: var(--highlight);
+}
+
+.file-state.referenced {
+  --state-color: var(--info);
+}
+
+.file-state.mini {
+  height: 18px;
+  padding: 0 6px 0 4px;
+  font-size: calc(10.5px * var(--font-scale));
+}
+
+.attachment-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.attachment-visual {
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+}
+
+.reference-badge {
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+  background: var(--surface-raised);
+  color: var(--info);
+}
+
+.attachment-chip.reference,
+.attachment-doc.reference {
+  border-style: dashed;
+  border-color: var(--border-strong);
+}
+
+.reference-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--info);
+  font-weight: 700;
+}
+
+/* Tooltip shown on hover or keyboard focus of its .has-tip parent */
+.hover-tip {
+  position: absolute;
+  z-index: 30;
+  width: max-content;
+  max-width: 236px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--surface-raised);
+  box-shadow: 0 10px 24px var(--shadow);
+  color: var(--text);
+  font-size: calc(12px * var(--font-scale));
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0;
+  text-align: left;
+  text-transform: none;
+  white-space: normal;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.12s ease;
+}
+
+.hover-tip.below {
+  top: calc(100% + 8px);
+  right: 0;
+}
+
+/* To the side, because the list scrolls and would clip a tooltip above the first row */
+.hover-tip.left {
+  top: 50%;
+  right: calc(100% + 8px);
+  transform: translateY(-50%);
+}
+
+.has-tip:hover > .hover-tip,
+.has-tip:focus-visible > .hover-tip,
+.file-row:focus-visible .file-state > .hover-tip {
+  opacity: 1;
+  visibility: visible;
+}
+
+.files-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 32px 28px;
+  text-align: center;
+}
+
+.files-empty-icon {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
+.files-empty-icon span {
+  position: absolute;
+  inset: 8px;
+  border: 1px solid var(--surface-raised);
+  border-radius: 6px;
+  transform: rotate(45deg);
+}
+
+.files-empty-icon svg {
+  position: relative;
+}
+
+.files-empty-title {
+  font-size: calc(15px * var(--font-scale));
+  font-weight: 700;
+}
+
+.files-empty-text {
+  max-width: 240px;
+  font-size: calc(13px * var(--font-scale));
+  color: var(--text-muted);
+}

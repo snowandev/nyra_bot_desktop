@@ -1,0 +1,3460 @@
+{
+  "common": {
+    "cancel": "Cancel",
+    "retry": "Retry",
+    "on": "On",
+    "off": "Off",
+    "options": "Options",
+    "optional": "optional",
+    "connecting": "Connecting…",
+    "notConnected": "Not connected",
+    "conversations_one": "{{count, number}} conversation",
+    "conversations_other": "{{count, number}} conversations",
+    "models_one": "{{count, number}} model",
+    "models_other": "{{count, number}} models",
+    "memories_one": "{{count, number}} memory",
+    "memories_other": "{{count, number}} memories"
+  },
+  "platform": {
+    "tray": {
+      "mac": "the menu bar",
+      "windows": "the notification area",
+      "linux": "the system tray"
+    },
+    "reveal": {
+      "mac": "Show in Finder",
+      "windows": "Show in File Explorer",
+      "linux": "Open in the file manager"
+    }
+  },
+  "format": {
+    "remainingSeconds": "{{value}} s left",
+    "remainingMinutes": "{{value}} min left",
+    "remainingHours": "{{value}} h left"
+  },
+  "settings": {
+    "title": "Settings",
+    "back": "Back to chat",
+    "sectionsLabel": "Settings sections",
+    "sections": {
+      "general": {
+        "label": "General",
+        "description": "Nyra's general preferences."
+      },
+      "personalization": {
+        "label": "Personalization",
+        "description": "Tell Nyra about yourself and how you want it to answer."
+      },
+      "providers": {
+        "label": "Providers",
+        "description": "Connect Nyra to the services that run the AI models."
+      },
+      "audio": {
+        "label": "Audio providers",
+        "description": "Who transcribes the audio you attach."
+      },
+      "mcp": {
+        "label": "MCP connections",
+        "description": "Services that give Nyra tools: GitHub, a database, a folder…"
+      },
+      "skills": {
+        "label": "Skills",
+        "description": "Specialized instructions you can turn on in each conversation."
+      },
+      "commands": {
+        "label": "Commands and shortcuts",
+        "description": "What you can type with / and what each key does."
+      },
+      "import": {
+        "label": "Import",
+        "description": "Bring conversations from other apps into Nyra."
+      }
+    },
+    "general": {
+      "label": "General options",
+      "appearance": "Appearance",
+      "notifications": "Notifications",
+      "features": "Nyra features",
+      "featuresOn": "{{on}} of {{total}} on",
+      "data": "Data",
+      "quickChat": "Quick chat",
+      "noShortcut": "No shortcut"
+    },
+    "appearance": {
+      "description": "Customize how the app looks.",
+      "theme": "Theme",
+      "themeHint": "Choose how Nyra looks. \"System\" switches between light and dark with your operating system.",
+      "themes": {
+        "dark": "Dark",
+        "light": "Light",
+        "system": "System"
+      },
+      "accent": "Accent color",
+      "accentHint": "Tints buttons, links and highlights across the app.",
+      "accents": {
+        "violet": "Lilac",
+        "blue": "Blue",
+        "green": "Green",
+        "amber": "Amber",
+        "pink": "Pink",
+        "graphite": "Graphite"
+      },
+      "fontSize": "Text size",
+      "fontSizeHint": "Changes the size of the text across the app. Default: {{size}}.",
+      "currentSize": "Current size",
+      "reset": "Reset",
+      "smaller": "Make the text smaller",
+      "larger": "Make the text larger",
+      "language": "Language",
+      "languageHint": "The language of Nyra's menus, buttons and messages. \"System\" uses your computer's language if Nyra has it, and English otherwise. Models answer in the language you write to them in.",
+      "languageSystem": "System ({{language}})"
+    },
+    "notifications": {
+      "description": "What Nyra does when you close its window, and the system's notices while you use other apps.",
+      "replyDone": "Reply finished",
+      "replyDoneHint": "Lets you know when Nyra finishes answering while the app is in the background.",
+      "denied": "The system didn't allow notifications. Turn them on for Nyra Bot in your system settings.",
+      "switchLabel": "Notify me when the reply is finished",
+      "needsYou": "When Nyra needs your permission or an answer",
+      "needsYouHint": "Lets you know when a command waits for your approval or asks a question while the app is in the background. The reply doesn't go on until you're back.",
+      "needsYouLabel": "Notify me when a command needs my permission or an answer",
+      "keepInTray": "Keep running when closed",
+      "keepInTrayHint": "Nyra keeps running with its icon in {{tray}}: replies finish and it lets you know. To quit completely, use Quit on its icon.",
+      "trayMayBeHidden": "If your desktop doesn't show the icon, open Nyra again and the window you had comes back.",
+      "keepInTrayLabel": "Keep running when the window is closed"
+    },
+    "features": {
+      "title": "Nyra features",
+      "description": "What Nyra can do besides answering. The ones with a brain use the chosen model, so they take longer and, with a cloud model, cost more.",
+      "usesModel": "Uses the model",
+      "webSearch": {
+        "title": "Web search",
+        "description": "Nyra searches when you ask it to or when the question needs recent information, and cites the pages it reads."
+      },
+      "compatibleGuides": {
+        "title": "Follow CLAUDE.md and AGENTS.md",
+        "description": "In a connected folder or a project, Nyra always follows the instructions in its NYRA.md. With this on, it also follows CLAUDE.md and AGENTS.md, other assistants' files, in the main folder and in the subfolders it works in, with the files they import with @. Where they disagree, NYRA.md wins."
+      },
+      "readLinks": {
+        "title": "Read the links you paste",
+        "description": "When you paste a link, Nyra reads the page and attaches it to the message, so the model also has it for your next questions."
+      },
+      "memory": {
+        "title": "Memory",
+        "description": "Nyra remembers short facts about you across conversations.",
+        "modelUse": "The model decides what to remember, and memories are used in your messages."
+      },
+      "semanticSearch": {
+        "title": "Search folders by meaning",
+        "description": "Nyra finds what you are looking for in a connected folder even when it is written with other words or in another language. For example, \"where is the user validated\" finds \"login\". The first time, it takes a moment to prepare the folder. It needs an Ollama model for searching folders, such as qwen3-embedding, which you choose in Providers."
+      },
+      "runCommands": {
+        "title": "Run commands in folders",
+        "description": "In a connected folder, Nyra can ask to run a command, such as running the tests, building or checking the Git status. Nothing runs until you press \"Run\" on its card. When this is off, Nyra only reads the folder and proposes changes."
+      },
+      "runCode": {
+        "title": "Run code",
+        "description": "Nyra can write a short program in Python or JavaScript and run it to calculate exactly, analyze or convert your files or make charts, even without a connected folder. Nothing runs until you press \"Run\" on its card. It needs Python or Node.js installed on the computer."
+      },
+      "browser": {
+        "title": "Use the browser",
+        "description": "Nyra can open pages in your Chrome, Edge or another Chromium browser to check a page, sign in with the details you give it or take screenshots."
+      },
+      "smartTitles": {
+        "title": "Smart titles",
+        "description": "After the first reply, the model gives each new conversation a short title about its topic. When this is off, the start of your first message is used."
+      },
+      "sensitiveData": {
+        "title": "Sensitive data warning",
+        "description": "While you write to a cloud provider, Nyra checks the message and its text files on your computer. If it sees something that looks like sensitive information, it points it out next to Send, without stopping you from sending. The check never leaves your computer."
+      },
+      "transcription": {
+        "title": "Transcribe audio",
+        "description": "When you attach an audio file, Nyra transcribes it with its timings and, if you want, who is speaking. Then you can ask it for a summary or minutes."
+      },
+      "screenLook": {
+        "title": "See your screen",
+        "description": "Nyra can look at your screen to help you with an app or a setting: it shows you where things are, guides you step by step or does it for you with the mouse and keyboard. It asks for your permission first. It needs a model that sees images."
+      }
+    },
+    "data": {
+      "description": "The conversations saved on this computer.",
+      "deleteAll": "Delete all conversations",
+      "deleted": "All conversations were deleted.",
+      "empty": "There are no saved conversations.",
+      "deletes_one": "Deletes the conversation and its attachments.",
+      "deletes_other": "Deletes the {{count, number}} conversations and their attachments.",
+      "couldNotDelete": "They couldn't be deleted: {{error}}",
+      "deleting": "Deleting…",
+      "deleteAllButton": "Delete all",
+      "confirm_one": "Delete the conversation?",
+      "confirm_other": "Delete the {{count, number}} conversations?",
+      "confirmText": "All of it will be erased. This can't be undone.",
+      "confirmButton": "Yes, delete all"
+    },
+    "personalization": {
+      "label": "Personalization options",
+      "about": "About you",
+      "filledIn": "Filled in",
+      "notFilledIn": "Not filled in",
+      "response": "How Nyra answers",
+      "custom": "Custom",
+      "default": "Default",
+      "memory": "Memory",
+      "memoryOff": "Off",
+      "aboutDescription": "What you want Nyra to know about you to give you more useful answers. Every field is optional. Nyra sends this to the model with every message.",
+      "nameLabel": "What should Nyra call you?",
+      "namePlaceholder": "For example, Julián",
+      "occupationLabel": "What do you do?",
+      "occupationPlaceholder": "For example, game developer",
+      "responseDescription": "Instructions Nyra follows in all your conversations. They're sent to the model with every message. If you ask for something different in a chat, it applies only that time.",
+      "responseLabel": "How do you want it to answer?",
+      "responsePlaceholder": "For example: answer briefly and warmly, and use code examples when you explain something technical.",
+      "responseHint": "Tone, length, language, format or things to avoid."
+    },
+    "providers": {
+      "list": "Provider list",
+      "title": "Providers",
+      "thisComputer": "this computer",
+      "local": "Local",
+      "missingKey": "API key missing",
+      "notConnectedYet": "Not connected yet",
+      "connectedTo": "Connected to {{name}}",
+      "connectedToAt": "Connected to {{name}} on {{place}}",
+      "pasteKeyAndLoad": "Paste your API key and press \"Load models\".",
+      "settingsOf": "{{name}} settings",
+      "connection": "Connection",
+      "urlHintCloud": "{{name}}'s API address. Change it only if you use a proxy. Default: {{url}}",
+      "urlHintLocal": "The address where {{name}} is running. Default: {{url}}",
+      "keyHintRequired": "Required to use {{name}}. It's only sent to {{url}}.",
+      "keyHintOptional": "Only needed if your {{name}} server requires authentication.",
+      "contextHintLoads": "Tokens the model can keep in memory. Empty: {{name}}'s value. If a model supports fewer, its maximum is used. More context uses more memory, and changing it reloads the model.",
+      "contextHintLimit": "Working limit: it isn't sent to {{name}}. At 75%, Nyra summarizes the conversation. Empty: each model's maximum, if the provider reports it.",
+      "contextHintLimitPaid": "Working limit: it isn't sent to {{name}}. At 75%, Nyra summarizes the conversation, because every message resends the whole history and you pay for it. Empty: each model's maximum, if the provider reports it.",
+      "summarizeHint": "When the conversation reaches 75% of the context, Nyra summarizes the earlier messages.",
+      "rememberKeychain": "It's saved in the system keychain. Untick it on a shared computer: the key is deleted right away.",
+      "rememberFile": "There's no keychain on this system: the key would be saved in a file in Nyra's folder that only your user can read.",
+      "keyNotKept": "not kept after closing the app",
+      "keyInKeychain": "saved in the keychain",
+      "keyInFile": "saved in a protected file",
+      "contextSize": "Context size",
+      "automatic": "Automatic",
+      "modelMaximum": "Model maximum",
+      "apiKey": "API key",
+      "required": "required",
+      "pasteKey": "Paste your API key here",
+      "noKey": "No key",
+      "hideKey": "Hide API key",
+      "showKey": "Show API key",
+      "summarize": "Summarize long conversations",
+      "rememberKey": "Remember the API key on this computer",
+      "forgetKey": "Forget the key",
+      "loadModels": "Load models",
+      "insecureWithKey": "This address uses http://, unencrypted: your messages and API key will travel readable over the network. If {{name}} is on another machine, use https://.",
+      "baseUrl": "Base URL"
+    },
+    "commands": {
+      "browse": "Browse",
+      "commands": "Commands",
+      "commandsCount_one": "{{count, number}} command",
+      "commandsCount_other": "{{count, number}} commands",
+      "shortcuts": "Keyboard shortcuts",
+      "shortcutsCount_one": "{{count, number}} shortcut",
+      "shortcutsCount_other": "{{count, number}} shortcuts",
+      "commandsDescription": "Type them at the start of a message in a conversation. When you type / they show up in the list, above the skills.",
+      "examples_one": "Example",
+      "examples_other": "Examples",
+      "unavailable": "Not available {{when}}",
+      "shortcutsDescription": "With this computer's keys: {{key}} is the shortcut key.",
+      "withKey": "Shortcuts with {{key}}",
+      "keys": "Keys",
+      "action": "Action",
+      "otherKeys": "Other keys",
+      "anywhere": "From any app",
+      "quickBarToggle": "Open and close the quick chat bar",
+      "quickBarWhere": "Change it in General → Quick chat.",
+      "disabled": "Off"
+    },
+    "shareImages": {
+      "title": "Shared images",
+      "description": "How the replies you copy or save as an image come out. The height depends on how long the reply is, and a very long one may come out at a little less resolution.",
+      "quality": "Quality",
+      "qualities": {
+        "high": "High",
+        "normal": "Normal",
+        "low": "Low"
+      },
+      "hints": {
+        "high": "Very sharp, to zoom in or print. Files are heavier.",
+        "normal": "Sharp on any screen.",
+        "low": "Light files, quick to send."
+      }
+    },
+    "models": {
+      "title": "Nyra's models",
+      "mainHint": "The star marks the main model, the one you use for everything.",
+      "demandingHint": "The bolt marks an optional second model for hard tasks. If you choose both, \"Automatic\" switches to it when needed.",
+      "askBeforeCloud": "Ask before switching to the cloud",
+      "askBeforeCloudHint": "Switching to a cloud model sends it the conversation. Private ones never move on their own."
+    },
+    "quickChat": {
+      "description": "Ask Nyra from any app without switching windows.",
+      "quickBar": "Open with a shortcut",
+      "quickBarHint": "The same shortcut opens and closes it. It also opens from Nyra's icon menu.",
+      "quickBarLabel": "Open the quick chat with a shortcut",
+      "shortcut": "Shortcut",
+      "wayland": "Your desktop uses Wayland, which doesn't let apps have global shortcuts. Create one in your desktop's keyboard settings (for example, {{shortcut}}) that runs this command:",
+      "copyCommand": "Copy the command",
+      "worksHidden": "Works even while Nyra is hidden in {{tray}}.",
+      "quickSize": "Size",
+      "quickSizeHint": "How much it can grow when the conversation opens. On a small screen it fits the space there is.",
+      "quickSizes": {
+        "normal": "Normal",
+        "large": "Large",
+        "extraLarge": "Extra large"
+      }
+    }
+  },
+  "conversations": {
+    "new": "New conversation",
+    "newWithShortcut": "New conversation ({{shortcut}})",
+    "search": "Search conversations",
+    "searchHint": "Searches titles, messages and files ({{shortcut}})",
+    "navLabel": "Conversations",
+    "pinned": "Pinned",
+    "folders": "Folders",
+    "newFolder": "New folder",
+    "chats": "Chats",
+    "results": "Results",
+    "removeFromFolder": "Remove from folder",
+    "searchFailed": "Couldn't search the messages: {{error}}",
+    "noResults": "No results",
+    "storageFailed": "Couldn't save or read the history: {{error}}",
+    "settingsWithShortcut": "Settings ({{shortcut}})",
+    "movedTo": "\"{{title}}\" was moved to {{folder}}.",
+    "theFolder": "the folder",
+    "removedFromFolder": "\"{{title}}\" was removed from its folder and is in Chats.",
+    "folderCreated": "Folder \"{{name}}\" created.",
+    "folderRenamed": "Folder renamed to \"{{name}}\".",
+    "folderDeleted": "Folder \"{{name}}\" deleted.",
+    "damaged": "The saved conversation is damaged and couldn't be opened.",
+    "row": {
+      "pending": "Has something waiting for review",
+      "busy": "Nyra is working here",
+      "inFolder": "In the folder {{folder}}",
+      "renameLabel": "New name for the conversation"
+    },
+    "menu": {
+      "optionsOf": "Options for \"{{title}}\"",
+      "label": "Conversation options",
+      "unpin": "Unpin",
+      "pin": "Pin",
+      "rename": "Rename",
+      "moveTo": "Move to…",
+      "delete": "Delete conversation",
+      "moveLabel": "Move \"{{title}}\" to a folder",
+      "back": "Back to the previous menu",
+      "moveToTitle": "Move to",
+      "newFolder": "New folder…",
+      "removeFromFolder": "Remove from folder"
+    },
+    "folder": {
+      "optionsOf": "Options for the folder \"{{name}}\"",
+      "rename": "Rename",
+      "delete": "Delete folder",
+      "namePlaceholder": "Folder name",
+      "newNameLabel": "Name of the new folder",
+      "renameLabel": "New name for the folder",
+      "moveHere": "Move here",
+      "empty": "<strong>Empty folder.</strong> Drag conversations here.",
+      "deleteTitle": "Delete the folder \"<name>{{name}}</name>\"?",
+      "deleteConfirm": "Delete",
+      "keeps_one": "Its conversation <strong>isn't deleted</strong>: it goes back to \"Chats\".",
+      "keeps_other": "Its {{count, number}} conversations <strong>aren't deleted</strong>: they go back to \"Chats\".",
+      "nameRequired": "Type a name for the folder.",
+      "nameTooLong": "{{max}} characters at most: {{extra}} too many.",
+      "nameTaken": "There's already a folder called \"{{name}}\"."
+    },
+    "hit": {
+      "matches": "{{count, number}} matches"
+    },
+    "import": {
+      "sources": "Import sources",
+      "from": "Import from",
+      "thisComputerSessions": "Sessions on this computer",
+      "label": "Import from Claude Code",
+      "description": "Bring into Nyra the conversations you had with Claude Code on this computer, with your messages, Claude's replies and the files you attached. Each one goes to its folder's project in Code.",
+      "imported_one": "{{count, number}} conversation was imported.",
+      "imported_other": "{{count, number}} conversations were imported.",
+      "copied_one": "{{count, number}} conversation continued in Nyra was imported separately.",
+      "copied_other": "{{count, number}} conversations continued in Nyra were imported separately.",
+      "unreadPdfs_one": "{{count, number}} PDF couldn't be read: it may be damaged or have a password. The model won't see its content, and the next import will try again.",
+      "unreadPdfs_other": "{{count, number}} PDFs couldn't be read: they may be damaged or have a password. The model won't see their content, and the next import will try again.",
+      "keptInChat_one": "{{count, number}} conversation took place in a general folder (your personal folder, Desktop, Documents, Downloads or a temporary one) and stayed in the chat. To bring it to Code, add that folder as a project and import it again.",
+      "keptInChat_other": "{{count, number}} conversations took place in a general folder (your personal folder, Desktop, Documents, Downloads or a temporary one) and stayed in the chat. To bring them to Code, add that folder as a project and import them again.",
+      "skipped_one": "{{count, number}} conversation had nothing new in Claude Code.",
+      "skipped_other": "{{count, number}} conversations had nothing new in Claude Code.",
+      "searching": "Looking for Claude Code sessions…",
+      "noneFound": "No Claude Code sessions were found",
+      "noneFoundHint": "Claude Code keeps its conversations in your user's .claude/projects folder.",
+      "selectedOf": "{{selected}} of {{total}} selected",
+      "selectAll": "Select all",
+      "selectNone": "None",
+      "importing": "Importing…",
+      "importCount_one": "Import {{count, number}} conversation",
+      "importCount_other": "Import {{count, number}} conversations",
+      "project": "Project {{name}}",
+      "statusImported": "Imported",
+      "statusContinued": "Continued in Nyra",
+      "continuedHint": "You continued it in Nyra, so importing it again doesn't replace it",
+      "messages_one": "{{count, number}} message",
+      "messages_other": "{{count, number}} messages",
+      "conflictTitle_one": "One of these conversations already went on in Nyra",
+      "conflictTitle_other": "{{count, number}} of these conversations already went on in Nyra",
+      "conflictText": "So that what you wrote in Nyra isn't lost, they won't be replaced. If Claude Code has new messages, its version is imported as a separate conversation. If not, it's skipped.",
+      "newMessages_one": "{{count, number}} new message",
+      "newMessages_other": "{{count, number}} new messages",
+      "edited": "edited",
+      "unchanged": "no changes",
+      "progress": "In Nyra: {{nyra}} · In Claude Code: {{claudeCode}}",
+      "willCopy": "Will be imported as a separate conversation",
+      "willSkip": "Will be skipped",
+      "continue": "Continue with the import"
+    },
+    "rail": {
+      "label": "Conversation list folded"
+    },
+    "sidebar": {
+      "fold": "Fold the sidebar",
+      "foldWithShortcut": "Fold the sidebar ({{shortcut}})",
+      "unfold": "Unfold the sidebar",
+      "unfoldWithShortcut": "Unfold the sidebar ({{shortcut}})"
+    }
+  },
+  "dictation": {
+    "start": "Dictate ({{shortcut}})",
+    "stop": "Finish dictating",
+    "listening": "Listening… Press the microphone to write it or Esc to drop it.",
+    "transcribing": "Writing down what you said…",
+    "needsModel": "To dictate, add a Whisper model in Settings → Audio providers. It works offline.",
+    "nothingHeard": "Nothing was heard. Speak closer to the microphone, or check that Nyra is allowed to use it in the system.",
+    "dismiss": "Close notice"
+  },
+  "quick": {
+    "window": "Nyra quick chat",
+    "untitled": "New conversation",
+    "searching": "Searching for “{{query}}”",
+    "captureFile": "capture.png",
+    "handle": "Drag to move it · Double-click to put it back",
+    "messageLabel": "Message for Nyra",
+    "setUpModel": "Set up a model to start",
+    "ask": "Ask Nyra…",
+    "help": "Enter sends, Shift plus Enter adds a line break, Escape hides the bar.",
+    "capture": "Capture an area of the screen",
+    "modelButton": "Model: {{name}}. Change model",
+    "noModelConfigured": "No model set up",
+    "noModel": "No model",
+    "stop": "Stop the reply",
+    "send": "Send",
+    "resumedAgo": "{{minutes}} min ago",
+    "afterReply": "When the reply finishes",
+    "continueInNyra": "Continue in Nyra",
+    "startNew": "New conversation",
+    "new": "New",
+    "hide": "Hide the bar (Esc)",
+    "thinking": "Nyra is thinking",
+    "answered": "Nyra answered: {{text}}",
+    "messages": "Messages",
+    "resumedSeparator": "Conversation from {{minutes}} min ago",
+    "attachments": "Attachments",
+    "chooseModel": "Choose a model",
+    "pickerHelp": "↑ ↓ to move · Enter chooses · Esc goes back",
+    "manageModels": "Manage models",
+    "noModelTitle": "No model is set up yet",
+    "noModelHint": "Connect a provider in Settings and come back here.",
+    "openNyra": "Open Nyra",
+    "documentLines_one": "Document · {{count, number}} line",
+    "documentLines_other": "Document · {{count, number}} lines",
+    "writing": "Writing…",
+    "openDocument": "Open {{title}} in Nyra",
+    "openInNyra": "Open in Nyra",
+    "pressKeys": "Press the keys…",
+    "change": "Change",
+    "keys": {
+      "space": "Space",
+      "enter": "Enter",
+      "backspace": "Backspace"
+    },
+    "pin": "Pin the bar",
+    "unpin": "Unpin the bar",
+    "pinHelp": "Pin: it stays when you click another app",
+    "unpinHelp": "Pinned: it stays even when you click another app. Press to let it hide on its own again",
+    "attach": "Attach files",
+    "dropHere": "Drop to attach"
+  },
+  "markdown": {
+    "copyImage": "Copy image",
+    "copy": "Copy",
+    "code": "code",
+    "viewTabs": "Show the diagram or its code",
+    "diagram": "Diagram",
+    "codeTab": "Code",
+    "diagramError": "<strong>The diagram couldn't be drawn:</strong> the code has an error. The code is shown instead.",
+    "drawing": "Drawing the diagram…",
+    "diagramAlt": "Diagram generated from the Mermaid code",
+    "imageFailed": "The diagram's image couldn't be prepared.",
+    "source": "Source {{number}}: {{domain}}, {{title}}",
+    "opensInBrowser": "Opens in the browser",
+    "callouts": {
+      "note": "Note",
+      "tip": "Tip",
+      "important": "Important",
+      "warning": "Warning",
+      "caution": "Caution"
+    },
+    "format": {
+      "label": "How to show the code",
+      "original": "Original",
+      "formatted": "Formatted",
+      "compact": "Compact",
+      "invalidJson": "Invalid JSON · line {{line}}, column {{column}}",
+      "formatting": "Formatting…",
+      "failed": "Couldn't format it"
+    }
+  },
+  "ui": {
+    "copied": "Copied",
+    "copyFailed": "Couldn't copy",
+    "status": {
+      "idle": "Not connected yet",
+      "loading": "Connecting…",
+      "loaded": "Connected",
+      "error": "Not connected"
+    },
+    "disclaimer": "Nyra can make mistakes. Check important information.",
+    "externalImage": "External image",
+    "externalImageNamed": "External image: {{alt}}",
+    "openInBrowser": "Open in the browser",
+    "openFailed": "Couldn't open {{url}}",
+    "nameEditorHint": "<kbd>Enter</kbd> saves · <kbd>Esc</kbd> cancels",
+    "remove": "Remove {{name}}",
+    "hideSection": "Hide {{name}}",
+    "showSection": "Show {{name}}",
+    "quotedName": "“{{name}}”",
+    "loadFailed": "This part of Nyra couldn't load."
+  },
+  "lib": {
+    "outOfMemoryFolder": "{{model}} ran out of memory: the model and everything it read from the folder don't fit on this computer. Nyra has lowered how much this model reads at once. Press Retry. If it happens again, ask a more specific question or use a smaller model.",
+    "outOfMemory": "{{model}} ran out of memory: the model and the conversation's text don't fit on this computer. Try fewer attachments, a new conversation or a smaller model.",
+    "keptOpenTitle": "Nyra is still running",
+    "keptOpenBody": "It's in {{where}}. To quit completely, use Quit on its icon.",
+    "replyTitle": "Nyra has replied",
+    "replyBody": "Go back to read its reply.",
+    "approvalTitle_one": "Nyra wants to run a command",
+    "approvalTitle_other": "Nyra wants to run {{count, number}} commands",
+    "approvalBody": "Go back to Nyra to review and decide.",
+    "questionTitle": "A command is waiting for your answer",
+    "questionBody": "Go back to Nyra to answer it."
+  },
+  "commands": {
+    "compact": {
+      "description": "Summarize the conversation now to free up context",
+      "details": "Summarizes the earlier messages and keeps only the last exchange in full. It's the same summary Nyra makes on its own when the context fills up, whenever you want: when you change topic, before a long task or if you've turned automatic summaries off.",
+      "unavailableWhen": "while Nyra is answering, or if there's only one exchange since the last summary."
+    },
+    "fork": {
+      "description": "Start a new conversation from here, with everything said so far",
+      "details": "Copies the conversation into another one, \"(branch)\", with its messages, skills and folder, and opens it. The original stays as it was. It's the same as \"Start a new conversation from here\" on the last message.",
+      "unavailableWhen": "while Nyra is answering, or in a conversation without messages."
+    },
+    "new": {
+      "description": "Start a new conversation. With a message after it, send it there",
+      "details": "On its own, it opens an empty conversation, like the new conversation shortcut. With a message after it, it creates the conversation with that message and Nyra answers it with the model you have chosen.",
+      "example": "/new explain what an API is with an example"
+    },
+    "init": {
+      "description": "Write the project's NYRA.md: the instructions Nyra follows when working on it",
+      "details": "Nyra explores the folder (how it builds and tests, its structure, its conventions) and proposes a short NYRA.md, which you review and apply like any change. If there is one already, it proposes improvements. If there is a CLAUDE.md or an AGENTS.md, it imports it instead of copying it. With text after it, it takes it into account.",
+      "example": "/init focus on how changes are tested",
+      "unavailableWhen": "without a connected folder or a project.",
+      "message": "Write this project's NYRA.md.",
+      "noFolder": "Connect a folder to write its NYRA.md.",
+      "busy": "Wait for Nyra to finish to write the NYRA.md."
+    },
+    "model": {
+      "description": "Switch models: type part of its name and pick it",
+      "details": "Shows the models in the picker and filters them as you type part of the name, the id or the provider. Enter picks the highlighted one, as in the model picker. Hidden models don't show up, except the one in use.",
+      "unavailableWhen": "if there are no models yet."
+    }
+  },
+  "shortcuts": {
+    "chatSpace": {
+      "action": "Go to Chat",
+      "detail": "Back to the conversation you had open there."
+    },
+    "codeSpace": {
+      "action": "Go to Code",
+      "detail": "Your projects and their conversations."
+    },
+    "newConversation": {
+      "action": "New conversation",
+      "detail": "Also from Settings: it takes you back to the chat."
+    },
+    "newPrivateConversation": {
+      "action": "New private conversation",
+      "detail": "It isn't saved and disappears as soon as you leave it."
+    },
+    "searchConversation": {
+      "action": "Search the open conversation"
+    },
+    "searchAll": {
+      "action": "Search all conversations"
+    },
+    "settings": {
+      "action": "Open Settings"
+    },
+    "workspace": {
+      "action": "Work with a folder",
+      "detail": "Or change the one connected to the conversation."
+    },
+    "moveConversation": {
+      "action": "Move the open conversation to a folder"
+    },
+    "projectPanel": {
+      "action": "Open or close the project panel",
+      "detail": "In Code: files, Git and what's pending in the project."
+    },
+    "dictate": {
+      "action": "Dictate",
+      "detail": "Starts listening, and pressing it again writes what you said in the box. Esc drops it. Also in the quick bar."
+    },
+    "applyChange": {
+      "action": "Apply the change you're reviewing",
+      "detail": "In the panel for reviewing proposed changes."
+    },
+    "other": {
+      "send": {
+        "action": "Send the message",
+        "detail": "Shift+Enter adds a line break."
+      },
+      "list": {
+        "action": "Open the list of commands and skills",
+        "detail": "At the start of the message."
+      },
+      "moveList": {
+        "action": "Move through the list of commands and skills",
+        "detail": "Enter or Tab picks and Esc closes it."
+      },
+      "jumpChanges": {
+        "action": "Jump between the changes in a file",
+        "detail": "In the review."
+      },
+      "moveProjects": {
+        "action": "Move through the projects in Code",
+        "detail": "→ expands, ← collapses or goes up to the project, Enter opens."
+      },
+      "rename": {
+        "action": "Rename the sidebar row",
+        "detail": "A project or a conversation."
+      },
+      "rowMenu": {
+        "keys": "Shift+F10",
+        "action": "Open the sidebar row's menu",
+        "detail": "Or the menu key."
+      },
+      "close": {
+        "action": "Close menus, the viewer, the search or editing a message"
+      }
+    },
+    "sidebar": {
+      "action": "Fold or unfold the sidebar",
+      "detail": "Leaves it as icons to give the conversation more room. In Code, a narrow window already folds it."
+    }
+  },
+  "reply": {
+    "stopped": "The reply was stopped.",
+    "forkSuffix": "(branch)",
+    "chooseModelToFix": "Choose a model so Nyra can fix the change.",
+    "tooLarge": "Your last message doesn't fit in {{model}}'s context: it takes about {{needed, number}} tokens and about {{left, number}} are left. Edit the message to remove an attachment, delete it or choose a model with more context.",
+    "fileVersionFailed": "Nyra couldn't prepare the new version of the file: {{error}}",
+    "changesFailed": "Nyra couldn't prepare the proposed changes: {{error}}",
+    "memoryFailed": "Nyra couldn't save a memory: {{error}}",
+    "noSummary": "The model didn't return a summary.",
+    "summaryStalled": "The model stopped answering while summarizing. You can try again."
+  },
+  "chat": {
+    "private": {
+      "label": "Private",
+      "title": "Private conversation",
+      "description": "It isn't saved and disappears as soon as you leave it."
+    },
+    "isolated": {
+      "label": "Isolated",
+      "title": "Isolated conversation",
+      "description": "Private, and only you, the model and your files: no memories, personalization, skills, web search, folders, commands, browser or MCP connections.",
+      "toggleTitle": "Isolated conversation: it isn't saved and Nyra uses nothing but the model and the files",
+      "cloudWarning": "This model is in the cloud: what you write and attach in this isolated conversation is sent to {{provider}}. To keep everything on your computer, choose a local model."
+    },
+    "privacyChoice": "Kind of conversation",
+    "undo": {
+      "deleted": "Message deleted.",
+      "action": "Undo"
+    },
+    "metadata": {
+      "title": "Metadata",
+      "optional": "Optional",
+      "key": "Key",
+      "value": "Value",
+      "removeNamed": "Remove {{name}}",
+      "removeField": "Remove the field",
+      "add": "Add field"
+    },
+    "summary": {
+      "divider": "Conversation summarized here",
+      "running": "Summarizing the conversation…",
+      "runningDetail": "This can take a few seconds. Wait for it to finish to go on, or cancel it.",
+      "failed": "The conversation couldn't be summarized"
+    },
+    "reasoning": {
+      "thinking": "Thinking… {{seconds}} s",
+      "label": "Reasoning",
+      "thoughtFor": "Thought for {{duration}}"
+    },
+    "versions": {
+      "label": "Reply versions",
+      "previous": "Previous version",
+      "next": "Next version"
+    },
+    "search": {
+      "label": "Search in the conversation",
+      "none": "No results",
+      "position": "{{current}} of {{total}}",
+      "previous": "Previous result",
+      "previousTitle": "Previous (Enter)",
+      "next": "Next result",
+      "nextTitle": "Next (Shift + Enter)",
+      "close": "Close search",
+      "closeTitle": "Close (Esc)",
+      "hint": "Find a text in every message"
+    },
+    "message": {
+      "copy": "Copy reply",
+      "regenerate": "Regenerate reply",
+      "regenerateTitle": "Regenerate with the selected model",
+      "branch": "Branch from this reply",
+      "branchTitle": "Start a new conversation with everything up to here",
+      "statsTitle": "Tokens generated and total reply time",
+      "stats_one": "{{count, number}} token · {{duration}}",
+      "stats_other": "{{count, number}} tokens · {{duration}}"
+    },
+    "user": {
+      "edit": "Edit message",
+      "editTitleFiles": "Edit the text or remove files",
+      "withoutFiles": "It will be sent without the files you removed.",
+      "laterReplaced": "Later messages will be replaced by the new reply.",
+      "send": "Send",
+      "deleteWithConversation": "Delete message and conversation",
+      "delete": "Delete message and its reply",
+      "onlyMessage": "It's the only message: deleting it deletes the conversation.",
+      "deleteConversation": "Delete conversation",
+      "manualSkill": "Skill applied by hand: {{name}}"
+    },
+    "welcome": {
+      "hello": "Hi",
+      "question": "How can I help you today?",
+      "privateToggleTitle": "A private conversation isn't saved and doesn't show in the sidebar ({{shortcut}})",
+      "applySkill": "Apply the “{{name}}” skill to your message",
+      "suggestions": {
+        "writing": {
+          "title": "Write",
+          "description": "A story, an email or a character description"
+        },
+        "summarize": {
+          "title": "Summarize",
+          "description": "Condense a document or a long conversation"
+        },
+        "explain": {
+          "title": "Explain",
+          "description": "Understand a concept step by step"
+        },
+        "plan": {
+          "title": "Plan",
+          "description": "A trip, a study week or a project, step by step"
+        }
+      }
+    },
+    "composer": {
+      "noModels": "No models yet: connect a provider in Settings.",
+      "hidden_one": "{{count, number}} value hidden before sending.",
+      "hidden_other": "{{count, number}} values hidden before sending.",
+      "inputLabel": "Write a message to Nyra",
+      "placeholderSkill": "Write or paste what you want for “{{name}}”…",
+      "placeholderWelcome": "Ask Nyra anything…",
+      "placeholder": "Write a message to Nyra…",
+      "pdfNoImages": "This model doesn't support images: it will only read the PDF's text, without its scanned pages or figures.",
+      "stop": "Stop reply",
+      "send": "Send message",
+      "sensitiveAnnounce": "Warning: the message seems to contain sensitive data ({{labels}}). It will be sent to {{destination}}. Sending isn't blocked.",
+      "skillAnnounce": "Skill {{name}} applied to this message. Backspace to remove it.",
+      "skillMarked": "<name>{{name}}</name> was turned on in this conversation.",
+      "folderError": "The folder couldn't be opened.",
+      "closeError": "Close error message",
+      "placeholderAnswer": "Ask Nyra or tell it what you'd rather do instead of running it…"
+    },
+    "menu": {
+      "more": "More options",
+      "label": "Message options",
+      "attach": "Attach file",
+      "attachHint": "Images, PDFs or text files",
+      "folder": "Connected folder: {{name}}",
+      "readOnly": "Read only",
+      "files_one": "{{count, number}} file · read only",
+      "files_other": "{{count, number}} files · read only",
+      "changeFolder": "Change folder…",
+      "disconnect": "Disconnect",
+      "workWithFolder": "Work with a folder…",
+      "workWithFolderHint": "Nyra will be able to work with your files",
+      "mention": "Mention a file",
+      "mentionHint": "Nyra reads it and sends it with your message",
+      "useSkill": "Use skill",
+      "useSkillLabel": "Use skill. {{active}}: {{names}}",
+      "activeSkills_one": "{{count, number}} skill on",
+      "activeSkills_other": "{{count, number}} skills on",
+      "activeCount_one": "{{count, number}} on",
+      "activeCount_other": "{{count, number}} on",
+      "useSkillHint": "Add specialized instructions to this conversation",
+      "activeTip": "On in this conversation",
+      "activeTipNote": "The model decides in each message whether to use any."
+    },
+    "view": {
+      "usingSkills_one": "Using the {{names}} skill",
+      "usingSkills_other": "Using the {{names}} skills",
+      "using": "Using <name>{{names}}</name>…",
+      "compactBusy": "Wait for Nyra to finish to compact.",
+      "compactNoModel": "Choose a model to compact.",
+      "compactNothing": "Nothing to compact yet: it needs more than one exchange.",
+      "forkBusy": "Wait for Nyra to finish to create another conversation.",
+      "forkEmpty": "The conversation has no messages yet.",
+      "taskSkillTitle": "Every message follows the “{{name}}” skill",
+      "removeTaskSkill": "Remove the {{name}} skill from this conversation",
+      "removeTaskSkillTitle": "Remove the skill",
+      "filesLabel_one": "Conversation files, {{count, number}} attachment",
+      "filesLabel_other": "Conversation files, {{count, number}} attachments",
+      "files": "Files",
+      "processes": "Processes",
+      "processesLabel_one": "{{count}} running process",
+      "processesLabel_other": "{{count}} running processes",
+      "messages": "Messages",
+      "earlier": "{{count, number}} earlier messages · scroll up to see them",
+      "today": "Today",
+      "loading": "Loading conversation…",
+      "fromHere": "From here on, {{model}}",
+      "writing": "Nyra is writing",
+      "close": "Close",
+      "reviewSettings": "Check the settings"
+    },
+    "context": {
+      "parts": {
+        "conversation": "Conversation",
+        "files": "Files",
+        "folder": "Folder “{{name}}”",
+        "skills": "Skills",
+        "memories": "Memories",
+        "instructions": "Nyra's instructions"
+      },
+      "listed": {
+        "conversation": "the conversation",
+        "folder": "the folder “{{name}}”",
+        "files": "the files",
+        "skills": "the skills",
+        "memories": "the memories"
+      },
+      "share": {
+        "almostAll": "almost all of it",
+        "almostHalf": "almost half",
+        "third": "a third",
+        "largest": "the largest share"
+      },
+      "suggestion": {
+        "biggestFile": "<b>“{{name}}” takes up {{share}}.</b> Removing it, or referencing it only when needed, frees up space.",
+        "files": "<b>The files take up {{share}}.</b> Removing or referencing the ones you don't need frees up space.",
+        "conversation": "<b>The conversation takes up {{share}}.</b> When it fills up, Nyra will summarize the older messages. To start fresh, open a new conversation.",
+        "skills": "<b>The skills take up {{share}}.</b> Turn off the ones you don't use in this conversation.",
+        "memories": "<b>The memories take up {{share}}.</b> Delete the ones you no longer need.",
+        "instructions": "<b>The instructions take up {{share}}.</b> Shortening your personalization frees up space."
+      },
+      "modelMaximum": "The model's maximum.",
+      "ringNoData": "Context usage: no data yet",
+      "ringUnknownLimit": "Context usage: about {{used}} tokens, unknown limit",
+      "ring": "Context usage: {{percent}}",
+      "ringCritical": "Context usage: {{percent}}, almost full",
+      "ringHigh": "Context usage: {{percent}}, high usage",
+      "spokenPart": "{{name}}, {{tokens}} tokens",
+      "spokenPartShare": "{{name}}, {{tokens}} tokens, {{share}}",
+      "rowPart": "{{name}}: {{tokens}} tokens",
+      "rowPartShare": "{{name}}: {{tokens}} tokens, {{share}}",
+      "spokenBreakdown": "Approximate breakdown: {{parts}}.",
+      "noData": "Context: no data yet",
+      "noDataHint": "It will be worked out with the next reply.",
+      "coming": "It will include {{parts}}, plus Nyra's instructions.",
+      "headWithTotal": "Context: {{used}} / {{total}} tokens ({{percent}})",
+      "headWithoutTotal": "Context: ≈ {{used}} tokens",
+      "limitNotYetKnown": "Limit not known yet",
+      "limitUnknown": "Unknown limit",
+      "criticalHint": "Almost full: consider starting a new conversation.",
+      "highHint": "High usage. {{free}} tokens left.",
+      "high": "High usage",
+      "critical": "Almost full",
+      "unknownLimitMark": "unknown limit",
+      "breakdown": "Approximate breakdown",
+      "free": "Free",
+      "freeSpoken": "Free: {{tokens}} tokens, {{share}}",
+      "footTotal": "The model reports the total, and the breakdown is an estimate.",
+      "footOllama": "It's all an estimate until Ollama loads the model.",
+      "footProvider": "It's all an estimate: {{provider}} doesn't report this model's context.",
+      "theProvider": "the provider",
+      "autoSize": "Automatic size: Ollama will decide the limit when it loads the model, with the first reply.",
+      "setSize": "To measure it and summarize in time, set the “Context size” in Settings → Providers → {{provider}}.",
+      "yourProvider": "your provider"
+    }
+  },
+  "panel": {
+    "tabs": {
+      "files": "Files",
+      "git": "Git",
+      "pending": "Pending"
+    },
+    "folded": "Folded project panel",
+    "gitChanged_one": "Git, {{count, number}} changed file",
+    "gitChanged_other": "Git, {{count, number}} changed files",
+    "pendingCount": "Pending, {{count, number}}",
+    "label": "{{name}} project panel",
+    "tabsLabel": "Project panel",
+    "close": "Close the project panel",
+    "closeWithShortcut": "Close the panel ({{shortcut}})",
+    "missingTitle": "The folder no longer exists",
+    "missingBody": "I can't find <path>{{path}}</path>.",
+    "findFolder": "Find the folder…",
+    "nothingPendingTitle": "Nothing pending",
+    "nothingPendingBody": "Here you will see the changes and commands in {{name}} waiting for your answer.",
+    "mention": "Mention in the message",
+    "files": {
+      "reading": "Reading the folder…",
+      "empty": "Nyra can't find any files it can read in this folder.",
+      "unreadable": "Nyra can't read this folder right now.",
+      "folder": "{{name}}, folder",
+      "folderWithMarked": "{{name}}, folder, holds files from this conversation",
+      "readHere": "read in this conversation",
+      "proposedHere": "proposed change not reviewed",
+      "appliedHere": "change applied",
+      "which": "Which files to show",
+      "all": "All",
+      "thisConversation": "From this conversation",
+      "legend": "In this conversation:",
+      "read": "read",
+      "proposed": "proposed",
+      "applied": "applied",
+      "treeLabel": "Files of {{name}}",
+      "untouched": "This conversation hasn't touched any file yet.",
+      "truncated": "The folder is very large: only the first files Nyra indexed are shown.",
+      "enterHint": "<kbd>↩</kbd> opens the file, or its review if it has a change to review."
+    },
+    "pending": {
+      "change": "Change not reviewed",
+      "newFile": "New file not reviewed",
+      "command": "Waiting for permission",
+      "commit": "Commit not made",
+      "conversation": "Conversation",
+      "thisConversation": "This conversation",
+      "view": "View",
+      "review": "Review",
+      "viewItem": "View {{name}}",
+      "reviewItem": "Review {{name}}"
+    }
+  },
+  "git": {
+    "status": {
+      "A": "added",
+      "M": "modified",
+      "D": "deleted"
+    },
+    "statusTitle": {
+      "A": "Added",
+      "M": "Modified",
+      "D": "Deleted"
+    },
+    "unavailableTitle": "I can't find Git on this computer",
+    "unavailableBody": "Install it and open Nyra again to see the branch and the changes here.",
+    "notTrustedTitle": "Git doesn't trust this folder",
+    "notTrustedBody": "It belongs to another user of this computer, or it's on an external or network drive. If it's yours, you can allow it from the terminal with <cmd>git config --global --add safe.directory</cmd> and the folder's path.",
+    "notRepoTitle": "This folder isn't a Git repository",
+    "notRepoBody": "Nyra can still read and change files, with a copy of the original and \"Undo\". What's missing is a history to compare with.",
+    "init": "Initialize repository",
+    "ahead_one": "↑{{count, number}} commit not pushed",
+    "ahead_other": "↑{{count, number}} commits not pushed",
+    "upToDate": "Up to date",
+    "refresh": "Read the changes again",
+    "changes": "Changes in the project",
+    "reading": "Reading the Git status…",
+    "noChanges": "No changes since the last commit.",
+    "linesUncounted": "lines not counted",
+    "linesAdded_one": "{{count, number}} line added",
+    "linesAdded_other": "{{count, number}} lines added",
+    "linesRemoved_one": "{{count, number}} removed",
+    "linesRemoved_other": "{{count, number}} removed",
+    "fileLabel": "{{name}}, {{status}}, {{lines}}",
+    "fileInFolderLabel": "{{name}} in {{folder}}, {{status}}, {{lines}}",
+    "changedByNyra": ", changed by Nyra",
+    "byNyra": "by Nyra",
+    "showingFirst": "Showing the first {{shown, number}} of {{total, number}}. If they're generated files (a build folder), add them to .gitignore.",
+    "legend": "A = added, M = modified, D = deleted. Nyra never commits or pushes on its own.",
+    "prepareCommit": "Prepare a commit",
+    "diff": {
+      "kind": "{{status}} · difference with the last commit, read only",
+      "how": "How to show the changes",
+      "unified": "One column",
+      "split": "Two columns",
+      "close": "Close",
+      "reading": "Reading the difference…",
+      "unavailable": "It's a binary file or too large to show here.",
+      "noDifference": "No content differences (maybe only its permissions changed)."
+    },
+    "commit": {
+      "done": "Commit made <id>{{id}}</id> · {{title}}",
+      "discarded": "Commit discarded · {{title}}",
+      "recover": "Restore",
+      "proposed": "Proposed commit",
+      "proposedHint": "Check the message and the files. Nyra doesn't push.",
+      "message": "Commit message",
+      "readingChanges": "Reading the changes…",
+      "nothingToSave": "No changes since the last commit: there's nothing to save.",
+      "files_one": "{{count, number}} file in the commit",
+      "files_other": "{{count, number}} files in the commit",
+      "committing": "Making the commit…",
+      "commit": "Commit",
+      "discard": "Discard"
+    }
+  },
+  "terminal": {
+    "view": "View",
+    "close": "Close (Esc)",
+    "risks": {
+      "delete": {
+        "title": "Deletes files or folders without going through the trash.",
+        "detail": "Whatever it deletes will be gone for good. Run it only if you know what's there or it can be regenerated."
+      },
+      "downloadAndRun": {
+        "title": "Downloads a program from the internet and runs it straight away.",
+        "detail": "It will run whatever is at that address when you press, without letting you read it first. Do it only if you trust the site."
+      },
+      "admin": {
+        "title": "Asks for administrator permissions.",
+        "detail": "It can change things outside the folder. If it asks for the password, you type it in the card itself, hidden, and it isn't kept."
+      },
+      "gitHistory": {
+        "title": "Rewrites Git history or discards unsaved changes.",
+        "detail": "What gets lost this way may not be recoverable."
+      },
+      "outside": {
+        "title": "Touches files outside {{folder}}.",
+        "detail": "Check the path before running it."
+      },
+      "codeDelete": {
+        "title": "Deletes files.",
+        "detail": "What it deletes doesn't go to the trash. Check which files it touches before running it."
+      },
+      "codeRuns": {
+        "title": "Runs other programs or commands.",
+        "detail": "It can do the same as a command in the terminal. Check what it runs."
+      },
+      "codeNetwork": {
+        "title": "Connects to the internet.",
+        "detail": "It can download or send data. Check which address it connects to and what it sends."
+      }
+    },
+    "keptOmitted": "… {{lines}} lines left out …",
+    "card": {
+      "nonZeroHelp": "Many programs end with a code other than 0 when they find something (failing tests, linter warnings, issues from an analysis), not only when something breaks. Check the output.",
+      "notFound": "The program wasn't found",
+      "notRunnable": "It couldn't run",
+      "announce": {
+        "pending": "Nyra wants to run a command and is waiting for your permission.",
+        "running": "The command is running.",
+        "asking": "The command is waiting for your answer.",
+        "done": "The command finished successfully.",
+        "failed": "The command ended with a code other than 0.",
+        "stopped": "You stopped the command."
+      },
+      "rejected": "You didn't run",
+      "queued": "After the previous one",
+      "review": "Check before running",
+      "waiting": "Waiting for your permission",
+      "running": "Running · {{time}}",
+      "asking": "Waiting for your answer",
+      "done": "Finished successfully · {{time}}",
+      "nonZero": "Ended with code {{code}} · {{time}}",
+      "code": "code {{code}}",
+      "stopped": "Stopped by you · after {{time}}",
+      "label": "Command {{command}}",
+      "titlePending": "Nyra wants to run a command",
+      "title": "Command",
+      "in": "in",
+      "skillScript": "Script from the skill «{{name}}»",
+      "viewScript": "View script",
+      "editLabel": "Edit the command",
+      "editedByYou": "Edited by you",
+      "run": "Run",
+      "reject": "Reject",
+      "editBefore": "Edit the command before running it",
+      "edit": "Edit",
+      "useThis": "Use this command",
+      "cancel": "Cancel",
+      "editHelp": "Enter saves · Esc cancels, doesn't run",
+      "stop": "Stop",
+      "noTimeLimit": "It has no time limit: it ends on its own or when you stop it.",
+      "background": "In the background",
+      "backgroundHelp": "Nyra keeps working while it runs and gets the result when it ends.",
+      "detachedHelp": "It keeps running after the reply, and Nyra gets its result with your next message. It stops when Nyra closes.",
+      "answeredInstead": "Not run: you replied"
+    },
+    "answer": {
+      "passwordLabel": "Password for the command",
+      "answerLabel": "Answer for the command",
+      "password": "Password",
+      "placeholder": "Type your answer…",
+      "send": "Send",
+      "noteSecret": "It goes to the command, not to Nyra. It's typed hidden and isn't kept.",
+      "note": "It goes to the command, not to Nyra. Press Enter without typing anything to accept the default option."
+    },
+    "reminder": {
+      "asking": "is waiting for your answer.",
+      "answer": "Answer",
+      "running": "is still running. You can write to Nyra when it finishes, or stop it from its card.",
+      "pendingBefore": "Nyra wants to run",
+      "pendingAfter": "and is waiting for your permission.",
+      "goTo": "Go to the command"
+    },
+    "compact": {
+      "viewOutput": "View the output of {{command}}"
+    },
+    "output": {
+      "live": "Live output",
+      "toEnd": "Go to the end",
+      "lines_one": "Output · {{count, number}} line",
+      "lines_other": "Output · {{count, number}} lines",
+      "copy": "Copy the output",
+      "viewAll": "View all",
+      "earlier_one": "… {{count, number}} line before",
+      "earlier_other": "… {{count, number}} lines before",
+      "lastLines": "Last lines of the output",
+      "empty": "(it showed nothing)"
+    },
+    "reads": {
+      "label": "Parts of the output Nyra read",
+      "text": "Nyra read lines {{from}}–{{to}} of the output",
+      "viewLines": "View lines {{from}} to {{to}}"
+    },
+    "viewer": {
+      "done": "finished successfully",
+      "failed": "ended with a code other than 0",
+      "stopped": "stopped by you",
+      "file": "output.txt",
+      "titlePrefix": "Output of",
+      "lines_one": "{{count, number}} line",
+      "lines_other": "{{count, number}} lines",
+      "searchLabel": "Search the output",
+      "search": "Search",
+      "full": "Full output",
+      "highlighted": "The lines Nyra read are highlighted",
+      "keptUpTo": "It's kept whole in the conversation up to {{lines}} lines.",
+      "copyAll": "Copy all",
+      "saveAs": "Save as…"
+    },
+    "script": {
+      "note": "Script from the skill «{{skill}}». Read it before running it: someone else wrote it.",
+      "reading": "Reading the script…",
+      "copy": "Copy the script"
+    },
+    "group": {
+      "label": "{{n}} proposed commands, in order",
+      "title": "Proposed commands",
+      "order": "· {{n}}, in this order"
+    },
+    "couldNotRun": "Couldn't run: {{error}}",
+    "code": {
+      "titlePending": "Nyra wants to run a program",
+      "title": "Program",
+      "editLabel": "Edit the program",
+      "editBefore": "Edit the program before running it",
+      "useThis": "Use this program",
+      "editHelp": "{{modifier}} Enter saves · Esc cancels, doesn't run",
+      "announce": {
+        "pending": "Nyra wants to run a program and is waiting for your permission.",
+        "running": "The program is running.",
+        "asking": "The program is waiting for your answer.",
+        "done": "The program finished successfully.",
+        "failed": "The program ended with an error.",
+        "stopped": "You stopped the program."
+      },
+      "files_one": "It created {{count, number}} file",
+      "files_other": "It created {{count, number}} files",
+      "save": "Save",
+      "saved": "Saved",
+      "saveFile": "Save {{name}}",
+      "noRuntime": "This computer has nothing to run {{language}} programs with.",
+      "noCommandsHere": "Here Nyra can only run programs, not commands. For commands, connect a folder and turn on \"Run commands in folders\" in Settings.",
+      "conversationFolder": "the conversation's folder"
+    },
+    "processes": {
+      "label": "Running processes",
+      "title": "Processes",
+      "close": "Close processes",
+      "running": "Running",
+      "asking": "Waiting for your answer",
+      "show": "Go to message",
+      "emptyTitle": "Nothing running",
+      "emptyText": "Commands and programs that are still running show here, like a server Nyra left running."
+    }
+  },
+  "code": {
+    "skills": {
+      "explainProject": {
+        "title": "Explain the project",
+        "task": "Explain the project",
+        "description": "Goes through the folder and sums up the architecture, the main pieces and how it runs.",
+        "start": "Explain how this project is organized."
+      },
+      "codeReview": {
+        "title": "Review code",
+        "task": "Review the code",
+        "description": "Reads the Git changes (or the files you choose) and points out bugs, risks and improvements.",
+        "start": "Review my uncommitted changes."
+      },
+      "writeTests": {
+        "title": "Write tests",
+        "task": "Write tests",
+        "description": "Writes tests with the tools the project already uses and runs them with your permission.",
+        "start": "What do you want to test? Mention a file with @…"
+      },
+      "debug": {
+        "title": "Debug",
+        "task": "Debug an error",
+        "description": "Starts from the error or the symptom, finds the cause and proposes the smallest possible fix.",
+        "start": "Paste the error or describe what's failing…"
+      },
+      "refactor": {
+        "title": "Refactor",
+        "task": "Refactor",
+        "description": "Reorganizes without changing behavior, in small steps that are easy to review.",
+        "start": "Which part do you want to reorganize?"
+      },
+      "commitAndPr": {
+        "title": "Commit and PR description",
+        "task": "Prepare a commit",
+        "description": "Sums up your changes in a commit message and a PR description for you to review.",
+        "start": "Prepare the commit message for the current changes."
+      },
+      "updateDependencies": {
+        "title": "Update dependencies",
+        "task": "Update dependencies",
+        "description": "Checks what's outdated or vulnerable and proposes in what order to update it.",
+        "start": "Which dependencies should I update?"
+      },
+      "documentCode": {
+        "title": "Document",
+        "task": "Document",
+        "description": "Writes or updates the README and the comments of the parts you touch.",
+        "start": "What do you want to document?"
+      }
+    }
+  },
+  "projects": {
+    "welcome": {
+      "title": "Code with Nyra in your folders",
+      "folders": "Each project is a folder on your computer, with its conversations inside.",
+      "reads": "Nyra reads and searches the code. Changes and commands wait for your approval.",
+      "local": "Nothing leaves your computer if you use a local model.",
+      "choose": "Choose a folder…"
+    },
+    "drawer": "Sidebar",
+    "space": {
+      "label": "Space",
+      "chat": "Chat",
+      "code": "Code",
+      "title": "{{space}} ({{shortcut}})",
+      "titleWithDraft": "{{space}} ({{shortcut}}). You have an unsent draft here",
+      "labelWithDraft": "{{space}}, you have an unsent draft",
+      "draft": ", you have an unsent draft"
+    },
+    "remove": {
+      "title": "Remove “<name>{{name}}</name>” from Nyra?",
+      "confirm": "Remove",
+      "body": "It disappears from this list with its conversations. The folder and its files <strong>stay on your disk</strong>. If you add it again, you get the conversations back."
+    },
+    "menu": {
+      "findFolder": "Find the folder…",
+      "skills": "Project skills",
+      "remove": "Remove from the list",
+      "removeHint": "The folder isn't deleted",
+      "actionsOf": "Actions for “{{name}}”"
+    },
+    "home": {
+      "branch": "Branch",
+      "unpushed_one": "↑{{count, number}} commit not pushed",
+      "unpushed_other": "↑{{count, number}} commits not pushed",
+      "noGit": "No Git",
+      "notTrusted": "Git not allowed",
+      "notTrustedHint": "Git doesn't trust this folder: it belongs to another user or is on another disk",
+      "modelPreferred": "New conversations start with {{model}}.",
+      "modelDefault": "New conversations start with the main model.",
+      "modelStays": "The one you choose here stays for this project.",
+      "skills": "Skills",
+      "missing": "<strong>I can't find the folder <path>{{path}}</path>.</strong> You may have moved or renamed it, or it may be on a disconnected disk. The conversations are still here and you can read them, but Nyra can't work until you find it.",
+      "reading": "<strong>Nyra is reading the folder</strong>. You can start writing already.",
+      "readingProgress": "<strong>Nyra is reading the folder</strong> so it can search by meaning · {{done}} of {{total}} files. You can start writing already.",
+      "notRepo": "This folder isn't a Git repository. Everything works the same, Git is only for keeping versions.",
+      "initializing": "Initializing…",
+      "initRepo": "Initialize repository",
+      "placeholderMissing": "Find the folder to keep working on this project",
+      "placeholder": "Ask something about {{name}}… start a new conversation",
+      "tasks": "Common tasks",
+      "taskLabel": "{{task}}. Starts a conversation with the {{skill}} skill",
+      "taskLabelNeedsGit": "{{task}}. Starts a conversation with the {{skill}} skill. Needs Git",
+      "needsGit": "Needs Git",
+      "recent": "Recent conversations",
+      "noConversations": "No conversations yet.",
+      "pending": "Waiting for review",
+      "nothingPending": "Nothing pending. Changes to review and commands waiting for permission will show up here."
+    },
+    "sidebar": {
+      "renamed": "Project renamed to “{{name}}”.",
+      "removed": "“{{name}}” was removed from the list.",
+      "restored": "“{{name}}” is back in the list.",
+      "namePlaceholder": "Project name",
+      "renameLabel": "New name for the project",
+      "folderGoneState": "the folder no longer exists",
+      "readingState": "reading the folder",
+      "branchState": "branch {{branch}}",
+      "changes_one": "{{count, number}} change to review",
+      "changes_other": "{{count, number}} changes to review",
+      "commands_one": "{{count, number}} command waiting for permission",
+      "commands_other": "{{count, number}} commands waiting for permission",
+      "folderGone": "The folder no longer exists",
+      "reading": "Reading the folder…",
+      "newProject": "New project",
+      "newProjectHint": ": choose a folder on your computer",
+      "searchLabel": "Search projects and conversations",
+      "search": "Search",
+      "searchHint": "Searches the names of the projects and their conversations ({{shortcut}})",
+      "nav": "Projects",
+      "empty": "<strong>No projects yet.</strong> A project is a folder on your computer: Nyra reads it, proposes changes that you review and keeps the conversations about that code inside it.",
+      "tree": "Projects and their conversations",
+      "undoNotice": "“{{name}}” was removed from the list. The folder is still on your disk.",
+      "undo": "Undo",
+      "closeNotice": "Close the notice",
+      "readError": "The projects couldn't be read: {{error}}"
+    },
+    "rail": {
+      "label": "Folded sidebar",
+      "showSidebar": "Show the sidebar",
+      "folderGone": "the folder no longer exists",
+      "pending_one": "{{count, number}} pending",
+      "pending_other": "{{count, number}} pending"
+    },
+    "skillsDialog": {
+      "title": "{{name}} skills",
+      "close": "Close",
+      "intro": "They come with Nyra for coding. The ones that are on show up in the home's tasks, and Nyra uses them when your message fits them.",
+      "included": "Included",
+      "needsGit": "Needs Git: this folder isn't a repository.",
+      "note": "Your own skills are turned on in each conversation with “/” or the + menu, as in the chat."
+    },
+    "name": {
+      "required": "Write a name for the project.",
+      "tooLong": "{{max}} characters at most: {{extra}} too many."
+    },
+    "git": {
+      "none": "no Git",
+      "notTrusted": "Git not allowed"
+    }
+  },
+  "workspace": {
+    "close": "Close",
+    "disconnect": "Disconnect",
+    "thisModel": "this model",
+    "files_one": "{{count, number}} file",
+    "files_other": "{{count, number}} files",
+    "matches_one": "{{count, number}} match",
+    "matches_other": "{{count, number}} matches",
+    "fragments_one": "{{count, number}} fragment",
+    "fragments_other": "{{count, number}} fragments",
+    "inFiles": "{{what}} in {{files}}",
+    "chip": {
+      "reading": "reading…",
+      "doesNotFit": "doesn't fit",
+      "nothingReadable": "nothing readable",
+      "noAccess": "no access",
+      "labelReady": "Connected folder: {{name}}, {{files}}. See details",
+      "labelReadyNote": "Connected folder: {{name}}, {{files}}, {{note}}. See details",
+      "label": "Folder {{name}}. See details",
+      "labelNote": "Folder {{name}}: {{note}}. See details",
+      "disconnectFolder": "Disconnect the folder {{name}}",
+      "connectedReadOnly": "Connected to this conversation · read only",
+      "readableFiles": "readable files",
+      "binariesAndSecrets": "binaries and secrets",
+      "indexTokens": "index tokens",
+      "indexTokensSummarized": "index tokens (summarized)",
+      "meaning": "Search by meaning:",
+      "meaningReady": "ready ({{model}})",
+      "meaningPreparing": "preparing the folder · {{done}} of {{total}} files",
+      "meaningUnavailable": "needs an embedding model in Ollama, such as qwen3-embedding:0.6b.",
+      "meaningError": "couldn't be prepared ({{message}}). Nyra searches for exact words.",
+      "whatNot": "What Nyra doesn't read",
+      "ignoredGit": "Whatever <mono>.gitignore</mono> lists, and <mono>node_modules</mono>: it doesn't search or list them, and only reads one if it asks for its exact path.",
+      "ignoredHidden": "<mono>.git</mono>, cache folders and hidden environments, and binaries that aren't images.",
+      "ignoredSecrets": "Secret files such as <mono>.env</mono>: never. In other files, values that look like passwords or keys are hidden before they're sent to the model.",
+      "rereads": "It's read again before every message, so it sees new files and changes.",
+      "change": "Change…"
+    },
+    "privacy": {
+      "cloud": "With {{model}}, only the files and fragments Nyra reads are sent to {{provider}}. The whole folder never leaves your computer.",
+      "local": "With {{model}} (local), nothing leaves your computer."
+    },
+    "notice": {
+      "gotIt": "Got it",
+      "missingTitle": "The folder {{name}} can't be found.",
+      "missingText": "It was in <path>{{path}}</path>. It may have been moved, renamed or deleted. Until you find it, Nyra answers without it.",
+      "findIt": "Find it…",
+      "noAccessTitle": "Nyra doesn't have permission to read {{name}}.",
+      "noAccessText": "The system blocks access to <path>{{path}}</path>. Choose it again to grant access.",
+      "giveAccess": "Grant access…",
+      "errorTitle": "The folder {{name}} couldn't be read.",
+      "errorText": "{{message}} Meanwhile, Nyra answers without it.",
+      "chooseAnother": "Choose another folder…",
+      "emptyTitle": "There's nothing Nyra can read in {{name}}.",
+      "emptyText": "It only has files Nyra can't read, such as binaries or archives, or its .gitignore excludes them. Nyra reads text, code, PDFs and images.",
+      "tooBigTitle": "The index of {{name}} doesn't fit in {{model}}.",
+      "tooBigText": "Not even summarized by folder does it fit in its share of the context. Nyra answers without the folder until you connect a subfolder or choose a model with more context.",
+      "connectSubfolder": "Connect a subfolder…",
+      "readingTitle": "Reading the folder…",
+      "readingText": "Nyra is indexing the paths, without reading the contents yet. You can keep typing.",
+      "cloudTitle": "With {{model}}, what Nyra reads will be sent to {{provider}}.",
+      "cloudText": "Only the files and fragments it needs to answer, not the whole folder. With a local model, nothing leaves your computer."
+    },
+    "skip": {
+      "secret": "A secrets file. Nyra never reads them.",
+      "ignored": "Ignored: .gitignore, hidden file or dependencies.",
+      "outside": "It's outside the connected folder.",
+      "binary": "It isn't a text file.",
+      "tooLarge": "It's too large: over 2 MB, or 10 MB for a PDF, an image or a spreadsheet.",
+      "missing": "It doesn't exist in the folder.",
+      "unreadable": "It couldn't be opened: it may be damaged or password-protected.",
+      "noText": "The PDF has no text or anything else to show.",
+      "scannedNoVision": "The PDF is scanned pages and this model doesn't read images. Use one with vision.",
+      "imageNoVision": "It's an image and this model doesn't read images. Use one with vision.",
+      "readOnly": "Nyra can't write this format (.xls, .ods) without risking losing formatting. It can save the changes to a new .xlsx copy next to the original, which stays untouched.",
+      "sheetProtected": "The sheet is protected in Excel. Nyra doesn't remove protections: unprotect it if you want the change."
+    },
+    "steps": {
+      "modified_one": "{{count, number}} modified",
+      "modified_other": "{{count, number}} modified",
+      "added_one": "{{count, number}} new",
+      "added_other": "{{count, number}} new",
+      "removed_one": "{{count, number}} deleted",
+      "removed_other": "{{count, number}} deleted",
+      "noChanges": "no changes",
+      "linesOf": "{{shown}} of {{total}} lines",
+      "ready": "Folder ready",
+      "checking": "Checking the folder for changes",
+      "compacting": "Summarizing what was read to keep going",
+      "compactedDetail_one": "{{count, number}} result removed, kept in its notes",
+      "compactedDetail_other": "{{count, number}} results removed, kept in their notes",
+      "changedSinceRead": "<path>{{path}}</path> changed since it was read",
+      "opening": "Opening <path>{{path}}</path>",
+      "outline": "Looking at the outline of <path>{{path}}</path>",
+      "outlineAll": "Looking at the outline of <path>the folder</path>",
+      "definitions_one": "{{count, number}} definition",
+      "definitions_other": "{{count, number}} definitions",
+      "noMatches": "no matches",
+      "searching": "Searching for <path>{{query}}</path>",
+      "nothingSimilar": "nothing similar",
+      "searchingMeaning": "Searching by meaning for <path>{{query}}</path>",
+      "readingLines": "Reading lines {{from}}–{{to}} of <path>{{path}}</path>",
+      "reading": "Reading <path>{{path}}</path>",
+      "ignoredByGit": "ignored by .gitignore",
+      "hiddenSecrets_one": "{{count, number}} secret hidden",
+      "hiddenSecrets_other": "{{count, number}} secrets hidden",
+      "notRead": "Not read: <path>{{path}}</path>",
+      "ran": "Ran <path>{{command}}</path>",
+      "outputLines_one": "{{count, number}} line",
+      "outputLines_other": "{{count, number}} lines",
+      "outputRead": "Reading lines {{from}}–{{to}} of the output of <path>{{command}}</path>",
+      "outputSearch": "Searching for <path>{{query}}</path> in the output of <command>{{command}}</command>",
+      "consulting": "Looking through the folder",
+      "label": "Steps in the folder",
+      "earlier_one": "{{count, number}} earlier step",
+      "earlier_other": "{{count, number}} earlier steps"
+    },
+    "consult": {
+      "searches_one": "{{count, number}} search",
+      "searches_other": "{{count, number}} searches",
+      "folders_one": "{{count, number}} folder",
+      "folders_other": "{{count, number}} folders",
+      "notRead_one": "{{count, number}} not read",
+      "notRead_other": "{{count, number}} not read",
+      "usedAllSteps": "used all its steps",
+      "stoppedStuck": "stopped exploring because it wasn't making progress",
+      "label": "Looked through the folder: {{details}}. See details",
+      "consulted": "Looked through the folder",
+      "noMoreSteps": "no more steps",
+      "stopped": "stopped making progress",
+      "title": "What Nyra looked at",
+      "inFolder": "In <path>{{folder}}</path> for this reply",
+      "readWhole": "Read in full",
+      "someLines": "Only some lines",
+      "linesOf": "lines {{from}}–{{to}} of {{total}} · {{size}} file",
+      "foundByMeaning": "Found by meaning",
+      "foundBySearch": "Found by searching for",
+      "nothingSimilar": "Nothing similar.",
+      "noMatches": "No matches.",
+      "openFolders": "Folders opened",
+      "outlines": "Code outlines",
+      "guides": "Project instructions it followed",
+      "wholeFolder": "the whole folder",
+      "notReadTitle": "Not read",
+      "openInViewer": "Open {{path}} in the viewer",
+      "openInViewerShort": "Open in the viewer",
+      "compacted_one": " · what was read was summarized once to keep exploring",
+      "compacted_other": " · what was read was summarized {{count, number}} times to keep exploring",
+      "footer": "≈ {{tokens}} tokens read{{compacted}}. The contents aren't saved in the conversation, only this list: if you ask again, Nyra reads the current version."
+    },
+    "mention": {
+      "header": "Mention a file from the folder",
+      "none": "No file matches <mono>@{{query}}</mono>",
+      "hint": "Try another part of the name, or press Esc to type it as text.",
+      "files": "Files in the folder"
+    },
+    "viewer": {
+      "cannotOpen": "{{path}} can't be opened. {{reason}}",
+      "openFailed": "{{path}} couldn't be opened: {{error}}",
+      "revealFailed": "{{path}} couldn't be shown: {{error}}"
+    }
+  },
+  "changes": {
+    "state": {
+      "pending": "not reviewed",
+      "applied": "applied",
+      "discarded": "discarded",
+      "undone": "undone",
+      "noMatch": "doesn't fit",
+      "conflict": "changed on disk",
+      "protected": "can't be applied",
+      "fixing": "being fixed",
+      "reviewed": "reviewed",
+      "reviewedNotApplied": "reviewed, not applied"
+    },
+    "linesAdded_one": "{{count, number}} line added",
+    "linesAdded_other": "{{count, number}} lines added",
+    "linesRemoved_one": "{{count, number}} removed",
+    "linesRemoved_other": "{{count, number}} removed",
+    "blocks_one": "{{count, number}} change",
+    "blocks_other": "{{count, number}} changes",
+    "files_one": "{{count, number}} file",
+    "files_other": "{{count, number}} files",
+    "totalLines_one": "{{count, number}} line",
+    "totalLines_other": "{{count, number}} lines",
+    "sizeSheet": "spreadsheet, {{sheets}}",
+    "sizeNew": "new file, {{added}}, {{removed}}",
+    "sizeEdit": "edit, {{added}}, {{removed}}",
+    "lines": "<added>+{{added}}</added> <removed>−{{removed}}</removed> lines",
+    "tag": {
+      "spreadsheet": "Spreadsheet",
+      "newFile": "New file",
+      "edit": "Edit",
+      "byClaudeCode": "Made in Claude Code",
+      "applied": "Applied",
+      "discarded": "Discarded",
+      "undone": "Undone",
+      "fixing": "Fixing…",
+      "corrected": "Fixed",
+      "failedOf": "{{block}} of {{total}} doesn't fit",
+      "noMatch": "Doesn't fit",
+      "exists": "Already exists",
+      "changedOnDisk": "Changed on disk",
+      "reviewed": "Reviewed",
+      "sheetProtected": "Protected sheet",
+      "readOnly": "Read only",
+      "protected": "Protected"
+    },
+    "action": {
+      "review": "Review",
+      "apply": "Apply",
+      "applyPath": "Apply {{path}}",
+      "applyPathUnreviewed": "Apply {{path}}: review it first",
+      "create": "Create",
+      "createFile": "Create file",
+      "reviewFirst": "Review it before applying it",
+      "discard": "Discard",
+      "discardPath": "Discard {{path}}",
+      "discardAll": "Discard all",
+      "applyAll": "Apply all {{total}}",
+      "undo": "Undo",
+      "viewApplied": "See the applied changes",
+      "restore": "Restore the proposal",
+      "view": "View",
+      "reapply": "Apply again",
+      "askAgain": "Ask again",
+      "askFix": "Ask for a fix",
+      "askNyraFix": "Ask Nyra to fix it",
+      "askNyraRedo": "Ask Nyra to redo it",
+      "convert": "Create a .xlsx copy",
+      "copyChange": "Copy the change"
+    },
+    "reason": {
+      "copied": "Copy created: {{path}}. The original didn't change.",
+      "cellsNoMatch": "A sheet or cell Nyra wanted to change no longer exists in the file. Nothing in this file is applied until Nyra redoes it.",
+      "cellsConflict": "The file changed after Nyra read it (maybe you had it open in Excel). So as not to overwrite your changes, it isn't applied.",
+      "undone": "The file is back to how it was before the change.",
+      "noMatch": "One of the changes doesn't match what's in the file: Nyra copied the lines it wanted to replace wrong. Nothing in this file is applied until Nyra fixes it.",
+      "exists": "A file with that name already exists. So as not to overwrite it, it isn't created.",
+      "conflict": "The file changed after Nyra read it (maybe in your editor). So as not to overwrite your changes, it isn't applied.",
+      "protectedNote": "Nyra doesn't write there. If you want the change, copy it and make it yourself."
+    },
+    "review": {
+      "label": "Review of the proposed changes",
+      "back": "Chat",
+      "willCreateIn": "Will be created in",
+      "theFolder": "the folder",
+      "close": "Close the review (Esc)",
+      "newFileLegend": "The full proposed content. There's no original.",
+      "view": "View",
+      "table": "Table",
+      "sideBySide": "Side by side",
+      "needsWider": "Needs a wider window",
+      "unified": "Unified",
+      "firstRowHeader": "The first row is the header",
+      "removed": "removed",
+      "added": "added",
+      "previous": "Previous change ({{keys}})",
+      "next": "Next change ({{keys}})",
+      "position": "Change {{current}} of {{total}}",
+      "conflictExists": "{{path}} already exists.",
+      "conflictChanged": "{{path}} changed on disk after Nyra read it.",
+      "conflictNote": "What you see is what Nyra proposed. It isn't applied because it could overwrite your changes.",
+      "noMatchBlock": "Change {{block}} doesn't fit the current file.",
+      "noMatchExplain": "Nyra wanted to replace some lines, but they aren't written that way in the file (maybe it copied them wrong).",
+      "expected": "Nyra expected to find:",
+      "diffOf": "Differences in {{path}}",
+      "reading": "Reading the file…",
+      "tableOf": "Changes to {{path}} as a table",
+      "appliedByClaudeCode": "Claude Code already made this change. Nyra has no copy from before, so it can't be undone here.",
+      "appliedBackup": "Applied. Nyra saved a copy of the original.",
+      "cantApply": "It can't be applied until Nyra redoes it.",
+      "noWrite": "Nyra doesn't write to this file.",
+      "discarded": "Discarded.",
+      "willCreate": "The file will be created.",
+      "backupFirst": "A copy is saved before writing.",
+      "keepsCsv": "The separator {{separator}}, the encoding ({{encoding}}) and the line endings ({{eol}}) are kept.",
+      "keepsText": "The encoding ({{encoding}}) and the {{eol}} line endings are kept.",
+      "tabsLabel": "Proposed files"
+    },
+    "diff": {
+      "wholeContent": "Full content",
+      "blockHeader": "Change {{block}} of {{total}} · line {{line}}",
+      "notFit": "This change doesn't fit the current file.",
+      "notFitExplain": "Nyra wanted to replace some lines, but they aren't written that way in the file (maybe it copied them wrong). It can't be applied as it is.",
+      "showUnchanged_one": "Show {{count, number}} unchanged line, from line {{from}}",
+      "showUnchanged_other": "Show {{count, number}} unchanged lines, from line {{from}}",
+      "fold_one": "… {{count, number}} unchanged line · Show",
+      "fold_other": "… {{count, number}} unchanged lines · Show",
+      "splitLabel": "Original on the left, proposed on the right",
+      "unifiedLabel": "Changes in one column",
+      "originalLine": "Original line",
+      "sign": "Sign",
+      "original": "Original",
+      "proposedLine": "Proposed line",
+      "proposed": "Proposed",
+      "text": "Text"
+    },
+    "proposals": {
+      "label": "Proposed changes",
+      "decided": "{{decided}} of {{total}} decided",
+      "allReviewed": "You've reviewed all {{total}}. They'll be applied one after another, and each one can be undone.",
+      "reviewEach": "Review each file to apply them all at once · {{reviewed}} of {{total}} reviewed",
+      "pendingNotice_one": "<strong>{{count, number}} proposed change still undecided</strong> in an earlier reply. It's still waiting and nothing has been written.",
+      "pendingNotice_other": "<strong>{{count, number}} proposed changes still undecided</strong> in an earlier reply. They're still waiting and nothing has been written.",
+      "goTo_one": "Go to it",
+      "goTo_other": "Go to them",
+      "hideUntilNext": "Hide until the next proposal",
+      "preparing": "Preparing changes",
+      "preparingDots": "Preparing changes…"
+    },
+    "error": {
+      "copyFailed": "Nyra couldn't create the .xlsx copy: the file seems damaged.",
+      "fileGone": "The file is no longer in the folder, or Nyra can't read it.",
+      "tooLargeToFix": "The file is too large to fix here. Ask Nyra in the chat.",
+      "fixFailed": "Nyra didn't get the lines right this time either. Ask in the chat, explaining what you want.",
+      "undoConflict": "The file changed after the change was applied, and undoing it would lose those changes.",
+      "backupGone": "The copy of the original is gone (copies are kept for 30 days)."
+    },
+    "ask": {
+      "cellsConflict": "{{path}} changed after you read it. Read it again and propose the change again.",
+      "cellsMissing": "A sheet or cell you wanted to change in {{path}} no longer exists. Read it again and propose the change again.",
+      "takenName": "There's already a file at {{path}}. Read it and propose the change on top of it."
+    },
+    "announce": {
+      "fixed": "The change to {{name}} was fixed. Review it before applying it.",
+      "applied": "{{name}} applied. Nyra saved a copy of the original.",
+      "undone": "Undone. {{name}} is back to how it was.",
+      "discarded": "The change to {{name}} was discarded.",
+      "copied": "Copy created next to {{name}}. The original didn't change."
+    },
+    "csv": {
+      "tab": "tab",
+      "quoted": "“{{separator}}”"
+    }
+  },
+  "cells": {
+    "kind": {
+      "modified": "Modified",
+      "added": "New",
+      "emptied": "Emptied",
+      "formula": "Formula"
+    },
+    "legend": {
+      "modified": "modified",
+      "added": "new",
+      "emptied": "emptied",
+      "formula": "formula"
+    },
+    "count_one": "{{count, number}} cell",
+    "count_other": "{{count, number}} cells",
+    "sheetCount_one": "{{count, number}} sheet",
+    "sheetCount_other": "{{count, number}} sheets",
+    "empty": "empty",
+    "spokenFormulaNew": "formula {{formula}}, a value calculated when the file opens",
+    "spokenFormula": "formula {{formula}}, value {{value}}",
+    "notCalculated": "not calculated",
+    "currentValue": "= {{value}} (current value)",
+    "calculatedInExcel": "The new value is calculated when the file opens in Excel",
+    "calculatedShort": "calculated when opened in Excel",
+    "spokenCell": "{{cell}}{{around}}, {{kind}}: before {{before}}, after {{after}}",
+    "csvSpoken": "{{column}}, row {{row}}: before {{before}}, after {{after}}",
+    "sheetChanges_one": "Sheet {{sheet}}: {{count, number}} proposed change",
+    "sheetChanges_other": "Sheet {{sheet}}: {{count, number}} proposed changes",
+    "row": "Row",
+    "rowsRange": "Rows {{from}} to {{to}}",
+    "rowsFold": "Rows {{from}}–{{to}} unchanged · Show",
+    "columnsShow": "Show columns {{from}} to {{to}}, unchanged",
+    "columnsTitle": "Columns {{from}}–{{to}} unchanged",
+    "listOf": "Changes in {{label}}",
+    "cell": "Cell",
+    "type": "Type",
+    "before": "Before",
+    "to": "to",
+    "after": "After",
+    "sheets": "Sheets",
+    "grid": "Grid",
+    "list": "List",
+    "newRow": "new row",
+    "removedRow": "removed row",
+    "panel": {
+      "label": "Review of the changes in {{path}}",
+      "tag": "Spreadsheet · {{extension}}",
+      "cellsInSheets": "{{cells}} in {{sheets}}",
+      "conflict": "<strong>{{name}} changed on disk after Nyra read it</strong> (maybe you had it open in Excel). Applying it could overwrite your changes, so it isn't applied.",
+      "noMatch": "<strong>A sheet or cell Nyra wanted to change no longer exists in the file.</strong> Nothing in this file is applied until Nyra redoes it.",
+      "reading": "Reading the spreadsheet…",
+      "savedIn": "Saved in {{path}}. The original didn't change.",
+      "appliedBackup": "Applied. The copy of the original is saved.",
+      "copyNote": "The changes are saved in a new .xlsx copy next to the original, which isn't touched.",
+      "backupNote": "A copy of the original is saved. Formats, charts and macros aren't touched."
+    }
+  },
+  "attachments": {
+    "errors": {
+      "passwordProtected": "“{{name}}” is password protected.",
+      "pdfDamaged": "Couldn't read “{{name}}”. The PDF may be damaged.",
+      "pdfTextTooLarge": "The text of “{{name}}” is over the 1 MB limit.",
+      "over10MB": "“{{name}}” is over the 10 MB limit.",
+      "over1MB": "“{{name}}” is over the 1 MB limit.",
+      "spreadsheetUnreadable": "Couldn't read “{{name}}”. It may be damaged or password protected.",
+      "notText": "“{{name}}” doesn't look like a text file.",
+      "unsupported": "“{{name}}” isn't a supported file type.",
+      "imageOpen": "Couldn't open the image.",
+      "imagePrepare": "Couldn't prepare the image.",
+      "pageUnreadable": "Couldn't read “{{domain}}”: {{error}}",
+      "saveFailed": "Couldn't save {{name}}: {{error}}"
+    },
+    "imagesUnsupported": "This model doesn't accept images. Choose a model with vision or remove the image.",
+    "help": "Supported: images, PDFs, audio and text or code files.",
+    "pastedName": "capture",
+    "types": {
+      "spreadsheet": "Spreadsheet",
+      "text": "Text",
+      "webPage": "Web page",
+      "image": "Image",
+      "imageFormat": "{{format}} image"
+    },
+    "webPageFrom": "Web page · {{domain}}",
+    "pages_one": "{{count, number}} page",
+    "pages_other": "{{count, number}} pages",
+    "lines_one": "{{count, number}} line",
+    "lines_other": "{{count, number}} lines",
+    "state": {
+      "complete": {
+        "label": "Complete",
+        "hint": "Nyra sees this whole file: it's in the recent messages."
+      },
+      "summarized": {
+        "label": "In the summary",
+        "hint": "Nyra only knows a summary of this file. Reference it so it reads it in full again."
+      },
+      "referenced": {
+        "label": "Referenced",
+        "hint": "You sent it again with “Reference”. Nyra sees it in full again."
+      }
+    },
+    "panel": {
+      "label": "Files in this conversation",
+      "title": "Files",
+      "close": "Close the files panel",
+      "show": "Show files",
+      "filters": {
+        "all": "All",
+        "uploaded": "Uploaded",
+        "generated": "By Nyra"
+      },
+      "emptyTitle": "No files in this conversation yet",
+      "emptyText": "The images and files you attach, and the documents Nyra creates, will show up here.",
+      "inContext": "In context",
+      "inSummary": "In the summary",
+      "summaryNote": "Nyra only knows what the summary says about these files."
+    },
+    "row": {
+      "open": "Open {{name}}",
+      "byNyra": "Created by Nyra",
+      "pendingLabel": "{{name}} is already in your next message",
+      "reference": "Reference {{name}}",
+      "pendingTip": "Already in your next message",
+      "referenceTip": "Send this file again in your next message",
+      "menu": "Options for “{{name}}”",
+      "showMessage": "Show message"
+    },
+    "chip": {
+      "view": "View {{name}}",
+      "viewReference": "View the reference to {{name}}",
+      "remove": "Remove {{name}}",
+      "removeReference": "Remove the reference to {{name}}",
+      "reference": "Reference"
+    },
+    "composer": {
+      "list": "Attachments",
+      "readingPdf": "Reading PDF…",
+      "pdfProgress": "{{page}} of {{pages}} pages",
+      "readingPage": "Reading page…",
+      "closeError": "Dismiss the error message"
+    },
+    "viewer": {
+      "copyText": "Copy text",
+      "copy": "Copy",
+      "openInBrowser": "Open in browser",
+      "close": "Close the viewer",
+      "page": "Page {{page}} of {{pages}}",
+      "pdfFailed": "Couldn't show the PDF. It may be damaged.",
+      "openingPdf": "Opening the PDF…"
+    },
+    "drop": {
+      "files": "Files",
+      "count_one": "{{count, number}} file",
+      "count_other": "{{count, number}} files",
+      "title": "Drop the files to attach them",
+      "subtitle": "Images, PDFs and text or code files"
+    },
+    "versions": {
+      "suffix": "(version {{number}})",
+      "errors": {
+        "readOnly": "Nyra can only read {{file}}: .xls and .ods files aren't modified.",
+        "sheetMissing": "There's no sheet “{{sheet}}” in {{file}}.",
+        "sheetProtected": "The sheet “{{sheet}}” is protected in Excel, and Nyra doesn't remove protections.",
+        "badCell": "“{{cell}}” isn't a valid cell.",
+        "damaged": "Couldn't modify {{file}}: the file seems damaged.",
+        "noAttachment": "There's no attached file called {{file}}."
+      },
+      "group": {
+        "attachedByYou": "You attached it",
+        "copyOfOriginal": "Copy of the original",
+        "copyOfVersion": "Copy of version {{number}}",
+        "count_one": "{{count, number}} version",
+        "count_other": "{{count, number}} versions",
+        "originalUnchanged": "the original attachment doesn't change",
+        "list": "Versions of {{name}}, from newest to original",
+        "original": "Original",
+        "version": "Version {{number}}",
+        "latest": "the latest",
+        "nextChanges": "Nyra will make the next changes on this one",
+        "viewChangesOf": "View the changes in version {{number}}",
+        "viewChanges": "View changes",
+        "saveAs": "Save as…",
+        "saveOriginal": "Save the original as…",
+        "saveVersion": "Save version {{number}} as…",
+        "continueFromOriginal": "Continue from the original",
+        "continueFromVersion": "Continue from version {{number}}",
+        "continueTip": "Continue from this one: the next changes will start here"
+      },
+      "cards": {
+        "label": "New versions of attached files",
+        "failedLabel": "{{file}}: the new version couldn't be made",
+        "noNewVersion": "No new version",
+        "unchanged": "Your attachment didn't change.",
+        "theOriginal": "the original",
+        "theVersion": "version {{number}}",
+        "cardLabel": "{{file}}, version {{number}}: {{summary}}. Your attachment doesn't change",
+        "copyOf": "copy of {{from}}",
+        "fileVersion": "{{file}} · version {{number}}",
+        "newCopy": "New copy",
+        "sameAs": "Same as {{from}}",
+        "notChanging": "· your attachment doesn't change"
+      },
+      "panel": {
+        "label": "Changes to {{file}}, version {{number}}",
+        "back": "Chat",
+        "spreadsheet": "Spreadsheet · {{ext}}",
+        "cellsInSheets": "{{cells}} in {{sheets}}",
+        "cells_one": "{{count, number}} cell",
+        "cells_other": "{{count, number}} cells",
+        "sheets_one": "{{count, number}} sheet",
+        "sheets_other": "{{count, number}} sheets",
+        "comparedOriginal": "Compared with the original",
+        "comparedVersion": "Compared with version {{number}}",
+        "close": "Close the review (Esc)",
+        "reviewLabel": "{{file}}, version {{number}}",
+        "gone": "This version is no longer in the conversation.",
+        "footer": "The file you attached doesn't change: this is version {{number}}, saved in the conversation."
+      }
+    }
+  },
+  "documents": {
+    "defaultTitle": "Document",
+    "fallbackName": "document",
+    "label": "Document: {{title}}",
+    "writing": "Writing…",
+    "copy": "Copy",
+    "less": "Show less",
+    "more": "Show the whole document",
+    "save": {
+      "idle": "Save…",
+      "saving": "Saving…",
+      "saved": "Saved",
+      "error": "Couldn't save"
+    },
+    "saveMenu": "Save the document",
+    "markdownHint": "The text as is, to edit it or use it in another app",
+    "markdownZip": "Markdown with images (.zip)",
+    "markdownZipHint": "The text and its images together: unzipped, any Markdown editor shows them",
+    "pdfHint": "Ready to read, print or send",
+    "pdfFailed": "Couldn't create the PDF.",
+    "diagramCode": "Diagram (Mermaid)"
+  },
+  "share": {
+    "done": {
+      "copy": "Image copied",
+      "save": "Image saved",
+      "markdown": "Markdown saved",
+      "pdf": "PDF saved"
+    },
+    "share": "Share reply",
+    "copyImage": "Copy image",
+    "copyImageHint": "Your question and this reply, to paste into another app",
+    "saveImage": "Save as image",
+    "saveImageHint": "Choose where to save the image",
+    "saveMarkdown": "Save as Markdown",
+    "saveMarkdownHint": "The reply's text in an .md file",
+    "savePdf": "Save as PDF",
+    "savePdfHint": "The reply as a document, ready to read or send",
+    "fileName": "nyra-reply",
+    "pdfTitle": "Nyra's reply",
+    "imageFailed": "Couldn't create the image of the message.",
+    "referenced_one": "{{count, number}} referenced file",
+    "referenced_other": "{{count, number}} referenced files",
+    "sources": "Sources"
+  },
+  "capture": {
+    "hint": "Drag to choose the area · Esc to cancel"
+  },
+  "providers": {
+    "contextOf": "{{size}} context",
+    "missingKey": "Add your {{name}} API key in Settings → Providers → {{name}}.",
+    "connectionCloud": "Couldn't connect to {{name}}. Check your internet connection.",
+    "connectionLocal": "Couldn't connect to {{name}}. Is its local server running?",
+    "invalidKey": "The {{name}} API key isn't valid.",
+    "forbidden": "Your {{name}} API key doesn't have permission for this.",
+    "forbiddenDetail": "Your {{name}} API key doesn't have permission for this: {{detail}}",
+    "notFound": "{{name}} can't find that model or address.",
+    "notFoundDetail": "{{name}} can't find that model or address: {{detail}}",
+    "rateLimit": "You've reached {{name}}'s usage limit. Wait a little and try again.",
+    "serverError": "{{name}}'s servers failed. Try again in a moment.",
+    "rejected": "{{name}} rejected the request ({{status}}).",
+    "rejectedDetail": "{{name}} rejected the request: {{detail}}",
+    "unreadable": "{{name}} sent a reply that couldn't be read.",
+    "replyError": "{{name}} replied with an error: {{detail}}",
+    "noDetails": "no details",
+    "filtered": "{{name}} cut the reply off with its safety filters.",
+    "anthropic": {
+      "description": "Anthropic's Claude models, in the cloud. You need an API key from console.anthropic.com.",
+      "notFound": "That Claude model doesn't exist or your account doesn't have access to it.",
+      "overloaded": "Anthropic's servers are overloaded or failed. Try again in a moment.",
+      "refusal": "Claude declined to answer this message. Try rephrasing it or choose another model.",
+      "refusalReason": "Claude declined to answer this message (reason: {{reason}}). Try rephrasing it or choose another model."
+    },
+    "openai": {
+      "description": "OpenAI's GPT models, in the cloud. You need an API key from platform.openai.com: a ChatGPT subscription won't work."
+    },
+    "gemini": {
+      "description": "Google's Gemini models, in the cloud. You need an API key from aistudio.google.com."
+    },
+    "lmstudio": {
+      "description": "Models that run with LM Studio on your computer. Turn on its local server in the Developer section."
+    },
+    "ollama": {
+      "description": "Models that run with Ollama, on your computer or another one on your network.",
+      "connection": "Couldn't connect to Ollama. Is it open?",
+      "status": "Ollama replied {{status}}",
+      "statusDetail": "Ollama replied {{status}}: {{detail}}",
+      "noEmbeddings": "Ollama didn't return the texts' embeddings."
+    }
+  },
+  "models": {
+    "available": "Available models",
+    "default": "Main",
+    "contextTokens": "{{tokens, number}} tokens of context",
+    "isDefaultLabel": "{{name}} is the main model",
+    "useAsDefaultLabel": "Use {{name}} as the main model",
+    "defaultTitle": "Main model. Press to remove it.",
+    "useAsDefault": "Use as main",
+    "percent": "{{percent}}%",
+    "place": {
+      "local": "this computer",
+      "remote": "the computer {{host}}"
+    },
+    "groups": {
+      "cloud": "{{name}} · in the cloud",
+      "local": "{{name}} · on your computer"
+    },
+    "capabilities": {
+      "readsImages": "Reads images",
+      "readsFiles": "Takes files",
+      "thinks": "Reasons"
+    },
+    "visibility": {
+      "showLabel": "Show {{name}} in the chat's model picker",
+      "hideLabel": "Hide {{name}} from the chat's model picker",
+      "hiddenTitle": "Hidden from the chat's model picker. Click to show it.",
+      "hideTitle": "Hide from the chat's model picker"
+    },
+    "apiKeys": {
+      "readAll": "The saved API keys couldn't be read: {{error}}",
+      "read": "The saved API key couldn't be read: {{error}}",
+      "save": "The API key couldn't be saved: {{error}}",
+      "delete": "The saved API key couldn't be deleted: {{error}}"
+    },
+    "form": {
+      "nameMissing": "Type a model's name, for example qwen3:8b.",
+      "nameInvalid": "The name can only have letters, numbers, dots, hyphens and \":\" for the tag.",
+      "installed": "{{name}} is already installed.",
+      "downloading": "{{name}} is already downloading.",
+      "nameLabel": "Model name",
+      "placeholder": "name:tag, e.g. qwen3:8b",
+      "download": "Download",
+      "hint": "Type the name as it appears in the Ollama library.",
+      "library": "See the library"
+    },
+    "indicator": {
+      "downloadingOne": "Downloading {{name}}",
+      "downloadingMany_one": "Downloading {{count, number}} model",
+      "downloadingMany_other": "Downloading {{count, number}} models",
+      "amount": "{{completed}} of {{total}}",
+      "label": "{{label}}, {{percent}}%. Go to model management",
+      "failedLabel": "Couldn't download {{name}}. Go to model management",
+      "failed": "Couldn't download",
+      "doneLabel": "{{name}} downloaded. Go to model management",
+      "ready": "{{name}} ready",
+      "downloaded": "Downloaded",
+      "doneAnnounce": "{{name}} finished downloading and is ready to use.",
+      "failedAnnounce": "Couldn't download {{name}}."
+    },
+    "row": {
+      "forSearch": "For searching",
+      "forSearchAuto": "For searching · chosen by Nyra",
+      "justDownloaded": "Just downloaded",
+      "loadedTitle": "Loaded in memory: {{memory}}. It's freed on its own at {{time}} if it isn't used.",
+      "unloading": "Freeing…",
+      "inMemory": "In memory · {{memory}}",
+      "unloadLabel": "Free {{name}}'s memory",
+      "unload": "Free",
+      "searchChosenLabel": "Nyra uses {{name}} to search folders. Click to let Nyra choose on its own",
+      "searchAutoLabel": "Nyra is using {{name}} to search folders because you haven't marked one. Click to keep it",
+      "searchUseLabel": "Use {{name}} to search folders",
+      "searchChosenTitle": "Used for searching · click to let Nyra choose",
+      "searchAutoTitle": "Nyra chose it · click to keep it",
+      "searchUseTitle": "Use this one to search folders",
+      "deleteLabel": "Delete {{name}}",
+      "delete": "Delete"
+    },
+    "deleteConfirm": {
+      "title": "Delete <name>{{name}}</name>?",
+      "deleting": "Deleting…",
+      "confirm": "Delete and free {{size}}",
+      "body": "It will be removed from {{place}}, freeing <strong>{{size}}</strong>. You can download it again whenever you want.",
+      "isDefault": "It's your main model.",
+      "nextDefault": "New conversations will use <name>{{name}}</name>.",
+      "noneLeft": "No model will be left to chat with."
+    },
+    "downloadCard": {
+      "phases": {
+        "preparing": "Preparing…",
+        "downloading": "Downloading",
+        "verifying": "Checking the file",
+        "writing": "Finishing…"
+      },
+      "notFound": "There's no \"{{name}}\" in the Ollama library.",
+      "notFoundHelp": "Check the name and the tag.",
+      "disk": "There isn't enough space on {{place}}.",
+      "diskHelp": "Delete a model from the list and try again.",
+      "connection": "Ollama disconnected halfway through the download.",
+      "connectionResume": "It got to {{size}}. Retrying picks up from there.",
+      "connectionHelp": "Check that Ollama is still open and try again.",
+      "failed": "The model couldn't be downloaded.",
+      "dismissLabel": "Dismiss the error for {{name}}",
+      "editName": "Edit name",
+      "cancelled": "Cancelled",
+      "removeLabel": "Remove {{name}} from the list",
+      "resumeFrom": "If you download it again, it will pick up from {{size}}.",
+      "resumeFromOf": "If you download it again, it will pick up from {{size}} of {{total}}.",
+      "downloadAgain": "Download again",
+      "preparingValue": "Preparing the download",
+      "progressValue": "{{percent}}%, {{completed}} of {{total}}",
+      "cancelLabel": "Cancel the download of {{name}}",
+      "barLabel": "Download of {{name}}",
+      "checkingLibrary": "Checking the Ollama library…",
+      "ofTotal": "of {{total}}",
+      "downloadedTotal": "{{total}} downloaded",
+      "verifying": "checking that the file is complete",
+      "saving": "saving the model"
+    },
+    "menu": {
+      "preferred": "Preferred",
+      "search": "Search models",
+      "searchPlaceholder": "Search models…",
+      "listLabel": "Choose a model",
+      "empty": "No models loaded yet.",
+      "setUpProvider": "Set up a provider",
+      "noMatch": "No model matches \"{{query}}\".",
+      "recent": "Recent",
+      "model": "Model",
+      "downloading": "Downloading",
+      "alwaysIn": "Always use in {{project}}",
+      "alwaysInHint": "New conversations will start with this model",
+      "manage": "Manage models",
+      "choose": "Choose a model",
+      "auto": "Automatic",
+      "autoDescription": "{{main}} and, for demanding tasks, {{demanding}}"
+    },
+    "unavailable": {
+      "title": "Couldn't connect to Ollama",
+      "body": "There's no answer at <address>{{address}}</address>. Without a connection, models can't be listed, downloaded or deleted.",
+      "openApp": "Open the Ollama app, or run <code>ollama serve</code> in a terminal.",
+      "checkUrl": "Check that the Base URL is right (by default, <code>http://localhost:11434</code>).",
+      "network": "If Ollama is on another computer, it must accept connections from the network: <code>OLLAMA_HOST=0.0.0.0</code>.",
+      "download": "Download Ollama"
+    },
+    "suggested": {
+      "installedLabel": "{{name}}, already installed",
+      "downloadingLabel": "{{name}}, downloading",
+      "downloadLabel": "Download {{name}}, {{size}}, {{purpose}}",
+      "installed": "Installed",
+      "downloading": "Downloading",
+      "toStart": "To start with",
+      "purposes": {
+        "fast": "Fast for everyday use",
+        "balanced": "Balanced, many languages",
+        "vision": "Reads images",
+        "code": "Programming",
+        "reasoning": "Reasons step by step",
+        "capable": "More capable, with images"
+      }
+    },
+    "manager": {
+      "downloaded": "<name>{{name}}</name> finished downloading ({{size}}) and you can use it now.",
+      "deleted": "<name>{{name}}</name> was removed from {{place}}, freeing {{size}}.",
+      "deletedNewDefault": "<name>{{name}}</name> was removed from {{place}}, freeing {{size}}. The main model is now {{next}}.",
+      "unloaded": "<name>{{name}}</name> no longer takes memory on {{place}} ({{size}} freed). It loads again on its own the next time you use it.",
+      "loading": "Looking for models at {{address}}…",
+      "downloads": "Downloads",
+      "firstModel": "Download your first model",
+      "downloadModel": "Download a model",
+      "suggested": "Suggested",
+      "emptyTitle": "You don't have any models yet",
+      "emptyBody": "Download your first model to start chatting. If you're not sure which one, <name>{{name}}</name> is a good starting point: it answers well in many languages and runs with 8 GB of memory.",
+      "installed": "Installed models",
+      "onDisk": "{{size}} on disk",
+      "refreshLabel": "Refresh the model list",
+      "refresh": "Refresh",
+      "closeNote": "Close notice",
+      "filterLabel": "Filter models by name",
+      "filterPlaceholder": "Filter by name",
+      "chatGroup": "For chatting",
+      "chatGroupHint": "The ★ picks which one new chats start with.",
+      "noChatTitle": "You don't have a model to chat with yet",
+      "seeChatModels": "See chat models",
+      "noChatBody": "The search models below can't answer messages. Download a chat model to start talking to Nyra.",
+      "noChatMatch": "No chat model matches.",
+      "searchGroup": "For searching folders",
+      "searchGroupHint": "They turn text into vectors to find code or notes by what they mean, even in other words or another language. They can't chat.",
+      "noSearchTitle": "You don't have one yet",
+      "downloadingShort": "Downloading…",
+      "downloadNamed": "Download {{name}}",
+      "noSearchBody": "Without a search model, Nyra can't search your folders by meaning. We recommend <name>{{name}}</name>: it takes {{size}} and understands many languages.",
+      "noSearchMatch": "No search model matches."
+    },
+    "embedding": {
+      "chosen": "Nyra uses <name>{{name}}</name> to search folders. You chose it.",
+      "letNyraChoose": "Let Nyra choose",
+      "onlyOne": "It's the only one you have, so Nyra uses <name>{{name}}</name> to search.",
+      "auto": "You haven't marked one, so Nyra uses <name>{{name}}</name>. Mark another with <icon/> if you prefer.",
+      "iconLabel": "the folder with a magnifying glass"
+    },
+    "offer": {
+      "title": "Switch to {{model}}?",
+      "body": "This task works better with {{model}}, which runs in the cloud ({{provider}}). If you accept, this conversation will be sent to it and it will carry on with that model.",
+      "hint": "You can stop seeing this question in Settings → Providers.",
+      "accept": "Switch to {{model}}",
+      "decline": "Stay with {{model}}"
+    },
+    "demanding": "Demanding tasks",
+    "isDemandingLabel": "{{name}} is the model for demanding tasks",
+    "useAsDemandingLabel": "Use {{name}} for demanding tasks",
+    "demandingTitle": "Model for demanding tasks. Press to remove it.",
+    "useAsDemanding": "Use for demanding tasks"
+  },
+  "skills": {
+    "new": "New skill",
+    "import": "Import",
+    "invoked": {
+      "title": "It'll be applied to this message",
+      "remove": "Remove the skill {{name}} from this message"
+    },
+    "tokens": {
+      "count": "≈ {{tokens}} tokens",
+      "light": "Light",
+      "large": "Large"
+    },
+    "source": {
+      "own": "Yours",
+      "file": "File",
+      "nyra": "Included in Nyra"
+    },
+    "heavy": {
+      "title": "The active skills take up ≈ {{tokens}} tokens, {{percent}} of <model>{{model}}</model>'s context.",
+      "body": "There'll be little room left for the conversation. Remove a skill or choose a model with more context.",
+      "show": "See active skills"
+    },
+    "empty": {
+      "label": "No skills",
+      "title": "You don't have any skills yet",
+      "text": "A skill is a set of instructions you can turn on in a conversation so Nyra works in a particular way: reviewing code, writing in your style, summarizing meetings…",
+      "hint": "You can import skills from Claude Code or .zip and .skill files. For now Nyra only uses the instructions in their <code>SKILL.md</code>."
+    },
+    "list": {
+      "label": "Skill list",
+      "title": "Skills"
+    },
+    "card": {
+      "default": "Default",
+      "defaultTitle": "Turned on in new conversations",
+      "code": "Code",
+      "codeTitle": "Turned on in new code conversations"
+    },
+    "drop": {
+      "tooManyFiles": "There are too many files (more than {{max}}).",
+      "tooBig": "What you dropped takes up more than 20 MB."
+    },
+    "cost": {
+      "title": "Context cost",
+      "share": "{{percent}} of <model>{{model}}</model>'s context ({{limit}} tokens)",
+      "yourDefault": ", your main model",
+      "meter": "Takes up {{percent}} of the context",
+      "hint": "What it takes up when the model uses it. While it's on, each message only carries its name and description."
+    },
+    "files": {
+      "title": "Files it brings",
+      "count_one": "{{count, number}} file",
+      "count_other": "{{count, number}} files",
+      "used": "Used",
+      "kept": "Kept"
+    },
+    "candidates": {
+      "statuses": {
+        "new": "New",
+        "update": "Newer version",
+        "conflict": "Already exists",
+        "imported": "Already imported",
+        "invalid": "Not valid"
+      },
+      "selectAll": "Select all",
+      "selected": "{{selected}} of {{total}} selected",
+      "unnamed": "Unnamed"
+    },
+    "adapt": {
+      "label": "Adapt the skill to any model",
+      "title": "Adapt <name>{{name}}</name>",
+      "introWithModel": "<model>{{model}}</model> rewrites the skill so it focuses on what it does rather than on the tool it was written for (Claude, ChatGPT, Gemini…), so it works with any model, in the cloud or local. Review the result before saving it: the original is kept and you can restore it.",
+      "intro": "The model rewrites the skill so it focuses on what it does rather than on the tool it was written for (Claude, ChatGPT, Gemini…), so it works with any model, in the cloud or local. Review the result before saving it: the original is kept and you can restore it.",
+      "waiting": "Waiting for the model…",
+      "writing": "Adapting… {{chars}} characters written",
+      "back": "Back",
+      "skip": "Skip this skill",
+      "position": "{{current}} of {{total}}",
+      "noModel": "No model is loaded. Load a provider's models first.",
+      "tooLong": "The skill is too long for {{model}}: it needs about {{needed}} tokens of context and the model supports {{limit}}. Try a model with more context.",
+      "badFormat": "The model's reply isn't in the expected format, or it was cut off before it finished.",
+      "emptyParts": "The model returned an empty description or empty instructions.",
+      "descriptionTooLong": "The adapted description is over the {{max}} characters allowed.",
+      "stillMentions": "<strong>It still mentions {{products}}.</strong> You can fix it below before saving, or generate it again.",
+      "original": "Original",
+      "adapted": "Adapted",
+      "description": "Description",
+      "instructions": "Instructions",
+      "discardAndContinue": "Discard and continue",
+      "discard": "Discard",
+      "regenerate": "Generate again",
+      "saving": "Saving…",
+      "save": "Save adapted version"
+    },
+    "picker": {
+      "title": "Use skill",
+      "close": "Close the skill picker",
+      "search": "Search skills",
+      "searchPlaceholder": "Search by name or description",
+      "none": "You don't have any skills yet. Create or import one from \"Manage skills\".",
+      "noMatch": "No skill matches your search.",
+      "footerTitle": "The skill list goes with every message, but a skill's instructions only when the model uses it.",
+      "active_one": "{{count, number}} on",
+      "active_other": "{{count, number}} on",
+      "footer": "{{active}} · ≈ {{tokens}} tokens",
+      "footerWithShare": "{{active}} · ≈ {{tokens}} tokens ({{percent}} of the context)",
+      "manage": "Manage skills"
+    },
+    "used": {
+      "label_one": "Nyra used the skill {{names}}. See details",
+      "label_other": "Nyra used {{count, number}} skills: {{names}}. See details",
+      "tip_one": "Nyra used this skill for this reply:",
+      "tip_other": "Nyra used these skills for this reply:",
+      "clickForDetails": "Click for details",
+      "title_one": "Skill used in this reply",
+      "title_other": "Skills used in this reply",
+      "count_one": "{{count, number}} skill · the model can pick up to 2 per reply",
+      "count_other": "{{count, number}} skills · the model can pick up to 2 per reply",
+      "close": "Close",
+      "chosenByYou": "Chosen by you",
+      "openInSettings": "See in Settings",
+      "byModel_one": "The model applied it because it fit your message.",
+      "byModel_other": "The model applied them because they fit your message.",
+      "byYou": "You chose it with \"/{{name}}\" in your message.",
+      "both_one": "You chose {{chosen}} with \"/{{chosen}}\", and the model added {{added}} because it fit your message.",
+      "both_other": "You chose {{chosen}} with \"/{{chosen}}\", and the model added {{added}} because they fit your message."
+    },
+    "filesEditor": {
+      "tooBig": "The skill would go over 20 MB with these files.",
+      "title": "Files",
+      "optional": "Optional",
+      "list": "Skill files",
+      "new": "New",
+      "replaced": "Replaced",
+      "removed": "Will be removed",
+      "dontAdd": "Don't add {{path}}",
+      "keepPath": "Keep {{path}}",
+      "removePath": "Remove {{path}}",
+      "keep": "Keep",
+      "remove": "Remove",
+      "builtinFiles": "Skills included in Nyra keep their files.",
+      "add": "Add files",
+      "dropHint": "or drag loose files or whole folders here",
+      "hint": "In the instructions, explain what to do with each file or with the set, and mention them by their path (<code>count.py</code>, <code>templates/report.md</code>). Nyra runs scripts with your permission in a conversation with a connected folder."
+    },
+    "command": {
+      "changeModel": "Change model",
+      "commandsAndSkills": "Commands and skills",
+      "applyToMessage": "Apply a skill to this message",
+      "replaces": "Will replace {{name}}",
+      "noModel": "No model matches <code>{{query}}</code>",
+      "noModelHint": "Try another part of the name, or press Esc to close.",
+      "noMatch": "No command or skill matches <code>/{{query}}</code>",
+      "noMatchHint": "Press Esc to type it as text, or create a new skill.",
+      "models": "Models",
+      "inUse": "In use",
+      "commands": "Commands",
+      "skills": "Skills",
+      "marked": "On",
+      "keys": "↑ ↓ move · Enter choose · Esc close",
+      "showCommands": "See commands"
+    },
+    "summary": {
+      "label": "Import result",
+      "almostDone": "Import almost done",
+      "done": "Import done",
+      "imported_one": "{{count, number}} imported",
+      "imported_other": "{{count, number}} imported",
+      "updated_one": "{{count, number}} updated",
+      "updated_other": "{{count, number}} updated",
+      "skipped_one": "{{count, number}} skipped",
+      "skipped_other": "{{count, number}} skipped",
+      "pending": "{{n}} to decide",
+      "toDecide": "To decide",
+      "exists": "There's already a skill called <code>{{name}}</code>.",
+      "editedHere": "Nyra's version was edited here on {{date}}: if you replace it, you'll lose those changes.",
+      "fromElsewhere": "Nyra's came from somewhere else: if you replace it, this one takes its place.",
+      "replace": "Replace",
+      "skip": "Skip",
+      "applyAll": "Apply to all conflicts ({{n}})",
+      "details": "Details",
+      "importedOne": "Imported",
+      "updatedOne": "Updated",
+      "skippedOne": "Skipped",
+      "keptNyras": "You kept Nyra's",
+      "importMore": "Import more",
+      "adaptTitle": "Rewrite them to work with any model. You'll review each one before it's saved",
+      "adapt": "Adapt to any model ({{n}})",
+      "seeSkills": "See skills"
+    },
+    "importer": {
+      "title": "Import skills",
+      "intro": "Bring in skills you already have in the standard <code>SKILL.md</code> format.",
+      "sources": "Import source",
+      "fromClaudeCode": "From Claude Code",
+      "fromFile": "From a file",
+      "searching": "Looking for Claude Code skills…",
+      "noneFound": "No Claude Code skills were found",
+      "dropZone": "Drop zone for files",
+      "dropTitle": "Drag a .zip, a .skill or a folder here",
+      "dropText": "The folder must contain a <code>SKILL.md</code>. You can drop several at once.",
+      "reading": "Reading…",
+      "chooseFiles": "Choose files…",
+      "chooseFolder": "Choose folder…",
+      "searchedIn": "Searched in <code>~/.claude/skills</code>, in Claude Code's plugins and in your projects' <code>.claude/skills</code> folders.",
+      "searchElsewhere": "Search another folder…",
+      "importing": "Importing…",
+      "importCount_one": "Import {{count, number}} skill",
+      "importCount_other": "Import {{count, number}} skills",
+      "invalid": "Not a valid skill",
+      "unchanged": "Already imported and unchanged"
+    },
+    "form": {
+      "edit": "Edit skill",
+      "intro": "Changes are saved to the skill's <code>SKILL.md</code> and its folder.",
+      "newBody": "# Title\n\nWhat Nyra should do when you use this skill.\n",
+      "nameError": "The name doesn't follow the rules below.",
+      "nameTaken": "There's already another skill with that name.",
+      "descriptionMissing": "Write a description.",
+      "descriptionTooLong": "It's over {{max}} characters.",
+      "theName": "the name",
+      "theDescription": "the description",
+      "review_one": "Check one field before saving:",
+      "review_other": "Check {{count, number}} fields before saving:",
+      "name": "Name",
+      "useSuggestion": "Use \"{{name}}\"",
+      "builtinName": "Skills included in Nyra keep their name.",
+      "nameRules": "Name rules",
+      "folderName": "It's also the name of its folder, as the standard requires.",
+      "description": "Description",
+      "descriptionHint": "Say what it does and, above all, <strong>when to use it</strong>: \"Use it when…\". That way you'll know when to pick it later.",
+      "license": "License",
+      "optional": "Optional",
+      "instructions": "Instructions",
+      "editor": "Instructions editor",
+      "write": "Write",
+      "preview": "Preview",
+      "markdownLabel": "Instructions in Markdown",
+      "previewLabel": "Preview of the instructions",
+      "tokensHint": "≈ {{tokens}} tokens · Markdown. The YAML header is generated from the fields above.",
+      "lastEdited": "Last edited in Nyra on {{date}}",
+      "saving": "Saving…",
+      "save": "Save"
+    },
+    "nameRules": {
+      "length": "Between 1 and 64 characters",
+      "chars": "Only lowercase letters, numbers and hyphens",
+      "edges": "No hyphen at the start or the end",
+      "double": "No two hyphens in a row (\"--\")"
+    },
+    "detail": {
+      "label": "Skill details",
+      "adapted": "Adapted",
+      "adaptedOn": "Adapted on {{date}}",
+      "edit": "Edit",
+      "adaptTitle": "Rewrite it to work with any model, without depending on Claude, ChatGPT or other tools",
+      "adapt": "Adapt to any model",
+      "restore": "Restore original",
+      "export": "Export (.zip)",
+      "delete": "Delete",
+      "exportedTo": "Exported to <path>{{path}}</path>",
+      "restoreTitle": "Restore the original version?",
+      "restoreText": "The skill goes back to how it was before it was adapted. The adapted version and any changes you made afterwards are lost.",
+      "deleteTitle": "Delete <name>{{name}}</name>?",
+      "deleteText_one": "The skill's folder and its file will be deleted. Conversations that used it stay open, but without it. This can't be undone.",
+      "deleteText_other": "The skill's folder and its {{count, number}} files will be deleted. Conversations that used it stay open, but without it. This can't be undone.",
+      "deleteButton": "Delete skill",
+      "license": "License",
+      "author": "Author",
+      "version": "Version",
+      "compatibility": "Compatibility",
+      "newConversations": "Turn on in new conversations",
+      "newConversationsHint": "It comes turned on in every new conversation. You can turn it off in each one from \"+\" → \"Use skill\".",
+      "newCode": "Turn on in new code conversations",
+      "newCodeHint": "It comes turned on in every new conversation of a Code project, instead of the ones above. If a project turns it off in its skills, it isn't turned on there.",
+      "compatibilityTitle": "Compatibility with Nyra",
+      "scripts": "<strong>It includes scripts.</strong> Nyra can run them in a conversation with a connected folder, always with your permission and with the script in view before it runs.",
+      "references": "<strong>It mentions files in <code>references/</code></strong> that Nyra can't look up on its own yet. If you need them, attach them to the message.",
+      "compatibilityNote": "<strong>Its <code>compatibility</code> field lists requirements Nyra may not meet:</strong> \"{{value}}\"",
+      "instructions": "Instructions",
+      "previewAside": "SKILL.md preview"
+    }
+  },
+  "memory": {
+    "saved": {
+      "open": "See in Memory",
+      "deleted": "deleted",
+      "edited": "edited",
+      "label_one": "Memory saved",
+      "label_other": "{{count, number}} memories saved",
+      "remembered": "Nyra remembered:",
+      "rememberedThings_one": "Nyra remembered {{count, number}} thing",
+      "rememberedThings_other": "Nyra remembered {{count, number}} things"
+    },
+    "editor": {
+      "placeholder": "For example: Prefers short answers",
+      "sensitive": "This looks like sensitive data. Memories are sent with every message: better not to save keys or passwords.",
+      "hint": "Enter saves · Esc cancels · {{length}}/{{max}}",
+      "save": "Save"
+    },
+    "status": {
+      "show": "See memories"
+    },
+    "row": {
+      "manual": "Added by hand",
+      "goneConversation": "Nyra saved it in a conversation that no longer exists",
+      "savedIn": "Nyra saved it in",
+      "editLabel": "Edit memory",
+      "editOf": "Edit: {{text}}",
+      "edit": "Edit",
+      "deleteOf": "Delete: {{text}}",
+      "delete": "Delete"
+    },
+    "settings": {
+      "description": "Short facts about you that Nyra uses with every message, in every conversation. They're saved only on this computer and you can change them whenever you like.",
+      "on": "Memory on",
+      "off": "Memory off",
+      "onHint": "Nyra sends these memories and can save new ones. It tells you in the conversation each time.",
+      "offHint": "No memories are sent and no new ones are made. The saved ones are kept.",
+      "goToFeatures": "Go to Nyra features",
+      "tokens": "≈ {{tokens}} tokens of memories",
+      "notSent": "not sent",
+      "sentEach": "sent with every message",
+      "noneToSend": "none to send",
+      "limit": "Recommended limit: {{limit}}",
+      "meter": "{{percent}}% of the recommended limit",
+      "heavy": "<strong>Memories take ≈ {{tokens}} tokens.</strong> With a 32k local model that's {{percent}}% of every message, and in the cloud you pay for them with every send. Delete the ones you no longer need or merge several into one.",
+      "list": "Memories",
+      "add": "Add",
+      "deleteAll": "Delete all",
+      "confirm_one": "Delete the memory?",
+      "confirm_other": "Delete the {{count, number}} memories?",
+      "confirmText": "Nyra will stop using them in every conversation. This can't be undone. Conversations aren't deleted.",
+      "confirmButton_one": "Delete the memory",
+      "confirmButton_other": "Delete {{count, number}} memories",
+      "deletedOne": "Memory deleted: {{text}}",
+      "undo": "Undo",
+      "loadError": "The memories couldn't be read: {{error}}",
+      "deleteFailed": "The memory couldn't be deleted",
+      "restoreFailed": "The memory couldn't be restored",
+      "deleteAllFailed": "The memories couldn't be deleted",
+      "empty": "No memories yet",
+      "emptyText": "Ask Nyra to \"remember that…\" in a conversation, or add them here. It can also save them itself when it notices something lasting, and it always tells you in the conversation.",
+      "examplesLabel": "Examples",
+      "examples": {
+        "city": "Lives in Valencia",
+        "short": "Prefers short answers",
+        "dog": "Has a dog called Toby",
+        "language": "Is learning Spanish"
+      },
+      "avoid": "Better not to save passwords, keys or health data.",
+      "newMemory": "New memory",
+      "privacy": "<strong>Privacy.</strong> With a cloud provider, memories are sent to its servers with every message. With a local model they don't leave your computer. Private conversations use them, but no new memories are made there."
+    }
+  },
+  "sensitive": {
+    "labels": {
+      "anthropicKey": "Anthropic API key",
+      "openaiKey": "OpenAI API key",
+      "googleKey": "Google API key",
+      "awsKey": "AWS access key",
+      "githubToken": "GitHub token",
+      "gitlabToken": "GitLab token",
+      "slackToken": "Slack token",
+      "stripeKey": "Stripe key",
+      "privateKey": "Private key",
+      "password": "Password or secret",
+      "card": "Card number"
+    },
+    "hidden": {
+      "value": "[hidden]",
+      "card": "[hidden card number]",
+      "key": "[hidden key]"
+    },
+    "place": {
+      "file": "in {{name}}",
+      "messageLine": "in the message · line {{line}}",
+      "message": "in the message"
+    },
+    "trigger_one": "Possible sensitive data in the message: {{label}}. See details",
+    "trigger_other": "{{count, number}} possible pieces of sensitive data in the message. See details",
+    "title": "Your message seems to contain sensitive data",
+    "detections_one": "{{count, number}} detection",
+    "detections_other": "{{count, number}} detections",
+    "close": "Close notice",
+    "list": "Detections",
+    "masked": "Masked value",
+    "point": "Select",
+    "pointLabel": "Select the {{label}} in the message",
+    "remove": "Remove",
+    "removeLabel": "Remove the file {{name}}",
+    "destination": "If you send it, it will leave your computer for <strong>a cloud provider</strong>.",
+    "hideAll": "Hide before sending",
+    "hideAllHint": "Replaces each value with <code>{{hidden}}</code> and keeps the name, so Nyra knows what you mean.",
+    "help": "Delete it before sending if you don't want to share it.",
+    "helpLocal": "With a local model it wouldn't leave your computer.",
+    "checked": "Checked on your computer, nothing was sent",
+    "disable": "Turn off this warning",
+    "sent": "Included sensitive data · sent to {{destination}}",
+    "sentTip": "{{labels}}. If it was a real key, it's worth changing it."
+  },
+  "web": {
+    "failed": "<b>The web search failed.</b> I'm answering with what I know, so it may be out of date.",
+    "progress": {
+      "searched": "Searched",
+      "onWikipedia": "on Wikipedia",
+      "searching": "Searching",
+      "pages_one": "{{count, number}} page",
+      "pages_other": "{{count, number}} pages",
+      "reading_one": "Reading {{count, number}} page…",
+      "reading_other": "Reading {{count, number}} pages…",
+      "readOf": "{{read}} of {{total}}"
+    },
+    "summary": {
+      "searchedWikipedia": "Searched Wikipedia",
+      "searchedWeb": "Searched the web",
+      "searches_one": "{{count, number}} search",
+      "searches_other": "{{count, number}} searches",
+      "sources_one": "{{count, number}} source",
+      "sources_other": "{{count, number}} sources",
+      "duckDuckGoDown": "DuckDuckGo didn't answer"
+    },
+    "sources": {
+      "search": "Search {{number}} ·",
+      "uncited": "Not cited",
+      "source": "Source {{number}}",
+      "cited": "Cited",
+      "label": "{{state}}: {{title}}, {{domain}}. Opens in the browser"
+    },
+    "cited": {
+      "list": "Cited sources",
+      "label": "Sources:",
+      "sourceLabel": "Source {{number}}: {{domain}}, {{title}}"
+    }
+  },
+  "native": {
+    "tray": {
+      "open": "Open Nyra",
+      "new": "New conversation",
+      "recent": "Recent",
+      "noRecent": "None yet",
+      "quick": "Quick chat",
+      "quit": "Quit"
+    },
+    "dictation": {
+      "noMicrophone": "No microphone was found. Connect one or check which one the system uses.",
+      "noPermission": "Nyra isn't allowed to use the microphone. Turn it on in the system's privacy settings.",
+      "couldNotRecord": "The microphone couldn't be recorded: {{error}}",
+      "unsupported": "The microphone uses an audio format Nyra can't read.",
+      "alreadyRecording": "Dictation is already running in another Nyra window.",
+      "notRecording": "There was no dictation in progress."
+    },
+    "quick": {
+      "notOpen": "The quick chat bar isn't open.",
+      "noScreen": "No screen was found.",
+      "forgetPosition": "The bar's position couldn't be forgotten: {{error}}",
+      "shortcutTaken": "Another app already uses this combination, or the system reserves it. Choose another one."
+    },
+    "capture": {
+      "openFailed": "The capture couldn't be opened: {{error}}",
+      "noneInProgress": "There's no capture in progress.",
+      "closed": "The capture is already closed.",
+      "prepareFailed": "The capture couldn't be prepared: {{error}}",
+      "noScreen": "No screen was found.",
+      "screenNotFound": "The screen wasn't found: {{error}}",
+      "captureFailed": "The screen couldn't be captured: {{error}}",
+      "readFailed": "The capture couldn't be read: {{error}}",
+      "unavailable": "Screen capture isn't available on this system yet.",
+      "toolFailed": "Screen capture couldn't be opened: {{error}}",
+      "didNotFinish": "The screen capture didn't finish properly.",
+      "permission": "Nyra needs permission to capture the screen. Turn it on in System Settings → Privacy & Security → Screen Recording and open Nyra again."
+    },
+    "share": {
+      "invalidImage": "The message's image isn't valid.",
+      "copyFailed": "The image couldn't be copied to the clipboard.",
+      "imageFile": "nyra-reply.png",
+      "pngFilter": "PNG image",
+      "saveImageFailed": "The image couldn't be saved.",
+      "invalidPdf": "The PDF isn't valid.",
+      "savePdfFailed": "The PDF couldn't be saved.",
+      "saveDocumentFailed": "The document couldn't be saved.",
+      "fallbackName": "document",
+      "documentTooLarge": "The document and its images are over 200 MB: too much to save together."
+    },
+    "web": {
+      "searchFailed": "Couldn't search the web right now.",
+      "onlyWebPages": "Only web pages (http or https) can be read.",
+      "invalidAddress": "The address isn't valid.",
+      "addressNotFound": "That address wasn't found.",
+      "notPublic": "That address isn't public: Nyra only reads pages on the internet.",
+      "couldNotOpen": "The page couldn't be opened.",
+      "badRedirect": "The page redirects to an invalid address.",
+      "answered": "The page answered {{status}}.",
+      "notText": "It isn't a text page.",
+      "tooManyRedirects": "The page redirects too many times."
+    },
+    "terminal": {
+      "alreadyFinished": "The command has already finished.",
+      "answerFailed": "The answer couldn't be sent to the command: {{error}}",
+      "notReading": "The command isn't reading what you type. It may not have asked for it yet, or it may be waiting for something else.",
+      "saveFailed": "The output couldn't be saved.",
+      "textFilter": "Text",
+      "invalidId": "Invalid command id.",
+      "emptyOrLong": "The command is empty or too long.",
+      "folderGone": "The connected folder no longer exists.",
+      "alreadyRunning": "That command is already running.",
+      "terminalFailed": "Couldn't open a terminal: {{error}}",
+      "runFailed": "Couldn't run the command: {{error}}",
+      "statusUnknown": "Couldn't tell how the command ended: {{error}}"
+    },
+    "git": {
+      "timedOut": "git didn't answer in time",
+      "fileNotInFolder": "That file isn't in the folder.",
+      "secretFile": "That file holds keys or passwords, and Nyra doesn't show it.",
+      "diffFailed": "The difference from the last commit couldn't be read.",
+      "unsafeConfig": "This folder's Git config defines a filter Nyra can't safely turn off, so it doesn't read its state.",
+      "emptyMessage": "Write a message for the commit.",
+      "tooMuch": "Choose between one and 500 files and a shorter message.",
+      "fileOutside": "One of the files isn't in the folder.",
+      "notInstalled": "Git isn't on this computer. Install it and open Nyra again to use it in your projects.",
+      "commitFailed": "The commit couldn't be made: {{error}}",
+      "noCommitId": "The commit was made, but its id couldn't be read.",
+      "initFailed": "The repository couldn't be created: {{error}}"
+    },
+    "secrets": {
+      "invalidProvider": "The provider isn't valid.",
+      "damagedFile": "The API key file is damaged.",
+      "keychain": "The system keychain couldn't be used: {{error}}"
+    },
+    "util": {
+      "tooLong": "{{max}} characters at most: {{extra}} too many."
+    },
+    "spreadsheet": {
+      "cantOpen": "The spreadsheet couldn't be opened: the file is damaged or protected with a password.",
+      "damaged": "The spreadsheet is damaged.",
+      "defaultName": "sheet.xlsx",
+      "saveFailed": "The spreadsheet couldn't be saved.",
+      "notReceived": "The spreadsheet didn't arrive intact.",
+      "tooBig": "The spreadsheet is over the 10 MB limit."
+    },
+    "workspace": {
+      "notConnected": "That folder isn't connected to Nyra.",
+      "fileNotInFolder": "That file isn't in the folder.",
+      "fileNotInConnectedFolder": "That file isn't in the connected folder.",
+      "encoding": "The change has characters that don't fit the file's encoding (Windows-1252).",
+      "invalidCopy": "The file's copy isn't valid.",
+      "cantChange": "That file can't be changed.",
+      "copyOfAnother": "That copy isn't of this file.",
+      "noFreeName": "No free name was found for the copy.",
+      "noAccess": "Couldn't access the folder."
+    },
+    "skills": {
+      "frontmatterMissing": "SKILL.md doesn't start with a YAML header (---).",
+      "frontmatterNotClosed": "SKILL.md's YAML header isn't closed with ---.",
+      "yamlInvalid": "The YAML header isn't valid: {{error}}",
+      "yamlNotFields": "The YAML header must be a list of fields.",
+      "nameLength": "Invalid name: it must be between 1 and 64 characters",
+      "nameCharacters": "Invalid name: use only lowercase letters, numbers and hyphens",
+      "nameEdges": "Invalid name: it can't start or end with a hyphen",
+      "nameDoubleHyphen": "Invalid name: it can't have two hyphens in a row",
+      "descriptionMissing": "The description is missing",
+      "descriptionTooLong": "The description is over 1024 characters ({{length}})",
+      "thousandsSeparator": ",",
+      "nameFieldMissing": "The name field is missing",
+      "compatibilityTooLong": "The compatibility field is over 500 characters",
+      "skillFileMissing": "SKILL.md is missing",
+      "tooManyFiles": "It has more than {{max}} files",
+      "tooBig": "It takes up more than 20 MB",
+      "notZip": "It isn't a valid .zip file",
+      "reservedByNyra": "Nyra already includes a skill with this name. Change its name in its SKILL.md to import it.",
+      "installFailed": "Some of Nyra's skills couldn't be installed ({{details}}). Close Nyra and open it again. If it keeps happening, check that your antivirus isn't blocking its data folder.",
+      "notSkillFile": "That file isn't part of the skill.",
+      "fileGone": "That file no longer exists.",
+      "fileTooBig": "The file is too large to show.",
+      "invalidFileName": "“{{path}}” isn't a valid file name for a skill.",
+      "unreadableFile": "“{{path}}” couldn't be read.",
+      "builtinFilesLocked": "The files of the skills included with Nyra can't be changed.",
+      "notText": "It isn't a text file.",
+      "nameTaken": "There's already a skill called “{{name}}”",
+      "builtinRename": "The skills included with Nyra can't be renamed.",
+      "adaptedEmpty": "The adapted instructions are empty.",
+      "noOriginal": "This skill has no saved original version.",
+      "builtinDelete": "The skills included with Nyra can't be deleted.",
+      "importUnavailable": "Importing isn't available.",
+      "droppedFiles": "Dropped files",
+      "versionChange": "From {{old}} to {{new}}"
+    },
+    "claudeCode": {
+      "untitledSession": "Claude Code session",
+      "copyTitle": "{{title}} (from Claude Code)",
+      "noProject": "No project",
+      "imageName": "image-{{index}}",
+      "documentName": "document-{{index}}",
+      "unsupportedFile": "[File not supported by Nyra: {{name}}]"
+    },
+    "memories": {
+      "invalid": "The memory isn't valid.",
+      "empty": "Write what you want Nyra to remember.",
+      "tooLong": "A memory must be short: {{max}} characters at most ({{extra}} too many).",
+      "invalidSource": "The memory's origin isn't valid.",
+      "gone": "That memory no longer exists."
+    },
+    "folders": {
+      "nameEmpty": "Write a name for the folder.",
+      "nameTaken": "There's already a folder called “{{name}}”.",
+      "invalid": "The folder isn't valid.",
+      "gone": "That folder no longer exists."
+    },
+    "storage": {
+      "unavailable": "The conversations database isn't available.",
+      "titleEmpty": "The conversation's name can't be empty.",
+      "titleTooLong": "The conversation's name can't be longer than {{max}} characters.",
+      "attachmentGone": "That attachment no longer exists."
+    },
+    "projects": {
+      "nameEmpty": "Write a name for the project.",
+      "invalid": "The project isn't valid.",
+      "invalidSkill": "That skill isn't valid.",
+      "invalidModel": "That model isn't valid.",
+      "folderWasRemoved": "That folder was the project “{{name}}”, which you removed from the list. Add it with “New project” to get it back, or choose another folder for this one.",
+      "folderTaken": "That folder is already the project “{{name}}”. Choose this project's new folder."
+    },
+    "code": {
+      "invalidConversation": "Invalid conversation id.",
+      "invalidPath": "That path isn't in the conversation's folder.",
+      "inputsTooLarge": "The conversation's files are too large to hand to the program (over 50 MB).",
+      "noRuntime": "No interpreter for {{language}} was found on this computer.",
+      "fileGone": "That file no longer exists.",
+      "fileTooLarge": "The file is too large to show.",
+      "saveFailed": "Couldn't save the file."
+    },
+    "browser": {
+      "notFound": "I couldn't find a browser Nyra can use. Install Google Chrome, Microsoft Edge, Brave or Chromium.",
+      "couldNotStart": "The browser couldn't be opened.",
+      "closed": "The browser closed.",
+      "noAnswer": "The browser didn't answer in time.",
+      "pageError": "The page gave an error: {{error}}",
+      "navigateFailed": "The address couldn't be opened: {{error}}",
+      "noElement": "The page no longer has element {{n}}.",
+      "unknownKey": "Nyra doesn't know how to press the \"{{key}}\" key.",
+      "screenshotFailed": "The screenshot couldn't be taken."
+    },
+    "transcription": {
+      "unreadable": "The audio couldn't be read. Try an mp3, m4a, wav, flac or ogg file.",
+      "noAudio": "The file has no sound to transcribe.",
+      "modelFailed": "The transcription models couldn't be loaded. Delete it and add it again in Settings → Audio providers.",
+      "notDownloaded": "Transcription models are missing. Add a Whisper in Settings → Audio providers.",
+      "unknownModel": "That transcription model is gone. Choose another one in Settings → Audio providers.",
+      "downloadFailed": "{{file}} couldn't be downloaded. Check the connection and try again.",
+      "downloadCancelled": "Download cancelled.",
+      "downloadRunning": "A transcription model is already being added.",
+      "cancelled": "Transcription cancelled.",
+      "tooLong": "The audio is too long: Nyra transcribes up to 4 hours.",
+      "gone": "The audio is gone: it was deleted with its conversation or in an earlier session. Attach it again.",
+      "badRepository": "Write the Hugging Face repository as user/name, or paste its link.",
+      "repositoryNotFound": "{{repository}} wasn't found on Hugging Face. Check the name and your connection.",
+      "noWhisperIn": "{{place}} has no Whisper Nyra can use: in Transformers' format (config.json, tokenizer.json and its weights) or in sherpa-onnx's (an encoder, a decoder and their tokens).",
+      "adapterOnly": "{{place}} only has an adapter (LoRA) to put on top of another model. The whole model is needed.",
+      "notWhisper": "{{place}} isn't a Whisper: it's another kind of speech model."
+    },
+    "mcp": {
+      "damagedConfig": "The MCP servers configuration couldn't be read.",
+      "unknownServer": "That MCP server doesn't exist.",
+      "missingCommand": "Write a name and the command that starts the server.",
+      "commandNotFound": "“{{command}}” wasn't found on this computer. Install it or write its full path.",
+      "couldNotStart": "Couldn't connect to {{name}}: {{error}}",
+      "timedOut": "The server took too long to answer.",
+      "badArguments": "The data for the tool isn't valid.",
+      "serverOff": "That MCP server is turned off in Settings.",
+      "toolOff": "That tool is turned off in Settings.",
+      "unknownTool": "The server doesn't offer that tool.",
+      "callFailed": "The tool failed: {{error}}"
+    },
+    "screen": {
+      "noLook": "Nyra hasn't looked at the screen in this conversation yet.",
+      "notTaken": "Couldn't capture the screen.",
+      "windowFailed": "Couldn't open the marks window: {{error}}",
+      "noAccessibility": "Nyra needs the Accessibility permission to use the mouse and keyboard. Turn it on in System Settings → Privacy & Security → Accessibility."
+    },
+    "access": {
+      "settingsFailed": "Couldn't open the system settings."
+    }
+  },
+  "markdown.chart": "Chart",
+  "markdown.chartViewTabs": "Show the chart or its data",
+  "markdown.chartData": "Data",
+  "markdown.chartError": "<strong>The chart couldn't be drawn:</strong> its data has an error. The data is shown instead.",
+  "markdown.drawingChart": "Drawing the chart…",
+  "markdown.chartAlt": "Chart drawn from the reply's data",
+  "markdown.chartErrors.notJson": "The data isn't valid JSON.",
+  "markdown.chartErrors.type": "The chart type is missing: bar, line or pie.",
+  "markdown.chartErrors.labels": "The labels are missing, or there are more than 60.",
+  "markdown.chartErrors.series": "At least one series of values is missing, or there are more than 12.",
+  "markdown.chartErrors.values": "Each series needs one number per label.",
+  "markdown.chartErrors.pieValues": "A pie chart needs positive values.",
+  "documents.chartCode": "Chart (data)",
+  "native.share.tableSheet": "Table",
+  "native.share.excelFilter": "Excel workbook",
+  "native.share.invalidTable": "The table is empty or too large to save.",
+  "native.share.saveTableFailed": "The table couldn't be saved.",
+  "markdown.copyTable": "Copy table",
+  "markdown.saveTable": "Save as Excel",
+  "markdown.tableSaved": "Saved",
+  "markdown.tableSaveFailed": "Couldn't save",
+  "markdown.sortBy": "Sort by {{column}}",
+  "markdown.tableFileName": "nyra-table",
+  "browser": {
+    "screenshotName": "Screenshot {{n}}",
+    "action": {
+      "open": "Opening {{site}}",
+      "click": "Clicking “{{label}}”",
+      "type": "Typing in “{{label}}”",
+      "key": "Pressing {{key}}",
+      "screenshot": "Taking a screenshot",
+      "pageSearch": "Looking for “{{text}}” on the page",
+      "mark": "Pointing out “{{label}}”"
+    },
+    "ask": {
+      "hint": {
+        "open": "To go to {{site}}. While it stays open, it can go to other pages without asking you again. You'll see it in its window and can close it whenever you want.",
+        "use": "To click, type and go to other pages from {{site}}. If you signed in to an account, it can use it. While it stays open, it won't ask you again.",
+        "local": "{{site}} is on this computer or your local network (your project, the router, other devices). Only allow it if you asked for it. While it stays open, it won't ask you again."
+      },
+      "allow": "Allow",
+      "deny": "Don't allow"
+    },
+    "control": {
+      "take": "Take control",
+      "giveBack": "Give back to Nyra"
+    },
+    "button": {
+      "open": "Open the browser",
+      "openTitle": "Open the browser: browse yourself or ask Nyra to check, fill in or capture a page",
+      "show": "Show the browser",
+      "showTitle": "Show the browser window. Ask Nyra anything about the page"
+    },
+    "card": {
+      "label": "Nyra's browser",
+      "working": "Nyra is using the browser",
+      "asking": "Waiting for your permission",
+      "yours": "You're using it · Nyra waits",
+      "yoursHint": "Take your time on the page. Nyra won't touch anything until you give it back.",
+      "done": "Done",
+      "stopped": "Stopped at a failure",
+      "you": "You",
+      "thumbnail": "See the window's latest picture large: {{title}}",
+      "thumbnailName": "Browser · {{title}}",
+      "showWindow": "Show window",
+      "earlier_one": "{{count, number}} earlier step",
+      "earlier_other": "{{count, number}} earlier steps",
+      "steps_one": "{{count, number}} step",
+      "steps_other": "{{count, number}} steps",
+      "ok": "{{count, number}} fine",
+      "noEffect": "{{count, number}} with no effect",
+      "failed": "{{count, number}} failed",
+      "showSteps": "Show the steps",
+      "hideSteps": "Hide the steps",
+      "stepsLabel": "What Nyra did in the browser"
+    },
+    "step": {
+      "browse": "Opened {{target}}",
+      "click": "Clicked “{{target}}”",
+      "type": "Typed in “{{target}}”",
+      "key": "Pressed the {{target}} key",
+      "pageSearch": "Looked for “{{target}}”",
+      "screenshot": "Took a screenshot of the page",
+      "hidden": "hidden",
+      "mark": "Pointed out “{{target}}”",
+      "unmark": "Took the marks away"
+    },
+    "stepNow": {
+      "browse": "Opening {{target}}…",
+      "click": "Clicking “{{target}}”…",
+      "type": "Typing in “{{target}}”…",
+      "key": "Pressing the {{target}} key…",
+      "pageSearch": "Looking for “{{target}}”…",
+      "screenshot": "Taking a screenshot…",
+      "mark": "Pointing out “{{target}}”…",
+      "unmark": "Taking the marks away…"
+    },
+    "outcome": {
+      "ok": "Fine",
+      "noEffect": "No effect",
+      "failed": "Failed",
+      "checking": "Checking the result…",
+      "navigated": "Now on {{site}}",
+      "changed": "The page changed",
+      "unchanged": "The page didn't change",
+      "notTyped": "The field doesn't hold what it typed",
+      "filled": "Filled in",
+      "found_one": "{{count, number}} match",
+      "found_other": "{{count, number}} matches",
+      "notFound": "Not on the page",
+      "shot": "It's below",
+      "refused": "You didn't allow it",
+      "marked": "You see it marked on the page",
+      "markedFirst_one": "Marked the first of {{count, number}}",
+      "markedFirst_other": "Marked the first of {{count, number}}",
+      "markMissing": "Not on the page",
+      "markHidden": "It's on the page, but out of view"
+    },
+    "strip": {
+      "label": "Browser status",
+      "open": "Browser open",
+      "working": "Nyra is using it",
+      "asking": {
+        "open": "Nyra wants to open the browser",
+        "use": "Nyra wants to use your browser",
+        "local": "Nyra wants to open an address on your network"
+      },
+      "yours": "You're using it",
+      "steps": "See the steps",
+      "close": "Close",
+      "closeLabel": "Close the browser"
+    }
+  },
+  "transcription": {
+    "settings": {
+      "model": "Model",
+      "speakers": "Tell speakers apart",
+      "speakersHint": "Puts “Speaker 1”, “Speaker 2”… on each line. Nyra can work out names if someone introduces themselves.",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "empty": "There's no Whisper model yet. Add one from Hugging Face, community ones too, or from a folder.",
+      "from": {
+        "huggingface": "Hugging Face · {{origin}}",
+        "folder": "Folder · {{origin}}"
+      },
+      "addModel": "Add model",
+      "huggingFace": "From Hugging Face",
+      "repositoryExample": "HiTZ/whisper-small-es",
+      "add": "Add",
+      "format": "The repository or its link: a Whisper as the community publishes it (Transformers format) or in sherpa-onnx's format.",
+      "fromFolder": "From a folder…",
+      "sharedFirst": "The first time, the models that detect voice and tell speakers apart are downloaded too ({{size}}).",
+      "adding": "Adding the model… {{percent}} %",
+      "preparing": "Preparing…",
+      "formats": {
+        "transformers": "Transformers",
+        "onnx": "sherpa-onnx"
+      }
+    },
+    "speaker": "Speaker {{n}}",
+    "fileName": "{{name}} (transcript).md",
+    "empty": "Nobody can be heard speaking in {{name}}.",
+    "disabled": "Audio transcription is turned off in Settings → General → Nyra's features.",
+    "providers": {
+      "list": "Audio providers",
+      "local": "On this computer",
+      "localDescription": "Whisper transcribes on your computer, without sending the audio to any service. Add the models you want to use.",
+      "ready": "Using {{model}}",
+      "missing": "No models",
+      "configure": "Choose the model in Audio providers"
+    },
+    "storing": "Preparing the audio…",
+    "type": "Audio",
+    "strip": {
+      "label": "Transcription",
+      "needsModel": "To transcribe {{name}}, add a Whisper model in Settings → Audio providers. It goes on by itself once you add it.",
+      "reading": "Reading {{name}}…",
+      "speakers": "Telling the voices of {{name}} apart…",
+      "transcribing": "Transcribing {{name}}… {{percent}}%",
+      "cancel": "Cancel",
+      "adding": "Adding the model… {{percent}} %"
+    },
+    "viewer": {
+      "pending": "Nyra transcribes it when it needs to: ask it to “transcribe it”, “summarize it” or “what was decided?”.",
+      "done": "Its transcript is in “{{name}}”."
+    },
+    "title": "Transcript of {{name}}",
+    "aboutSpeakers_one": "{{duration}} · {{count, number}} speaker",
+    "aboutSpeakers_other": "{{duration}} · {{count, number}} speakers",
+    "fileWord": "transcript"
+  },
+  "mcp": {
+    "call": {
+      "label": "Tool {{tool}} of {{server}}",
+      "asking": "Wants to use it",
+      "running": "Using it…",
+      "done": "Done",
+      "failed": "Failed",
+      "denied": "Not allowed",
+      "stopped": "Stopped",
+      "allow": "Allow",
+      "allowAlways": "Always allow",
+      "deny": "Don't allow"
+    },
+    "settings": {
+      "list": "Servers",
+      "add": "Add server",
+      "import_one": "Import {{count, number}} from Claude Desktop",
+      "import_other": "Import {{count, number}} from Claude Desktop",
+      "imported_one": "{{count, number}} server imported.",
+      "imported_other": "{{count, number}} servers imported.",
+      "newServer": "New server",
+      "serverDescription": "A program on your computer that gives Nyra tools. Nyra asks you before using each one, except those you always allow.",
+      "trustWarning": "Only add servers from sources you trust, such as the service itself or a well-known project. A server runs with your user's permissions, and what it says about its tools reaches Nyra: a malicious one could try to give it instructions.",
+      "enabled": "Use this server",
+      "name": "Name",
+      "command": "Command",
+      "commandHint": "What starts it, as in its documentation: npx, uvx, docker or a program's path.",
+      "variables": "Variables",
+      "variablesHint": "Keys or data the server needs, like a token. They're kept in the system keychain. Leave a value empty to keep the saved one.",
+      "variableName": "Variable name",
+      "variableValue": "Value of {{name}}",
+      "saved": "Saved",
+      "removeVariable": "Remove {{name}}",
+      "addVariable": "Add variable",
+      "save": "Save",
+      "test": "Reconnect",
+      "delete": "Delete",
+      "deleteTitle": "Delete {{name}}?",
+      "deleteHint": "Its settings and saved variables are deleted. Conversations don't change.",
+      "tools": "Tools",
+      "connecting": "Connecting… The first time can take a while as it installs.",
+      "noTools": "This server offers no tools.",
+      "readOnly": "Read only",
+      "alwaysAllow": "Always allow",
+      "alwaysAllowTool": "Always allow {{tool}}",
+      "use": "Use",
+      "useTool": "Use {{tool}}",
+      "log": "Server log",
+      "logRefresh": "Refresh the log",
+      "logEmpty": "The server hasn't written anything since it started.",
+      "inUse": "Nyra can use {{used, number}} of {{total, number}}. Those you turn off aren't offered to it, so each message costs less.",
+      "choice": {
+        "all": "All",
+        "readOnly": "Read-only",
+        "none": "None"
+      },
+      "off": "Off",
+      "failed": "Couldn't connect",
+      "notStarted": "Not started",
+      "toolCount_one": "{{count, number}} tool",
+      "toolCount_other": "{{count, number}} tools",
+      "namePlaceholder": "GitHub",
+      "commandPlaceholder": "docker run -i --rm -e GITHUB_PERSONAL_ACCESS_TOKEN ghcr.io/github/github-mcp-server",
+      "variablePlaceholder": "GITHUB_PERSONAL_ACCESS_TOKEN"
+    }
+  },
+  "welcome": {
+    "label": "Nyra welcome",
+    "progress": "Welcome progress",
+    "stepOf": "Step {{step}} of {{total}}",
+    "skip": "Skip welcome",
+    "back": "Back",
+    "continue": "Continue",
+    "later": "Do it later",
+    "hello": {
+      "title": "Welcome to Nyra",
+      "text": "Your AI assistant on the desktop: it uses models on your computer or in the cloud, works with your files and asks before it acts.",
+      "language": "Interface language",
+      "fromSystem": "Based on your system",
+      "chosen": "Chosen by you",
+      "start": "Get started"
+    },
+    "appearance": {
+      "title": "Choose how it looks",
+      "lead": "You can change it any time in Settings → Appearance."
+    },
+    "where": {
+      "title": "Where do you want to run models?",
+      "lead": "Pick one or both.",
+      "none": "Continue without models",
+      "later": "You can change this or add more in Settings → Providers.",
+      "local": {
+        "title": "On your computer",
+        "with": "Ollama",
+        "private": "Private: nothing leaves your computer",
+        "free": "Free",
+        "offline": "Works offline",
+        "needs": "Needs about 8 GB of memory and a model download of 2–8 GB."
+      },
+      "cloud": {
+        "title": "In the cloud",
+        "with": "Claude, OpenAI, Gemini",
+        "capable": "The most capable models",
+        "noDownload": "Nothing to download",
+        "needs": "Needs an API key from the provider, which charges per use."
+      }
+    },
+    "ollama": {
+      "title": "Models on your computer",
+      "lead": "Nyra uses Ollama to run models right here.",
+      "checking": "Looking for Ollama on this computer…",
+      "checkingHint": "This only takes a moment.",
+      "address": "Ollama address",
+      "connect": "Connect",
+      "addressHint": "On that computer, Ollama must accept network connections (OLLAMA_HOST=0.0.0.0).",
+      "connecting": "Connecting…",
+      "noAnswer": "No response: check the address and that Ollama is running there.",
+      "lookHere": "Look on this computer again",
+      "haveModelsHint": "Ollama is running. You can start chatting with any of them.",
+      "downloaded": "All set: {{name}} is downloaded",
+      "downloadedHint": "It will be the default model for your conversations.",
+      "here": "this computer",
+      "keepGoing": "You can go on with the next steps: the download keeps going even if you close the welcome, and you’ll see it in the sidebar.",
+      "forMemory": "Your computer has {{memory}} GB: we recommend {{name}}, {{why}}.",
+      "forUnknown": "We recommend {{name}}, {{why}}.",
+      "recommended": "Recommended",
+      "downloadModel": "Download",
+      "others": "See other models",
+      "why": {
+        "light": "light, fast and good at Spanish",
+        "balanced": "good at Spanish and fast",
+        "capable": "more capable and understands images"
+      },
+      "haveModels_one": "All set: you have {{count}} model",
+      "haveModels_other": "All set: you have {{count}} models",
+      "addressExample": "http://192.168.1.20:11434"
+    },
+    "cloud": {
+      "title": "Cloud models",
+      "lead": "Connect your account with an API key. Each provider charges for what you use.",
+      "provider": "Provider",
+      "key": "API key for {{name}}",
+      "paste": "Paste it here",
+      "hideKey": "Hide the key",
+      "showKey": "Show the key",
+      "check": "Check",
+      "checking": "Checking the key…",
+      "remember": "Remember on this computer",
+      "another": "Add another provider",
+      "works_one": "{{name}} · {{count}} model",
+      "works_other": "{{name}} · {{count}} models"
+    },
+    "mcp": {
+      "title": "MCP connections",
+      "optional": "Optional",
+      "explain": "MCP connections link Nyra to services like GitHub, a database or Notion. Each one gives it new tools.",
+      "importedHint": "You’ll find them in Settings → MCP connections. Nyra will ask before using each tool.",
+      "import": "Import them",
+      "notNow": "Not now",
+      "add": "Add a server",
+      "trust": "Only add services from people you trust.",
+      "imported_one": "{{count}} server imported",
+      "imported_other": "{{count}} servers imported",
+      "found_one": "We found {{count}} Claude Desktop server",
+      "found_other": "We found {{count}} Claude Desktop servers"
+    },
+    "done": {
+      "title": "All set",
+      "lead": "Here’s what you set up. Everything can be changed in Settings.",
+      "almost": "Nyra is almost ready",
+      "almostLead": "It still needs a model to chat. You can set one up whenever you like.",
+      "downloading": "{{name}} · downloading, you can start chatting meanwhile",
+      "ready": "Ready",
+      "setUpLater": "Set it up in Settings → Providers",
+      "noKey": "No API key yet",
+      "models": "Models",
+      "noneChosen": "You didn’t pick any: set them up in Settings → Providers",
+      "noMcp": "None for now",
+      "notSet": "Not set up",
+      "more": "Nyra can do much more: search the web, remember things about you, work with folders, run code or use the browser. It’s all explained and turned on in Settings → Nyra features.",
+      "showFeatures": "See what Nyra can do",
+      "chat": "Start chatting"
+    },
+    "noModels": {
+      "title": "No models yet:",
+      "text": "set them up to start chatting.",
+      "setUp": "Set up models",
+      "welcome": "Open the welcome"
+    },
+    "settings": {
+      "title": "Welcome",
+      "again": "See it again"
+    },
+    "escKey": "Esc",
+    "access": {
+      "title": "System permissions",
+      "lead": "Grant them now so everything works from the start. Nyra only uses them when you ask.",
+      "microphone": {
+        "title": "Microphone",
+        "why": "To dictate messages. What you say is transcribed on your computer."
+      },
+      "screen": {
+        "title": "Screen recording",
+        "why": "So Nyra can look at your screen when you ask, and for screenshots."
+      },
+      "notifications": {
+        "title": "Notifications",
+        "why": "To let you know when a reply is done or a command needs your approval."
+      },
+      "allow": "Allow",
+      "asking": "Waiting…",
+      "granted": "Granted",
+      "openSettings": "Open System Settings",
+      "notificationsDenied": "Turn them on in the system settings",
+      "screenReopen": "After allowing screen recording or accessibility, the system may ask you to reopen Nyra.",
+      "later": "If you leave any for later, Nyra will ask the first time it needs it.",
+      "accessibility": {
+        "title": "Accessibility",
+        "why": "So Nyra can use your mouse and keyboard when you ask it to do a task for you."
+      }
+    }
+  },
+  "screen": {
+    "strip": {
+      "label": "Your screen",
+      "asking": "Nyra wants to see your screen",
+      "askingHint": "Only in this conversation. It captures the screen where your mouse is.",
+      "allow": "Allow",
+      "deny": "No",
+      "marks_one": "{{count, number}} mark on your screen",
+      "marks_other": "{{count, number}} marks on your screen",
+      "marksHint": "Click a note to remove it.",
+      "clear": "Remove the marks",
+      "askingAct": "Nyra wants to use your mouse and keyboard",
+      "askingActHint": "Only for this task. You'll see its pointer and can keep using your mouse. “Stop” ends it.",
+      "acting": "Nyra is using your mouse and keyboard",
+      "actingHint": "You can keep using your mouse. “Stop” ends it whenever you want.",
+      "stop": "Stop"
+    },
+    "card": {
+      "label": "What Nyra did on your screen"
+    },
+    "step": {
+      "look": "Looked at your screen",
+      "point": "Pointed out “{{target}}”",
+      "unpoint": "Removed the marks",
+      "watch": "Waited for: {{target}}",
+      "click": "Clicked: {{target}}",
+      "type": "Typed “{{target}}”",
+      "key": "Pressed {{target}}",
+      "scroll": "Scrolled over “{{target}}”"
+    },
+    "outcome": {
+      "running": "Working…",
+      "ok": "Done",
+      "missing": "Couldn't find it",
+      "refused": "You didn't allow it",
+      "failed": "Failed",
+      "done": "You said it was done",
+      "ended": "You ended the guide",
+      "idle": "No change in 5 minutes",
+      "taken": "You stopped it"
+    },
+    "marks": {
+      "close": "Remove this mark"
+    },
+    "guide": {
+      "step": "Step {{step}}",
+      "checking": "Looking at what you did…",
+      "done": "I did it",
+      "end": "End"
+    },
+    "pointer": {
+      "typing": "Typing…",
+      "keys": "Pressing {{keys}}",
+      "scrolling": "Scrolling…",
+      "label": "Nyra's pointer",
+      "thinking": "Thinking…",
+      "farewell": "Done. Go back to Nyra to see the answer"
+    }
+  },
+  "updates": {
+    "notice": {
+      "label": "Update",
+      "available": "A new version is out: {{version}}",
+      "youHave": "You have {{version}}",
+      "skipped_one": "You have {{version}} · {{count, number}} new version",
+      "skipped_other": "You have {{version}} · {{count, number}} new versions",
+      "seeNotes": "See what's new",
+      "later": "Later",
+      "update": "Update",
+      "download": "Download",
+      "downloading": "Downloading {{version}}",
+      "cancel": "Cancel",
+      "ready": "Ready to install",
+      "readyText": "Nyra will restart to finish.",
+      "onQuit": "When I quit",
+      "onQuitDone": "It will install when you quit",
+      "restart": "Restart now",
+      "failed": "The update couldn't be downloaded",
+      "failedAt": "The download stopped at {{percent}}%.",
+      "byHand": "Download it manually",
+      "retry": "Retry",
+      "updated": "Nyra was updated to {{version}}",
+      "close": "Close",
+      "progress": "{{percent}}% · {{done}} of {{total}}"
+    },
+    "notes": {
+      "title": "Nyra {{version}}",
+      "titleUpdated": "What's new in {{version}}",
+      "newVersions_one": "{{count, number}} new version",
+      "newVersions_other": "{{count, number}} new versions",
+      "version": "Version {{version}}",
+      "label": "Release notes",
+      "empty": "The notes for this version couldn't be loaded.",
+      "groups": {
+        "new": "New",
+        "improvements": "Improvements",
+        "fixes": "Fixes"
+      },
+      "updateNow": "Update now",
+      "downloading": "Downloading {{version}}…",
+      "keepsGoing": "You can close this window, the download keeps going.",
+      "readyText": "Nyra will restart to finish. Your conversations stay as they are.",
+      "package": "This install (.deb or .rpm) is updated with your package manager.",
+      "upToDate": "You're on {{version}}",
+      "close": "Close (Esc)"
+    },
+    "settings": {
+      "title": "Updates",
+      "description": "How you hear about new versions of Nyra.",
+      "statusOn": "On open",
+      "statusOff": "By hand",
+      "auto": "Check for updates when Nyra opens",
+      "autoHint": "Nyra will check for a new version every time it opens.",
+      "version": "Nyra Bot · v{{version}}",
+      "package": "Updated with your package manager",
+      "checkNow": "Check now",
+      "checking": "Checking…",
+      "latest": "You're on the latest version.",
+      "available": "A new version is out: {{version}}",
+      "failed": "Couldn't check.",
+      "failedHint": "Check your connection and try again.",
+      "dot": "An update is available"
+    }
+  }
+}

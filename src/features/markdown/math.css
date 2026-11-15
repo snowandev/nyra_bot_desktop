@@ -1,0 +1,27 @@
+/* Formulas in replies */
+
+/* A long formula scrolls on its own instead of widening the chat column */
+.markdown .katex-display {
+  margin: 0.8em 0;
+  padding: 2px 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* A formula that can't be drawn is shown as written, in the error color */
+.markdown .katex-error {
+  color: var(--danger);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+/* In a shared image each formula becomes a picture of its own size (sharpenFormulas): its box has to hold all of it,
+   a fraction's lower half included, and a block one is measured around the formula, not across the column */
+.share-card .markdown .katex-display {
+  overflow: visible;
+}
+
+.share-card .markdown .katex,
+.share-card .markdown .katex-display > .katex > .katex-html {
+  display: inline-block;
+}

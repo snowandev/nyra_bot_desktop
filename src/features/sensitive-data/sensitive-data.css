@@ -1,0 +1,339 @@
+/* Sensitive data: indicator next to Send, its popover and the mark on sent messages */
+
+.composer-send {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+}
+
+.sensitive-data {
+  position: relative;
+}
+
+.sensitive-data-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 32px;
+  min-width: 32px;
+  padding: 0 8px;
+  border: 1.5px solid rgba(var(--warning-rgb), 0.55);
+  border-radius: 999px;
+  background: rgba(var(--warning-rgb), 0.14);
+  color: var(--warning-text);
+  font-size: calc(12.5px * var(--font-scale));
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  /* A single entrance: it grows a little and sends out one ring. Mounting again (after it went away) replays it */
+  animation: sensitive-appear 0.42s cubic-bezier(0.2, 0.9, 0.3, 1.3) both,
+    sensitive-ring 0.9s ease-out 0.15s 1 both;
+}
+
+.sensitive-data-trigger.single {
+  padding: 0;
+}
+
+.sensitive-data-trigger:hover,
+.sensitive-data-trigger[aria-expanded="true"] {
+  border-color: var(--orange);
+}
+
+.sensitive-data-trigger[aria-expanded="true"] {
+  background: var(--orange);
+  color: var(--text-on-accent);
+}
+
+@keyframes sensitive-appear {
+  0% {
+    transform: scale(0.55);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes sensitive-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(var(--warning-rgb), 0.55);
+  }
+  100% {
+    box-shadow: 0 0 0 9px rgba(var(--warning-rgb), 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sensitive-data-trigger {
+    animation: none;
+  }
+}
+
+.sensitive-data-popover {
+  position: absolute;
+  right: 0;
+  z-index: 6;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: 0 18px 40px var(--shadow-strong);
+  text-align: left;
+  /* Never taller than the room on its side (useFitPlacement); the list scrolls inside */
+  max-height: var(--fit-height, 70vh);
+  overflow: hidden;
+}
+
+.sensitive-data-popover > :not(.sensitive-data-list) {
+  flex-shrink: 0;
+}
+
+.sensitive-data-popover[data-placement="up"] {
+  bottom: calc(100% + 10px);
+}
+
+.sensitive-data-popover[data-placement="down"] {
+  top: calc(100% + 10px);
+}
+
+.sensitive-data-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 10px 10px 14px;
+  border-bottom: 1px solid var(--surface-raised);
+}
+
+.sensitive-data-shield,
+.sensitive-data-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--warning-text);
+}
+
+.sensitive-data-shield {
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(var(--warning-rgb), 0.55);
+  border-radius: 9px;
+  background: rgba(var(--warning-rgb), 0.14);
+}
+
+.sensitive-data-header h4 {
+  flex: 1;
+  margin: 0;
+  font-size: calc(14.5px * var(--font-scale));
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.sensitive-data-header small {
+  display: block;
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+  font-weight: 600;
+}
+
+.sensitive-data-list {
+  min-height: 0;
+  max-height: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 6px;
+  overflow: auto;
+  list-style: none;
+}
+
+.sensitive-data-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 10px;
+}
+
+.sensitive-data-list li:hover {
+  background: var(--bg);
+}
+
+.sensitive-data-icon {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--surface-raised);
+  border-radius: 8px;
+  background: var(--bg);
+}
+
+.sensitive-data-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+
+.sensitive-data-text strong {
+  font-size: calc(13px * var(--font-scale));
+  font-weight: 800;
+}
+
+.sensitive-data-text span {
+  overflow: hidden;
+  color: var(--text-soft);
+  font-size: calc(12px * var(--font-scale));
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sensitive-data-text .mono {
+  color: var(--text-muted);
+  font-size: calc(11px * var(--font-scale));
+}
+
+.sensitive-data-action {
+  flex-shrink: 0;
+  min-height: 28px;
+  padding: 0 9px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--surface);
+  font-size: calc(11.5px * var(--font-scale));
+  font-weight: 800;
+}
+
+.sensitive-data-action:hover {
+  background: var(--surface-raised);
+}
+
+.sensitive-data-destination {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+  line-height: 1.45;
+}
+
+.sensitive-data-destination svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--info);
+}
+
+.sensitive-data-destination strong {
+  color: var(--text);
+}
+
+.sensitive-data-help {
+  margin: 10px 14px 0;
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+  line-height: 1.45;
+}
+
+.sensitive-data-help span {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-muted);
+}
+
+/* The way out that keeps the message: hide the values and send the rest */
+.sensitive-data-hide {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 10px 14px 0;
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+  line-height: 1.45;
+}
+
+.sensitive-data-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 14px 12px;
+  color: var(--text-muted);
+  font-size: calc(11.5px * var(--font-scale));
+}
+
+.sensitive-data-footer > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.sensitive-data-footer svg {
+  color: var(--success);
+}
+
+.sensitive-data-footer .link-button {
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+}
+
+/* Under a sent message: grey, with the shield in orange; the details show on hover or focus */
+.sensitive-sent {
+  position: relative;
+  align-self: flex-end;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  /* The message's own gap is 8px; the mark belongs to the bubble above */
+  margin-top: -3px;
+  color: var(--text-muted);
+  font-size: calc(11.5px * var(--font-scale));
+  font-weight: 700;
+  cursor: default;
+}
+
+.sensitive-sent svg {
+  color: var(--warning-text);
+}
+
+.sensitive-sent-tip {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 4;
+  width: max-content;
+  max-width: 260px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: 0 18px 40px var(--shadow-strong);
+  color: var(--text);
+  font-size: calc(12px * var(--font-scale));
+  font-weight: 600;
+  line-height: 1.4;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.12s;
+}
+
+.sensitive-sent:hover .sensitive-sent-tip,
+.sensitive-sent:focus-visible .sensitive-sent-tip {
+  opacity: 1;
+  visibility: visible;
+}

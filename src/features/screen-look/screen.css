@@ -1,0 +1,107 @@
+/* Nyra asking to look at the screen, or its marks on it, above the composer */
+.screen-strip {
+  margin-bottom: 8px;
+  border-color: var(--accent-line);
+}
+
+.screen-strip.guiding {
+  background: var(--accent-tint);
+}
+
+.screen-strip.guiding b {
+  color: var(--accent);
+}
+
+.screen-strip-text span[title] {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.screen-strip-text {
+  flex: 1 1 200px;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+}
+
+.screen-strip-text b {
+  font-weight: 800;
+}
+
+.screen-strip-text span {
+  color: var(--text-muted);
+}
+
+/* What a reply did on the screen, where it did it */
+.screen-card {
+  margin: 12px 0;
+  padding: 10px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  background: var(--surface);
+  font-family: var(--font-app);
+}
+
+.screen-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.screen-step {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  font-size: calc(13px * var(--font-scale));
+}
+
+.screen-step > svg {
+  color: var(--accent);
+}
+
+.screen-step-text {
+  flex: 1 1 180px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.screen-step-outcome {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-muted);
+  font-size: calc(12.5px * var(--font-scale));
+  font-weight: 700;
+}
+
+.screen-step.ok .screen-step-outcome {
+  color: var(--success);
+}
+
+.screen-step.failed .screen-step-outcome {
+  color: var(--danger);
+}
+
+.screen-step-error {
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+/* In the quick bar, with less room: the strip over the bar, the card in a reply */
+.quick-screen .screen-strip {
+  min-height: 36px;
+  margin: 0 4px 6px;
+}
+
+.quick-reply-body .screen-card {
+  margin: 4px 0 8px;
+  padding: 8px 10px;
+  border-radius: 12px;
+}

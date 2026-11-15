@@ -1,0 +1,894 @@
+/* Commands in a reply (nyra_design/nyra-comandos.html): of the family of the proposed changes, dashed while nothing
+   has run and solid once it ran. The state shows in a tag with an icon and text, so color is never the only clue. */
+
+.command-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  padding: 12px;
+  border: 1.5px dashed var(--border-strong);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.command-card.ran {
+  border-style: solid;
+  border-color: var(--surface-raised);
+}
+
+.command-card.attention {
+  border-style: solid;
+  border-color: rgba(var(--highlight-rgb), 0.45);
+}
+
+.command-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.command-icon {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--surface-raised);
+  border-radius: 9px;
+  background: var(--bg);
+  color: var(--text-soft);
+}
+
+.command-title {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.command-title b {
+  font-size: calc(13.5px * var(--font-scale));
+  font-weight: 800;
+}
+
+.command-title small {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: calc(12px * var(--font-scale));
+  color: var(--text-muted);
+}
+
+.command-title small svg {
+  color: var(--workspace);
+}
+
+.command-folder {
+  font-family: var(--font-mono);
+  font-size: calc(11.5px * var(--font-scale));
+  color: var(--text-soft);
+}
+
+.command-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 9px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  font-size: calc(11.5px * var(--font-scale));
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--text-soft);
+}
+
+.command-state.pending {
+  border-style: dashed;
+}
+
+.command-state.running {
+  border-color: var(--accent-line);
+  background: var(--accent-tint);
+  color: var(--text);
+}
+
+.command-state.done {
+  border-color: rgba(var(--success-rgb), 0.35);
+  background: rgba(var(--success-rgb), 0.1);
+  color: var(--success);
+}
+
+.command-state.failed {
+  border-color: rgba(var(--danger-rgb), 0.4);
+  background: rgba(var(--danger-rgb), 0.1);
+  color: var(--danger);
+}
+
+.command-state.attention {
+  border-color: rgba(var(--highlight-rgb), 0.45);
+  background: rgba(var(--highlight-rgb), 0.08);
+  color: var(--highlight);
+}
+
+.command-spinner {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  border: 2px solid var(--accent-tint-strong);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.command-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--terminal-bg);
+  font-family: var(--font-mono);
+  font-size: calc(13px * var(--font-scale));
+  line-height: 1.55;
+}
+
+.command-line.editing {
+  box-shadow: inset 0 0 0 1.5px var(--accent);
+}
+
+.command-prompt {
+  color: var(--accent);
+  font-weight: 700;
+  user-select: none;
+}
+
+.command-line code {
+  flex: 1;
+  min-width: 0;
+  font-size: inherit;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.command-line mark {
+  padding: 0 2px;
+  border-radius: 3px;
+  background: rgba(var(--highlight-rgb), 0.22);
+  color: inherit;
+  text-decoration: underline wavy var(--highlight);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.command-line textarea {
+  flex: 1;
+  min-width: 0;
+  min-height: 22px;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  resize: vertical;
+}
+
+/* A program reads like code: colored, with its line numbers, and scrolls past a screenful */
+.command-code {
+  position: relative;
+  max-height: 320px;
+  overflow: auto;
+  padding: 10px 0;
+  border-radius: 10px;
+  background: var(--terminal-bg);
+}
+
+.command-code .highlighted-code {
+  font-size: calc(12.5px * var(--font-scale));
+  line-height: 1.6;
+}
+
+.command-code .line-numbers {
+  width: 40px;
+  padding-right: 12px;
+}
+
+.command-code .highlighted-code pre {
+  padding-right: 12px;
+  white-space: pre;
+}
+
+.command-code .command-edited {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.command-line.editing textarea[rows] {
+  resize: vertical;
+  white-space: pre;
+  overflow: auto;
+}
+
+.code-files {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.code-files-title {
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+  font-weight: 600;
+}
+
+.code-files ul {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.code-file {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.code-file-preview {
+  max-width: 100%;
+  max-height: 360px;
+  align-self: flex-start;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.code-file-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  color: var(--text-muted);
+}
+
+.code-file-name {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text);
+  font-size: calc(12.5px * var(--font-scale));
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.code-file-row .spacer {
+  flex: 1;
+}
+
+.code-file-size {
+  flex-shrink: 0;
+  font-size: calc(11.5px * var(--font-scale));
+}
+
+.code-file-error {
+  color: var(--danger);
+  font-size: calc(12px * var(--font-scale));
+}
+
+.command-edited {
+  align-self: center;
+  height: 20px;
+  font-size: calc(10.5px * var(--font-scale));
+}
+
+/* The reply goes on while it runs */
+.command-background {
+  align-self: center;
+  height: 20px;
+  gap: 4px;
+  color: var(--info);
+  font-size: calc(10.5px * var(--font-scale));
+}
+
+.command-risk {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 11px;
+  border: 1px solid rgba(var(--highlight-rgb), 0.45);
+  border-radius: 10px;
+  background: rgba(var(--highlight-rgb), 0.08);
+  font-size: calc(13px * var(--font-scale));
+  line-height: 1.45;
+  color: var(--text-soft);
+}
+
+.command-risk > svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--highlight);
+}
+
+.command-risk b {
+  color: var(--text);
+}
+
+.command-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.command-card .ghost-button.small,
+.command-reads .ghost-button.small,
+.command-output-head .ghost-button.small,
+.command-viewer-foot .ghost-button.small,
+.command-reminder .ghost-button.small {
+  min-height: 28px;
+  padding: 0 9px;
+  gap: 6px;
+  font-size: calc(12px * var(--font-scale));
+}
+
+.command-actions .spacer {
+  flex: 1;
+}
+
+.command-help {
+  font-size: calc(12px * var(--font-scale));
+  color: var(--text-muted);
+}
+
+/* The help gives way before any button when the window is narrow */
+@media (max-width: 760px) {
+  .command-help {
+    display: none;
+  }
+}
+
+/* Output */
+.command-output {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--surface-raised);
+  border-radius: 10px;
+  background: var(--terminal-bg);
+}
+
+.command-output-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 6px 0 10px;
+  border-bottom: 1px solid var(--surface-raised);
+  font-size: calc(12px * var(--font-scale));
+  font-weight: 800;
+  color: var(--text-soft);
+}
+
+.command-output-head .spacer {
+  flex: 1;
+}
+
+.command-fold {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 2px;
+  border: 0;
+  background: transparent;
+  color: var(--text-soft);
+  font-size: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.command-fold svg {
+  transition: transform 0.15s;
+}
+
+.command-fold[aria-expanded="true"] svg {
+  transform: rotate(90deg);
+}
+
+.command-output pre {
+  max-height: 220px;
+  margin: 0;
+  padding: 8px 12px 10px;
+  overflow: auto;
+  font-family: var(--font-mono);
+  font-size: calc(12px * var(--font-scale));
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--text);
+}
+
+.command-output .earlier {
+  display: block;
+  padding: 6px 12px 0;
+  font-size: calc(11.5px * var(--font-scale));
+  font-weight: 800;
+  color: var(--text-muted);
+}
+
+.command-output .question {
+  display: block;
+  margin: 0 -12px;
+  padding: 0 12px;
+  background: rgba(var(--highlight-rgb), 0.08);
+  box-shadow: inset 3px 0 0 var(--highlight);
+  font-weight: 600;
+}
+
+.command-to-end {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 26px;
+  padding: 0 9px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: 0 8px 20px var(--shadow);
+  color: var(--text);
+  font-size: calc(11.5px * var(--font-scale));
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* Answering a question of the command */
+.command-answer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid rgba(var(--highlight-rgb), 0.45);
+  border-radius: 10px;
+  background: var(--bg);
+}
+
+.command-answer .command-prompt {
+  padding-left: 4px;
+  color: var(--highlight);
+}
+
+.command-answer input {
+  flex: 1;
+  min-width: 80px;
+  height: 30px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: calc(13px * var(--font-scale));
+}
+
+.command-answer-note {
+  margin-top: -4px;
+  font-size: calc(12px * var(--font-scale));
+  color: var(--text-muted);
+}
+
+/* Not run, and the parts of an output the model read */
+.command-quiet {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: calc(12.5px * var(--font-scale));
+  color: var(--text-muted);
+}
+
+.command-quiet code {
+  padding: 1px 6px;
+  border-radius: 5px;
+  background: var(--terminal-bg);
+  color: var(--text-soft);
+  font-size: calc(12px * var(--font-scale));
+}
+
+/* What the user wrote to Nyra instead of running it */
+.command-answer {
+  flex-basis: 100%;
+  color: var(--text-soft);
+  font-style: italic;
+  overflow-wrap: anywhere;
+}
+
+.command-quiet.rejected code {
+  text-decoration: line-through;
+  text-decoration-color: var(--text-muted);
+}
+
+/* The parts of the output the model read, at the foot of the card */
+.command-reads {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.command-reads li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 4px 4px 4px 10px;
+  border: 1px solid var(--surface-raised);
+  border-radius: 10px;
+  background: var(--bg);
+  font-size: calc(12.5px * var(--font-scale));
+  color: var(--text-muted);
+}
+
+.command-reads li > svg {
+  flex-shrink: 0;
+  color: var(--accent);
+}
+
+.command-reads .text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Several commands of one request, numbered in the order they run */
+.command-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--surface-raised);
+  border-radius: 16px;
+  background: var(--bg);
+}
+
+.command-group-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4px;
+  font-size: calc(13px * var(--font-scale));
+  font-weight: 800;
+}
+
+.command-group-head span {
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.command-group-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.command-group-item > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.command-number {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--surface-raised);
+  color: var(--text-soft);
+  font-size: calc(11px * var(--font-scale));
+  font-weight: 800;
+}
+
+.command-compact {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--surface-raised);
+  border-radius: 12px;
+  background: var(--surface);
+  font-size: calc(12.5px * var(--font-scale));
+  color: var(--text-soft);
+}
+
+.command-compact.queued {
+  border-style: dashed;
+  opacity: 0.8;
+}
+
+.command-compact code {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text);
+}
+
+/* The whole output, over the chat */
+.command-viewer {
+  width: 100%;
+  max-width: 900px;
+  height: 100%;
+  max-height: 640px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: 0 18px 40px var(--shadow-dialog);
+}
+
+.command-viewer-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 10px 10px 14px;
+  border-bottom: 1px solid var(--surface-raised);
+}
+
+.command-viewer-head .title {
+  flex: 1;
+  min-width: 0;
+}
+
+.command-viewer-head b {
+  display: block;
+  font-size: calc(14px * var(--font-scale));
+  font-weight: 800;
+}
+
+.command-viewer-head small {
+  font-size: calc(12px * var(--font-scale));
+  color: var(--text-muted);
+}
+
+.command-viewer-search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 9px;
+  background: var(--bg);
+  color: var(--text-muted);
+}
+
+.command-viewer-search input {
+  width: 140px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font-size: calc(12.5px * var(--font-scale));
+}
+
+.command-viewer-lines {
+  flex: 1;
+  margin: 0;
+  padding: 8px 0;
+  overflow: auto;
+  background: var(--terminal-bg);
+  font-family: var(--font-mono);
+  font-size: calc(12px * var(--font-scale));
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.command-viewer-lines span {
+  display: block;
+  padding-right: 14px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  /* A long output has tens of thousands of lines: those out of view are neither laid out nor painted. Where the
+     WebView doesn't know it, every line is drawn as before. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 1.55em;
+}
+
+.command-viewer-lines i {
+  display: inline-block;
+  width: 56px;
+  padding-right: 12px;
+  font-style: normal;
+  text-align: right;
+  color: var(--text-muted);
+  user-select: none;
+}
+
+.command-viewer-lines span.read {
+  background: var(--accent-tint);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.command-viewer-lines mark {
+  background: rgba(var(--highlight-rgb), 0.3);
+  color: inherit;
+}
+
+.command-viewer-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--surface-raised);
+  font-size: calc(12px * var(--font-scale));
+  color: var(--text-muted);
+}
+
+.command-viewer-foot .spacer {
+  flex: 1;
+}
+
+/* Above the composer while a command waits and its card is out of view */
+.command-reminder {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 8px 7px 12px;
+  border: 1px solid var(--accent-line);
+  border-radius: 12px;
+  background: var(--accent-tint);
+  font-size: calc(12.5px * var(--font-scale));
+  color: var(--text-soft);
+}
+
+.command-reminder > svg {
+  flex-shrink: 0;
+  color: var(--accent);
+}
+
+.command-reminder .text {
+  flex: 1;
+  min-width: 0;
+}
+
+.command-reminder b,
+.command-reminder code {
+  color: var(--text);
+}
+
+.command-reminder.running {
+  border-color: var(--surface-raised);
+  background: var(--surface);
+}
+
+.command-reminder.asking {
+  border-color: rgba(var(--highlight-rgb), 0.45);
+  background: rgba(var(--highlight-rgb), 0.08);
+}
+
+.command-reminder.asking > svg {
+  color: var(--highlight);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .command-spinner {
+    animation: none;
+  }
+
+  .command-fold svg {
+    transition: none;
+  }
+}
+
+/* A skill's script, read before it runs */
+.skill-script-code {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 10px 12px;
+  background: var(--terminal-bg);
+}
+
+.command-skill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.command-quiet button,
+.command-skill button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-soft);
+  font-size: inherit;
+  font-weight: 800;
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+/* Processes panel: what still runs in the conversation, with its last line and Stop */
+.process-list {
+  margin: 0;
+  padding: 8px 12px;
+  list-style: none;
+  overflow-y: auto;
+}
+
+.process-row {
+  display: flex;
+  gap: 10px;
+  padding: 12px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.process-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--accent);
+}
+
+.process-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.process-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: calc(12.5px * var(--font-scale));
+  font-weight: 700;
+}
+
+.process-meta {
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+}
+
+.process-last {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text-soft);
+  font-size: calc(11.5px * var(--font-scale));
+}
+
+.process-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}

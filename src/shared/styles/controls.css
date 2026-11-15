@@ -1,0 +1,262 @@
+/* Shared controls */
+
+.icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.icon-button:hover:not(:disabled) {
+  background: var(--surface-raised);
+  color: var(--text);
+}
+
+.icon-button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.icon-button.large {
+  width: 44px;
+  height: 44px;
+}
+
+.icon-button.small {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+}
+
+.ghost-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  min-height: 36px;
+  padding: 0 12px 0 8px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-soft);
+  font-size: calc(14px * var(--font-scale));
+  font-weight: 600;
+}
+
+.ghost-button:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+.icon-button.soft {
+  width: 40px;
+  height: 40px;
+  color: var(--text-soft);
+}
+
+.primary-button,
+.send-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--accent);
+  color: var(--text-on-accent);
+  font-weight: 700;
+}
+
+.primary-button:hover,
+.send-button:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.primary-button {
+  min-height: 44px;
+  font-size: calc(14px * var(--font-scale));
+}
+
+.send-button {
+  width: 44px;
+  height: 44px;
+}
+
+.send-button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* Used across the app, also in the quick bar's strips and cards */
+.outline-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: calc(13px * var(--font-scale));
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.outline-button:hover:not(:disabled) {
+  background: var(--surface-raised);
+}
+
+.outline-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.outline-button.danger {
+  border-color: rgba(var(--danger-rgb), 0.45);
+  background: transparent;
+  color: var(--danger);
+}
+
+.outline-button.danger:hover:not(:disabled) {
+  background: rgba(var(--danger-rgb), 0.08);
+}
+
+.outline-button.small,
+.primary-button.small {
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 8px;
+  font-size: calc(12px * var(--font-scale));
+}
+
+.primary-button.small {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px 6px;
+  font-size: calc(11px * var(--font-scale));
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Search box inside a menu or picker */
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 10px;
+  border: 1px solid rgba(var(--accent-rgb), 0.4);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text-muted);
+}
+
+.search-field input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  font-size: calc(13px * var(--font-scale));
+  outline: none;
+}
+
+.brand-badge {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 10px;
+}
+
+/* The backdrop of every window over the app (Dialog) */
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: var(--backdrop);
+}
+
+/* An entry of ActionMenu: its separator and its option, laid out as if the wrapper weren't there */
+.action-menu-entry {
+  display: contents;
+}
+
+/* The explanation of InlineConfirm keeps the spacing of the question around it */
+.inline-confirm-text {
+  display: flex;
+  flex-direction: column;
+  gap: inherit;
+}
+
+/* A choice between a few options, as pressed buttons side by side; small in panels, wide to fill its row */
+.segmented {
+  display: inline-flex;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid var(--surface-raised);
+  border-radius: 11px;
+  background: var(--surface);
+}
+
+.segmented button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 11px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+  font-weight: 800;
+}
+
+.segmented button[aria-pressed="true"] {
+  background: var(--surface-raised);
+  color: var(--text);
+}
+
+.segmented button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.segmented.small {
+  gap: 2px;
+  padding: 2px;
+  border-radius: 9px;
+}
+
+.segmented.small button {
+  min-height: 26px;
+  padding: 0 10px;
+  border-radius: 7px;
+  font-size: calc(12px * var(--font-scale));
+  font-weight: 700;
+}
+
+.segmented.wide {
+  display: flex;
+}
+
+.segmented.wide button {
+  flex: 1;
+  justify-content: center;
+}

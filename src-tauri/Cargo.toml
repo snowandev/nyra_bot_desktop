@@ -1,0 +1,114 @@
+[package]
+name = "nyra-bot"
+version = "0.9.0"
+description = "Nyra Bot"
+authors = ["snowandev"]
+license = "MIT"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "nyra_bot_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["image-png", "tray-icon", "macos-private-api"] }
+# unsafe-headers: Ollama's requests go without Origin, which it refuses on Windows (see providers/ollamaApi.ts)
+tauri-plugin-http = { version = "2.8.0", features = ["gzip", "brotli", "deflate", "unsafe-headers"] }
+tauri-plugin-clipboard-manager = "2.4.1"
+tauri-plugin-notification = "2.5.1"
+rusqlite = { version = "0.41", features = ["bundled"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.151"
+tauri-plugin-opener = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-single-instance = "2.5.4"
+tauri-plugin-global-shortcut = "2.4.1"
+# Updates published on GitHub, signed with the project's key, and relaunching once installed (updates.rs)
+tauri-plugin-updater = "2"
+tauri-plugin-process = "2"
+zip = { version = "9.0.4", default-features = false, features = ["deflate"] }
+yaml-rust2 = "0.13.0"
+base64 = "0.22"
+scraper = "0.27.0"
+keyring = "4.2"
+ignore = "0.4"
+# Files written whole through a temporary one beside them (util::write_atomically)
+tempfile = "3.27"
+# What a terminal prints, read as a terminal does, to drop its control codes (terminal.rs)
+vte = "0.15"
+# Programs run with a time limit, their output read while they run (git, the user's shell, interpreters)
+process_control = "5.2"
+image = { version = "0.25", default-features = false, features = ["png", "jpeg"] }
+portable-pty = "0.9.0"
+calamine = "0.38"
+quick-xml = "0.42"
+encoding_rs = "0.8"
+# The browser Nyra controls (browser.rs) is driven over a local WebSocket
+tungstenite = { version = "0.30", default-features = false, features = ["handshake"] }
+# Transcribing audio on this computer (transcription.rs): Whisper, speaker separation and voice detection, with its
+# native libraries linked statically
+sherpa-onnx = "2.0.1"
+# Reading the audio the user attaches; only the formats Nyra offers
+symphonia = { version = "0.6.1", default-features = false, features = ["mp3", "aac", "isomp4", "flac", "vorbis", "ogg", "wav", "pcm"] }
+# Connections to MCP servers the user adds (mcp.rs): the official SDK, as a client of servers run on this computer
+rmcp = { version = "3.9.0", default-features = false, features = ["client", "transport-child-process"] }
+which = "8"
+tokio = { version = "1", features = ["process", "io-util", "time", "sync"] }
+cpal = "0.18.2"
+# The Whisper models of the community, in Hugging Face's Transformers format (whisper_transformers.rs): run as they
+# are published, without converting them; the tokenizer with its pure-Rust regular expressions, nothing to compile
+candle-core = "0.11.0"
+candle-nn = "0.11.0"
+candle-transformers = "0.11.0"
+tokenizers = { version = "0.22", default-features = false, features = ["fancy-regex"] }
+
+
+[dev-dependencies]
+# The async tests of real MCP servers
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+
+# Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 3
+panic = "abort"
+strip = true
+
+[target."cfg(windows)".dependencies]
+xcap = "0.9.8"
+# Nyra using the mouse and keyboard on the screen it sees (screen_act.rs)
+enigo = { version = "0.6.1", default-features = false }
+# The taskbar's theme, for the tray icon to show on it (tray.rs)
+windows-registry = "0.6.1"
+
+# On a Mac they run on its graphics chip; elsewhere, on the processor
+[target."cfg(target_os = \"macos\")".dependencies]
+# Screen captures for "see the screen" straight from ScreenCaptureKit, in memory (screen_capture.rs)
+objc2-screen-capture-kit = { version = "0.3.2", default-features = false, features = ["std", "block2", "objc2-core-foundation", "objc2-core-graphics", "SCShareableContent", "SCScreenshotManager", "SCStream", "SCError"] }
+objc2-core-graphics = { version = "0.3.2", default-features = false, features = ["std", "CGImage", "CGDataProvider", "CGDirectDisplay", "CGColorSpace", "CGContext", "CGBitmapContext", "CGWindow"] }
+# Nyra using the mouse and keyboard on the screen it sees (screen_act.rs)
+enigo = { version = "0.6.1", default-features = false }
+# Whether Nyra may use the mouse and keyboard: the Accessibility permission (system_access.rs), and pressing what is at
+# a place without moving the mouse (screen_press.rs)
+objc2-application-services = { version = "0.3.2", default-features = false, features = ["std", "HIServices", "AXUIElement", "AXError", "libc"] }
+# Whether the microphone is allowed, and asking for it, from the welcome (system_access.rs)
+objc2-av-foundation = { version = "0.3.2", default-features = false, features = ["std", "block2", "AVCaptureDevice", "AVMediaFormat"] }
+objc2-foundation = { version = "0.3.2", default-features = false, features = ["std", "NSArray", "NSError", "NSString"] }
+objc2-core-foundation = { version = "0.3.2", default-features = false, features = ["std", "CFCGTypes", "CFString", "CFArray", "CFNumber"] }
+objc2 = "0.6"
+block2 = "0.6"
+candle-core = { version = "0.11.0", features = ["metal"] }
+candle-nn = { version = "0.11.0", features = ["metal"] }
+candle-transformers = { version = "0.11.0", features = ["metal"] }
+
+[target."cfg(unix)".dependencies]
+libc = "0.2.191"

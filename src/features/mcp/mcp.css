@@ -1,0 +1,339 @@
+/* A tool of an MCP server in a reply: which, with what, the question to allow it, and what it returned */
+
+.tool-call {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 12px 0;
+  padding: 12px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  background: var(--surface);
+  font-family: var(--font-app);
+}
+
+.tool-call.asking {
+  border-color: rgba(var(--warning-rgb), 0.6);
+}
+
+.tool-call-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.tool-call-head:disabled {
+  cursor: default;
+}
+
+.tool-call-chevron {
+  color: var(--text-muted);
+  transition: transform 0.15s ease;
+}
+
+.tool-call-head:hover .tool-call-chevron {
+  color: var(--text);
+}
+
+.tool-call-chevron.open {
+  transform: rotate(90deg);
+}
+
+.tool-call-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--accent-tint);
+  color: var(--accent);
+}
+
+.tool-call-name {
+  flex: 1 1 160px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  font-size: calc(12.5px * var(--font-scale));
+  color: var(--text-muted);
+}
+
+.tool-call-name b {
+  overflow-wrap: anywhere;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: calc(13px * var(--font-scale));
+}
+
+.tool-call-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: calc(12.5px * var(--font-scale));
+  font-weight: 800;
+  color: var(--text-soft);
+}
+
+.tool-call.asking .tool-call-state {
+  color: var(--warning-text);
+}
+
+.tool-call.running .tool-call-state {
+  color: var(--accent);
+}
+
+.tool-call.done .tool-call-state {
+  color: var(--success);
+}
+
+.tool-call.failed .tool-call-state,
+.tool-call.denied .tool-call-state {
+  color: var(--danger);
+}
+
+.tool-call-arguments,
+.tool-call-result {
+  margin: 0;
+  max-height: 320px;
+  overflow: auto;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-size: calc(12px * var(--font-scale));
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.tool-call-result.failed {
+  color: var(--danger);
+}
+
+.tool-call-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* A server's icon, or its initial */
+
+.mcp-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.mcp-icon img {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  object-fit: contain;
+}
+
+.mcp-icon.small img {
+  width: 17px;
+  height: 17px;
+  border-radius: 4px;
+}
+
+.mcp-icon-initial {
+  font-family: var(--font-app);
+  font-size: calc(15px * var(--font-scale));
+  font-weight: 800;
+}
+
+.mcp-icon.small .mcp-icon-initial {
+  font-size: calc(13px * var(--font-scale));
+}
+
+:root[data-theme="dark"] .mcp-icon .on-light,
+:root:not([data-theme="dark"]) .mcp-icon .on-dark {
+  display: none;
+}
+
+/* Settings → Conexiones MCP */
+
+.mcp-form,
+.mcp-tools {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mcp-tools {
+  margin-top: 18px;
+}
+
+.mcp-label {
+  font-size: calc(13px * var(--font-scale));
+  font-weight: 800;
+}
+
+.mcp-hint {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+}
+
+.mcp-error {
+  margin: 0;
+  color: var(--danger);
+  font-size: calc(12.5px * var(--font-scale));
+  overflow-wrap: anywhere;
+}
+
+.mcp-variables {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mcp-variable {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.mcp-variable .text-input {
+  flex: 1 1 160px;
+  min-width: 0;
+  font-family: var(--font-mono);
+}
+
+.mcp-variables .ghost-button,
+.mcp-actions .ghost-button {
+  min-height: 30px;
+  font-size: calc(12.5px * var(--font-scale));
+}
+
+.mcp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mcp-tools-bulk {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.mcp-tools-bulk > span {
+  min-width: 120px;
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+  font-weight: 800;
+}
+
+.mcp-tool {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+}
+
+.mcp-tool-text {
+  flex: 1 1 240px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+}
+
+.mcp-tool-text b {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: calc(13px * var(--font-scale));
+}
+
+.mcp-tool-badge {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--accent-tint);
+  color: var(--accent);
+  font-family: var(--font-app);
+  font-size: calc(11px * var(--font-scale));
+  font-weight: 800;
+}
+
+.mcp-log {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.mcp-log-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mcp-log-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 4px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-soft);
+  font-size: calc(13px * var(--font-scale));
+  font-weight: 800;
+}
+
+.mcp-log-toggle:hover {
+  color: var(--text);
+}
+
+.mcp-log-toggle svg.open {
+  transform: rotate(90deg);
+}
+
+.mcp-log-text {
+  margin: 0;
+  max-height: 280px;
+  overflow: auto;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-size: calc(12px * var(--font-scale));
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.mcp-tool.off .mcp-tool-text {
+  opacity: 0.55;
+}
+
+.mcp-tool-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+}

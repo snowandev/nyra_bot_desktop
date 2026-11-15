@@ -1,0 +1,437 @@
+/* What a reply does in the browser, in the reply itself; the browser is Chrome's own window beside Nyra */
+
+.browser-card {
+  display: flex;
+  flex-direction: column;
+  margin: 12px 0;
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  background: var(--surface);
+  overflow: hidden;
+  font-family: var(--font-app);
+}
+
+.browser-card.asking {
+  border-color: rgba(var(--warning-rgb), 0.6);
+}
+
+.browser-card.yours {
+  border-color: var(--accent-line);
+}
+
+.browser-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 14px;
+  padding: 12px;
+}
+
+.browser-card-thumbnail {
+  position: relative;
+  flex-shrink: 0;
+  width: 168px;
+  aspect-ratio: 16 / 10;
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: 9px;
+  background: var(--paper);
+  overflow: hidden;
+  cursor: zoom-in;
+}
+
+.browser-card-thumbnail img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top left;
+}
+
+/* Lit while Nyra works: the picture follows each action */
+.browser-card-live {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-tint-strong);
+}
+
+.browser-card-you {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--text-on-accent);
+  font-size: calc(11px * var(--font-scale));
+  font-weight: 800;
+}
+
+.browser-card-info {
+  flex: 1 1 200px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.browser-card-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: calc(14px * var(--font-scale));
+  font-weight: 800;
+}
+
+.browser-card-url {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: calc(12px * var(--font-scale));
+}
+
+.browser-card-url svg {
+  flex-shrink: 0;
+}
+
+.browser-card-state {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+  font-weight: 800;
+}
+
+.browser-card.working .browser-card-state,
+.browser-card.yours .browser-card-state {
+  color: var(--accent);
+}
+
+.browser-card.asking .browser-card-state {
+  color: var(--warning-text);
+}
+
+.browser-card.done .browser-card-state svg {
+  color: var(--success);
+}
+
+.browser-card.stopped .browser-card-state {
+  color: var(--danger);
+}
+
+.browser-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.browser-card-actions .outline-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.browser-card-error,
+.browser-card-hint {
+  margin: 0 14px 12px;
+  font-size: calc(12.5px * var(--font-scale));
+}
+
+.browser-card-error {
+  color: var(--danger);
+  overflow-wrap: anywhere;
+}
+
+.browser-card-hint {
+  color: var(--text-soft);
+}
+
+.browser-card-steps {
+  padding: 10px 14px 12px;
+  border-top: 1px solid var(--divider);
+}
+
+.browser-card-steps ol {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.browser-card-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 4px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: calc(12.5px * var(--font-scale));
+  font-weight: 800;
+}
+
+.browser-card-toggle:hover {
+  color: var(--text);
+}
+
+.browser-card-steps > .browser-card-toggle {
+  margin-bottom: 8px;
+}
+
+.browser-card-toggle svg {
+  transition: transform 0.15s;
+}
+
+.browser-card-toggle svg.open {
+  transform: rotate(90deg);
+}
+
+.browser-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.browser-step-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  background: var(--surface-raised);
+  color: var(--text-soft);
+}
+
+.browser-step.running .browser-step-icon {
+  background: var(--accent-tint-strong);
+  color: var(--accent);
+}
+
+.browser-step-body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 2px;
+}
+
+.browser-step-text {
+  color: var(--text);
+  font-size: calc(13.5px * var(--font-scale));
+  overflow-wrap: anywhere;
+}
+
+.browser-step.running .browser-step-text {
+  font-weight: 700;
+}
+
+.browser-step-typed {
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 5px;
+  background: var(--surface-raised);
+  font-family: var(--font-mono);
+  font-size: calc(12px * var(--font-scale));
+}
+
+.browser-step-secret {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: 6px;
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+  font-weight: 700;
+}
+
+.browser-step-outcome {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+  overflow-wrap: anywhere;
+}
+
+.browser-step-outcome svg {
+  flex-shrink: 0;
+}
+
+.browser-step-outcome.ok b,
+.browser-step-outcome.ok svg {
+  color: var(--success);
+}
+
+.browser-step-outcome.noEffect b,
+.browser-step-outcome.noEffect svg {
+  color: var(--warning-text);
+}
+
+.browser-step-outcome.failed b,
+.browser-step-outcome.failed svg {
+  color: var(--danger);
+}
+
+.browser-step-outcome.checking {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* A finished card folds into this line; it opens to show the steps */
+.browser-card-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--divider);
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+}
+
+.browser-card-summary > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.browser-card-summary .ok {
+  color: var(--success);
+  font-weight: 800;
+}
+
+.browser-card-summary .noEffect {
+  color: var(--warning-text);
+  font-weight: 800;
+}
+
+.browser-card-summary .failed {
+  color: var(--danger);
+  font-weight: 800;
+}
+
+/* Above the composer while the conversation has a browser: always at hand, however far the chat is scrolled */
+.browser-strip-wrap {
+  margin-bottom: 8px;
+}
+
+.browser-strip.working,
+.browser-strip.yours {
+  border-color: var(--accent-line);
+}
+
+.browser-strip.yours {
+  background: var(--accent-tint);
+}
+
+.browser-strip.working b,
+.browser-strip.yours b {
+  color: var(--accent);
+}
+
+.browser-strip-text {
+  flex: 1 1 160px;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.browser-strip-text b {
+  flex-shrink: 0;
+  font-weight: 800;
+}
+
+.browser-strip-place {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: calc(12px * var(--font-scale));
+}
+
+.browser-strip .status-strip-actions .outline-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.browser-strip .status-strip-actions .ghost-button {
+  align-self: auto;
+  min-height: 30px;
+  padding: 0 10px;
+  gap: 4px;
+  font-size: calc(12px * var(--font-scale));
+}
+
+.browser-strip-error {
+  margin: 6px 4px 0;
+  color: var(--danger);
+  font-size: calc(12.5px * var(--font-scale));
+  overflow-wrap: anywhere;
+}
+
+/* The globe next to the composer, accented while the conversation has a browser */
+.browser-button.open {
+  color: var(--accent);
+}
+
+/* The screenshots a reply took, under its text */
+.reply-screenshots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.reply-screenshot {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: min(320px, 100%);
+  padding: 6px;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+  font-weight: 700;
+  text-align: left;
+}
+
+.reply-screenshot:hover {
+  border-color: var(--accent);
+}
+
+.reply-screenshot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.reply-screenshot span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 4px 2px;
+}

@@ -1,0 +1,38 @@
+/* A line above the composer while something of the conversation needs to stay in sight (the browser, the screen, a
+   transcription): what it is, and its buttons. Each adds its own border color and text. */
+.status-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  min-height: 42px;
+  padding: 5px 6px 5px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  background: var(--surface);
+  font-family: var(--font-app);
+  font-size: calc(13px * var(--font-scale));
+}
+
+.status-strip > svg {
+  flex-shrink: 0;
+  color: var(--accent);
+}
+
+/* Waiting for the user to allow something */
+.status-strip.asking {
+  border-color: rgba(var(--warning-rgb), 0.6);
+}
+
+.status-strip.asking > svg,
+.status-strip.asking b {
+  color: var(--warning-text);
+}
+
+.status-strip-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}

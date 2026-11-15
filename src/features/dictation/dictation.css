@@ -1,0 +1,62 @@
+/* Dictation: the microphone next to send and its notice under the box */
+
+.dictation-button {
+  position: relative;
+}
+
+/* A ring that grows with the voice, so the user sees they are heard */
+.dictation-button.recording {
+  color: var(--danger);
+}
+
+.dictation-button.recording::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border: 2px solid var(--danger);
+  border-radius: inherit;
+  opacity: calc(0.35 + var(--dictation-level, 0) * 0.65);
+  transform: scale(calc(1 + var(--dictation-level, 0) * 0.25));
+  transition:
+    transform 0.1s linear,
+    opacity 0.1s linear;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dictation-button.recording::after {
+    transform: none;
+    transition: none;
+  }
+}
+
+.dictation-notice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  margin: 6px 0 0;
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+  line-height: 1.45;
+}
+
+.dictation-notice > svg {
+  flex-shrink: 0;
+}
+
+.dictation-notice.error {
+  color: var(--danger);
+}
+
+.dictation-notice-text {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+/* Above the quick bar, lined up with its box */
+.quick-dictation .dictation-notice {
+  margin: 0;
+  padding: 0 8px 6px;
+}
+

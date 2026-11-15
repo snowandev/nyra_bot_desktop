@@ -1,0 +1,92 @@
+/* The accent colors from Settings → Appearance. Each one is tuned for both themes, like the default violet, so
+   text and icons keep at least 4.5:1 contrast. The default is the brand violet and needs no data-accent. */
+
+:root,
+[data-theme="dark"] {
+  --accent-violet: var(--brand);
+  --accent-blue: #7fb2f7;
+  --accent-blue-secondary: #a99cf7;
+  --accent-blue-blend: #94a7f7;
+  --accent-blue-rgb: 127, 178, 247;
+  --accent-green: #6fd6a0;
+  --accent-green-secondary: #7edcf2;
+  --accent-green-blend: #76d9c9;
+  --accent-green-rgb: 111, 214, 160;
+  --accent-amber: #f5b86a;
+  --accent-amber-secondary: #f2877d;
+  --accent-amber-blend: #f39f73;
+  --accent-amber-rgb: 245, 184, 106;
+  --accent-pink: #f27bc4;
+  --accent-pink-secondary: #b48cf5;
+  --accent-pink-blend: #d383dc;
+  --accent-pink-rgb: 242, 123, 196;
+  --accent-graphite: #cbc6de;
+  --accent-graphite-secondary: #a49dcf;
+  --accent-graphite-blend: #b7b1d6;
+  --accent-graphite-rgb: 203, 198, 222;
+}
+
+/* Darker hues than in dark mode, readable on white and under white text */
+[data-theme="light"] {
+  --accent-violet: var(--brand);
+  --accent-blue: #2f63c9;
+  --accent-blue-secondary: #6247c9;
+  --accent-blue-blend: #4855c9;
+  --accent-blue-rgb: 47, 99, 201;
+  --accent-green: #1d7a4b;
+  --accent-green-secondary: #0e6f88;
+  --accent-green-blend: #157469;
+  --accent-green-rgb: 29, 122, 75;
+  --accent-amber: #a65a06;
+  --accent-amber-secondary: #bf3a2c;
+  --accent-amber-blend: #b24a19;
+  --accent-amber-rgb: 166, 90, 6;
+  --accent-pink: #b8327f;
+  --accent-pink-secondary: #7c4dd8;
+  --accent-pink-blend: #9a3fab;
+  --accent-pink-rgb: 184, 50, 127;
+  --accent-graphite: #4a4560;
+  --accent-graphite-secondary: #6b6488;
+  --accent-graphite-blend: #5a5474;
+  --accent-graphite-rgb: 74, 69, 96;
+}
+
+:root[data-accent="blue"],
+:root[data-accent="blue"] [data-theme] {
+  --accent: var(--accent-blue);
+  --accent-secondary: var(--accent-blue-secondary);
+  --accent-blend: var(--accent-blue-blend);
+  --accent-rgb: var(--accent-blue-rgb);
+}
+
+:root[data-accent="green"],
+:root[data-accent="green"] [data-theme] {
+  --accent: var(--accent-green);
+  --accent-secondary: var(--accent-green-secondary);
+  --accent-blend: var(--accent-green-blend);
+  --accent-rgb: var(--accent-green-rgb);
+}
+
+:root[data-accent="amber"],
+:root[data-accent="amber"] [data-theme] {
+  --accent: var(--accent-amber);
+  --accent-secondary: var(--accent-amber-secondary);
+  --accent-blend: var(--accent-amber-blend);
+  --accent-rgb: var(--accent-amber-rgb);
+}
+
+:root[data-accent="pink"],
+:root[data-accent="pink"] [data-theme] {
+  --accent: var(--accent-pink);
+  --accent-secondary: var(--accent-pink-secondary);
+  --accent-blend: var(--accent-pink-blend);
+  --accent-rgb: var(--accent-pink-rgb);
+}
+
+:root[data-accent="graphite"],
+:root[data-accent="graphite"] [data-theme] {
+  --accent: var(--accent-graphite);
+  --accent-secondary: var(--accent-graphite-secondary);
+  --accent-blend: var(--accent-graphite-blend);
+  --accent-rgb: var(--accent-graphite-rgb);
+}

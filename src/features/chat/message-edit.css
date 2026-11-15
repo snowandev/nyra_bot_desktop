@@ -1,0 +1,93 @@
+/* Editing user messages */
+
+.user-actions {
+  margin: -4px -6px 0 0;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.user-message:hover .user-actions,
+.user-actions:focus-within {
+  opacity: 1;
+}
+
+.user-edit {
+  width: min(78%, 720px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 12px 10px 16px;
+  border-radius: 16px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-input);
+}
+
+.user-edit textarea {
+  width: 100%;
+  padding: 2px 0;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-chat);
+  font-size: calc(15px * var(--font-scale));
+  line-height: 1.55;
+  resize: none;
+  outline: none;
+}
+
+.user-edit-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.user-edit-hint {
+  flex: 1;
+  font-size: calc(12px * var(--font-scale));
+  color: var(--text-placeholder);
+}
+
+.user-edit .ghost-button {
+  align-self: auto;
+  padding: 0 12px;
+}
+
+.primary-button.user-edit-send {
+  min-height: 36px;
+  padding: 0 16px;
+  font-size: calc(13px * var(--font-scale));
+}
+
+.primary-button:disabled {
+  opacity: 0.45;
+  cursor: default;
+  filter: none;
+}
+
+/* Deleting a message: the question when it is the only one, and the way back afterwards */
+
+.user-delete-confirm {
+  align-self: flex-end;
+  max-width: 420px;
+  padding: 12px 14px;
+}
+
+.message-undo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 6px 4px 14px;
+  border-radius: 12px;
+  background: var(--surface-raised);
+  color: var(--text-soft);
+  font-size: calc(13px * var(--font-scale));
+}
+
+.message-undo span {
+  flex: 1;
+}
+
+.message-undo .ghost-button {
+  align-self: center;
+  padding: 0 12px;
+}

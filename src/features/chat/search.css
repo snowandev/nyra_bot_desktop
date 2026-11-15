@@ -1,0 +1,157 @@
+/* Search in the conversation */
+
+.chat-search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 10px 24px 0;
+  padding: 4px 6px 4px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.chat-search-icon {
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.chat-search input {
+  flex: 1;
+  min-width: 0;
+  min-height: 36px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: calc(14px * var(--font-scale));
+  outline: none;
+}
+
+.chat-search-count {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+  font-variant-numeric: tabular-nums;
+}
+
+.chat-search .icon-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+::highlight(chat-search) {
+  background-color: rgba(var(--highlight-rgb), 0.35);
+  color: inherit;
+}
+
+/* Outline instead of a background, so it doesn't hide the highlighted words inside */
+[data-search-current] {
+  border-radius: 14px;
+  outline: 2px solid rgba(var(--highlight-rgb), 0.7);
+  outline-offset: 6px;
+}
+
+.menu-option-shortcut {
+  margin-left: auto;
+  padding: 1px 6px;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-family: var(--font-app);
+  font-size: calc(11px * var(--font-scale));
+}
+
+/* Search across all conversations, in the sidebar */
+
+.sidebar-section-toggle.static:hover {
+  background: transparent;
+  color: inherit;
+}
+
+.search-hits {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.search-hit {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-soft);
+  text-align: left;
+}
+
+.search-hit:hover {
+  background: var(--border);
+}
+
+.search-hit.active {
+  background: var(--surface-raised);
+}
+
+.search-hit-header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.search-hit-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text);
+  font-size: calc(13.5px * var(--font-scale));
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-hit-date,
+.search-hit-count {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  font-size: calc(11.5px * var(--font-scale));
+}
+
+.search-hit-file {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-hit-file svg {
+  flex-shrink: 0;
+}
+
+/* Up to three lines of context around the match */
+.search-hit-snippet {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  font-size: calc(12.5px * var(--font-scale));
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.search-hit-snippet mark {
+  border-radius: 3px;
+  background: rgba(var(--highlight-rgb), 0.35);
+  color: var(--text);
+}

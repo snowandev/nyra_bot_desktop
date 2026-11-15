@@ -1,0 +1,3575 @@
+{
+  "common": {
+    "cancel": "Cancelar",
+    "retry": "Reintentar",
+    "on": "Activadas",
+    "off": "Desactivadas",
+    "options": "Opciones",
+    "optional": "opcional",
+    "connecting": "Conectando…",
+    "notConnected": "Sin conexión",
+    "conversations_one": "{{count, number}} conversación",
+    "conversations_other": "{{count, number}} conversaciones",
+    "models_one": "{{count, number}} modelo",
+    "models_other": "{{count, number}} modelos",
+    "memories_one": "{{count, number}} recuerdo",
+    "memories_other": "{{count, number}} recuerdos",
+    "conversations_many": "{{count, number}} conversaciones",
+    "models_many": "{{count, number}} modelos",
+    "memories_many": "{{count, number}} recuerdos"
+  },
+  "platform": {
+    "tray": {
+      "mac": "la barra de menús",
+      "windows": "el área de notificación",
+      "linux": "la bandeja del sistema"
+    },
+    "reveal": {
+      "mac": "Mostrar en Finder",
+      "windows": "Mostrar en el Explorador",
+      "linux": "Abrir en el gestor de archivos"
+    }
+  },
+  "format": {
+    "remainingSeconds": "quedan {{value}} s",
+    "remainingMinutes": "quedan {{value}} min",
+    "remainingHours": "quedan {{value}} h"
+  },
+  "settings": {
+    "title": "Configuración",
+    "back": "Volver al chat",
+    "sectionsLabel": "Secciones de configuración",
+    "sections": {
+      "general": {
+        "label": "General",
+        "description": "Preferencias generales de Nyra."
+      },
+      "personalization": {
+        "label": "Personalización",
+        "description": "Cuéntale a Nyra sobre ti y cómo quieres que te responda."
+      },
+      "providers": {
+        "label": "Proveedores",
+        "description": "Conecta Nyra con los servicios que ejecutan los modelos de IA."
+      },
+      "audio": {
+        "label": "Proveedores de audio",
+        "description": "Quién transcribe los audios que adjuntas."
+      },
+      "mcp": {
+        "label": "Conexiones MCP",
+        "description": "Servicios que le dan herramientas a Nyra: GitHub, una base de datos, una carpeta…"
+      },
+      "skills": {
+        "label": "Skills",
+        "description": "Instrucciones especializadas que puedes activar en cada conversación."
+      },
+      "commands": {
+        "label": "Comandos y atajos",
+        "description": "Qué puedes escribir con / y qué teclas hacen cada cosa."
+      },
+      "import": {
+        "label": "Importar",
+        "description": "Trae a Nyra conversaciones de otras aplicaciones."
+      }
+    },
+    "general": {
+      "label": "Opciones generales",
+      "appearance": "Apariencia",
+      "notifications": "Notificaciones",
+      "features": "Funciones de Nyra",
+      "featuresOn": "{{on}} de {{total}} activadas",
+      "data": "Datos",
+      "quickChat": "Chat rápido",
+      "noShortcut": "Sin atajo"
+    },
+    "appearance": {
+      "description": "Personaliza la apariencia de la aplicación.",
+      "theme": "Tema",
+      "themeHint": "Elige cómo se ve Nyra. «Sistema» cambia sola entre claro y oscuro según tu sistema operativo.",
+      "themes": {
+        "dark": "Oscuro",
+        "light": "Claro",
+        "system": "Sistema"
+      },
+      "accent": "Color de acento",
+      "accentHint": "Tiñe los botones, los enlaces y lo resaltado en toda la app.",
+      "accents": {
+        "violet": "Lila",
+        "blue": "Azul",
+        "green": "Verde",
+        "amber": "Ámbar",
+        "pink": "Rosa",
+        "graphite": "Grafito"
+      },
+      "fontSize": "Tamaño del texto",
+      "fontSizeHint": "Cambia el tamaño de las letras en toda la app. Por defecto: {{size}}.",
+      "currentSize": "Tamaño actual",
+      "reset": "Restablecer",
+      "smaller": "Achicar el texto",
+      "larger": "Agrandar el texto",
+      "language": "Idioma",
+      "languageHint": "El idioma de los menús, los botones y los avisos de Nyra. «Sistema» usa el de tu equipo si Nyra lo tiene, y si no, inglés. Los modelos te responden en el idioma en que les escribas.",
+      "languageSystem": "Sistema ({{language}})"
+    },
+    "notifications": {
+      "description": "Qué hace Nyra cuando cierras su ventana, y los avisos del sistema mientras usas otras aplicaciones.",
+      "replyDone": "Respuesta completada",
+      "replyDoneHint": "Te avisa cuando Nyra termina de responder y la app está en segundo plano.",
+      "denied": "El sistema no permitió las notificaciones. Actívalas para Nyra Bot en los ajustes del sistema.",
+      "switchLabel": "Notificar cuando la respuesta esté completa",
+      "needsYou": "Cuando Nyra necesita tu permiso o una respuesta",
+      "needsYouHint": "Te avisa cuando un comando espera que lo apruebes o hace una pregunta, y la app está en segundo plano. La respuesta no sigue hasta que vuelvas.",
+      "needsYouLabel": "Notificar cuando un comando necesite tu permiso o una respuesta",
+      "keepInTray": "Seguir en la barra al cerrar",
+      "keepInTrayHint": "Nyra sigue abierta con su icono en {{tray}}: las respuestas terminan y te avisa. Para salir del todo, usa Salir en su icono.",
+      "trayMayBeHidden": "Si tu escritorio no muestra el icono, abre Nyra otra vez y volverá la ventana que tenías.",
+      "keepInTrayLabel": "Seguir en la barra al cerrar la ventana"
+    },
+    "features": {
+      "title": "Funciones de Nyra",
+      "description": "Lo que Nyra puede hacer además de responder. Las que llevan un cerebro usan el modelo elegido, así que tardan más y, con un modelo en la nube, cuestan más.",
+      "usesModel": "Usa el modelo",
+      "webSearch": {
+        "title": "Búsqueda en internet",
+        "description": "Nyra busca cuando se lo pides o cuando la pregunta necesita datos recientes, y cita las páginas que lee."
+      },
+      "compatibleGuides": {
+        "title": "Seguir CLAUDE.md y AGENTS.md",
+        "description": "En una carpeta conectada o un proyecto, Nyra sigue siempre las instrucciones de su NYRA.md. Con esto activado, también las de CLAUDE.md y AGENTS.md, los archivos de otros asistentes, en la carpeta principal y en las subcarpetas en que trabaje, con los archivos que importen con @. Si se contradicen, manda NYRA.md."
+      },
+      "readLinks": {
+        "title": "Leer los enlaces que pegas",
+        "description": "Al pegar un enlace, Nyra lee la página y la adjunta al mensaje, así el modelo la tiene también en tus preguntas siguientes."
+      },
+      "memory": {
+        "title": "Memoria",
+        "description": "Nyra recuerda datos breves sobre ti entre conversaciones.",
+        "modelUse": "El modelo decide qué recordar, y los recuerdos se usan en tus mensajes."
+      },
+      "semanticSearch": {
+        "title": "Búsqueda por significado en carpetas",
+        "description": "Nyra encuentra lo que buscas en una carpeta conectada aunque esté escrito con otras palabras o en otro idioma. Por ejemplo, «dónde se valida el usuario» encuentra «login». La primera vez tarda un poco en preparar la carpeta. Necesita un modelo de Ollama para buscar en carpetas, como qwen3-embedding, que eliges en Proveedores."
+      },
+      "runCommands": {
+        "title": "Ejecutar comandos en carpetas",
+        "description": "En una carpeta conectada, Nyra puede pedir que se ejecute un comando, como pasar los tests, compilar o ver el estado de Git. Nada se ejecuta sin que pulses «Ejecutar» en su tarjeta. Desactivado, Nyra solo lee la carpeta y propone cambios."
+      },
+      "runCode": {
+        "title": "Ejecutar código",
+        "description": "Nyra puede escribir un programa corto en Python o JavaScript y ejecutarlo para calcular con exactitud, analizar o convertir tus archivos o crear gráficos, aunque no haya una carpeta conectada. Nada se ejecuta sin que pulses «Ejecutar» en su tarjeta. Necesita Python o Node.js instalados en el equipo."
+      },
+      "browser": {
+        "title": "Usar el navegador",
+        "description": "Nyra puede abrir páginas en tu Chrome, Edge u otro navegador Chromium para revisar una página, entrar con los datos que le des o hacer capturas."
+      },
+      "smartTitles": {
+        "title": "Títulos inteligentes",
+        "description": "Tras la primera respuesta, el modelo pone a cada conversación nueva un título corto sobre su tema. Si está desactivado, se usa el principio de tu primer mensaje."
+      },
+      "sensitiveData": {
+        "title": "Aviso de datos sensibles",
+        "description": "Mientras escribes para un proveedor en la nube, Nyra revisa en tu equipo el mensaje y sus archivos de texto. Si ve algo que parece información sensible, lo señala junto a Enviar, sin impedir el envío. La revisión no sale de tu equipo."
+      },
+      "transcription": {
+        "title": "Transcribir audio",
+        "description": "Al adjuntar un audio, Nyra lo transcribe con sus tiempos y, si quieres, quién habla. Así puedes pedirle un resumen o un acta."
+      },
+      "screenLook": {
+        "title": "Ver tu pantalla",
+        "description": "Nyra puede mirar tu pantalla para ayudarte con una app o un ajuste: te señala dónde está cada cosa, te guía paso a paso o lo hace por ti con el ratón y el teclado. Te pide permiso antes. Necesita un modelo que vea imágenes."
+      }
+    },
+    "data": {
+      "description": "Las conversaciones guardadas en este equipo.",
+      "deleteAll": "Eliminar todas las conversaciones",
+      "deleted": "Se eliminaron todas las conversaciones.",
+      "empty": "No hay conversaciones guardadas.",
+      "deletes_one": "Borra la conversación y sus archivos adjuntos.",
+      "deletes_other": "Borra las {{count, number}} conversaciones y sus archivos adjuntos.",
+      "couldNotDelete": "No se pudieron eliminar: {{error}}",
+      "deleting": "Eliminando…",
+      "deleteAllButton": "Eliminar todo",
+      "confirm_one": "¿Eliminar la conversación?",
+      "confirm_other": "¿Eliminar las {{count, number}} conversaciones?",
+      "confirmText": "Se borrará toda la información. Esta acción no se puede deshacer.",
+      "confirmButton": "Sí, eliminar todo",
+      "deletes_many": "Borra las {{count, number}} conversaciones y sus archivos adjuntos.",
+      "confirm_many": "¿Eliminar las {{count, number}} conversaciones?"
+    },
+    "personalization": {
+      "label": "Opciones de personalización",
+      "about": "Sobre ti",
+      "filledIn": "Completado",
+      "notFilledIn": "Sin completar",
+      "response": "Cómo responde Nyra",
+      "custom": "Personalizado",
+      "default": "Predeterminado",
+      "memory": "Memoria",
+      "memoryOff": "Desactivada",
+      "aboutDescription": "Lo que quieres que Nyra sepa de ti para darte respuestas más útiles. Todos los campos son opcionales. Nyra envía esta información al modelo con cada mensaje.",
+      "nameLabel": "¿Cómo quieres que te llame?",
+      "namePlaceholder": "Por ejemplo, Julián",
+      "occupationLabel": "¿A qué te dedicas?",
+      "occupationPlaceholder": "Por ejemplo, desarrollador de videojuegos",
+      "responseDescription": "Instrucciones que Nyra seguirá en todas tus conversaciones. Se envían al modelo con cada mensaje. Si en un chat pides algo distinto, se hará solo esa vez.",
+      "responseLabel": "¿Cómo quieres que te responda?",
+      "responsePlaceholder": "Por ejemplo: responde de forma breve y cercana, y usa ejemplos de código cuando expliques algo técnico.",
+      "responseHint": "Tono, extensión, idioma, formato o cosas que debe evitar."
+    },
+    "providers": {
+      "list": "Lista de proveedores",
+      "title": "Proveedores",
+      "thisComputer": "este equipo",
+      "local": "Local",
+      "missingKey": "Falta la API Key",
+      "notConnectedYet": "Sin conectar",
+      "connectedTo": "Conectado a {{name}}",
+      "connectedToAt": "Conectado a {{name}} en {{place}}",
+      "pasteKeyAndLoad": "Pega tu API Key y pulsa «Cargar modelos».",
+      "settingsOf": "Configuración de {{name}}",
+      "connection": "Conexión",
+      "urlHintCloud": "Dirección de la API de {{name}}. Cámbiala solo si usas un proxy. Por defecto: {{url}}",
+      "urlHintLocal": "Dirección donde se está ejecutando {{name}}. Por defecto: {{url}}",
+      "keyHintRequired": "Necesaria para usar {{name}}. Solo se envía a {{url}}.",
+      "keyHintOptional": "Solo hace falta si tu servidor de {{name}} exige autenticación.",
+      "contextHintLoads": "Tokens que el modelo puede tener en memoria. Vacío: el valor de {{name}}. Si un modelo admite menos, se usa su máximo. Más contexto consume más memoria, y al cambiarlo el modelo se vuelve a cargar.",
+      "contextHintLimit": "Límite de trabajo: no se envía a {{name}}. Al llegar al 75 %, Nyra resume la conversación. Vacío: el máximo de cada modelo, si el proveedor lo informa.",
+      "contextHintLimitPaid": "Límite de trabajo: no se envía a {{name}}. Al llegar al 75 %, Nyra resume la conversación, porque cada mensaje reenvía todo el historial y se paga por él. Vacío: el máximo de cada modelo, si el proveedor lo informa.",
+      "summarizeHint": "Cuando la conversación llega al 75 % del contexto, Nyra resume los mensajes anteriores.",
+      "rememberKeychain": "Se guarda en el llavero del sistema. Desmárcalo en un equipo compartido: la clave se borra al momento.",
+      "rememberFile": "No hay llavero disponible en este sistema: la clave se guardaría en un archivo de la carpeta de Nyra que solo tu usuario puede leer.",
+      "keyNotKept": "no se guarda al cerrar la app",
+      "keyInKeychain": "se guarda en el llavero",
+      "keyInFile": "se guarda en un archivo protegido",
+      "contextSize": "Tamaño del contexto",
+      "automatic": "Automático",
+      "modelMaximum": "Máximo del modelo",
+      "apiKey": "API Key",
+      "required": "obligatoria",
+      "pasteKey": "Pega aquí tu API Key",
+      "noKey": "Sin clave",
+      "hideKey": "Ocultar API Key",
+      "showKey": "Mostrar API Key",
+      "summarize": "Resumir conversaciones largas",
+      "rememberKey": "Recordar la API Key en este equipo",
+      "forgetKey": "Olvidar la clave",
+      "loadModels": "Cargar modelos",
+      "insecureWithKey": "Esta dirección usa http://, sin cifrar: tus mensajes y la API Key viajarán legibles por la red. Si {{name}} está en otra máquina, usa https://.",
+      "baseUrl": "Base URL"
+    },
+    "commands": {
+      "browse": "Consultar",
+      "commands": "Comandos",
+      "commandsCount_one": "{{count, number}} comando",
+      "commandsCount_other": "{{count, number}} comandos",
+      "shortcuts": "Atajos de teclado",
+      "shortcutsCount_one": "{{count, number}} atajo",
+      "shortcutsCount_other": "{{count, number}} atajos",
+      "commandsDescription": "Escríbelos al principio de un mensaje, en una conversación. Al escribir / aparecen en la lista, encima de las skills.",
+      "examples_one": "Ejemplo",
+      "examples_other": "Ejemplos",
+      "unavailable": "No disponible {{when}}",
+      "shortcutsDescription": "Con las teclas de este equipo: {{key}} es la tecla de los atajos.",
+      "withKey": "Atajos con {{key}}",
+      "keys": "Teclas",
+      "action": "Acción",
+      "otherKeys": "Otras teclas",
+      "anywhere": "Desde cualquier aplicación",
+      "quickBarToggle": "Abrir y cerrar la barra de chat rápido",
+      "quickBarWhere": "Se cambia en General → Chat rápido.",
+      "disabled": "Desactivado",
+      "commandsCount_many": "{{count, number}} comandos",
+      "shortcutsCount_many": "{{count, number}} atajos",
+      "examples_many": "Ejemplos"
+    },
+    "shareImages": {
+      "title": "Imágenes compartidas",
+      "description": "Cómo salen las respuestas que copias o guardas como imagen. El alto depende de lo larga que sea la respuesta, y una muy larga puede salir con algo menos de resolución.",
+      "quality": "Calidad",
+      "qualities": {
+        "high": "Alta",
+        "normal": "Normal",
+        "low": "Baja"
+      },
+      "hints": {
+        "high": "Muy nítidas, para ampliarlas o imprimirlas. Los archivos pesan más.",
+        "normal": "Nítidas en cualquier pantalla.",
+        "low": "Archivos ligeros, para enviarlos rápido."
+      }
+    },
+    "models": {
+      "title": "Modelos de Nyra",
+      "mainHint": "La estrella marca el modelo principal, el que usas para todo.",
+      "demandingHint": "El rayo marca un segundo modelo, opcional, para tareas difíciles. Si eliges los dos, «Automático» cambia a él cuando hace falta.",
+      "askBeforeCloud": "Pedir permiso antes de pasar a la nube",
+      "askBeforeCloudHint": "Pasar a un modelo en la nube le envía la conversación. Las privadas nunca pasan solas."
+    },
+    "quickChat": {
+      "description": "Pregúntale a Nyra desde cualquier aplicación sin cambiar de ventana.",
+      "quickBar": "Abrir con un atajo",
+      "quickBarHint": "El mismo atajo lo abre y lo cierra. También se abre desde el menú del icono de Nyra.",
+      "quickBarLabel": "Abrir el chat rápido con un atajo",
+      "shortcut": "Atajo",
+      "wayland": "Tu escritorio usa Wayland, que no deja a las aplicaciones tener atajos globales. Crea uno en los ajustes de teclado de tu escritorio (por ejemplo, {{shortcut}}) que ejecute este comando:",
+      "copyCommand": "Copiar el comando",
+      "worksHidden": "Funciona aunque Nyra esté oculta en {{tray}}.",
+      "quickSize": "Tamaño",
+      "quickSizeHint": "Cuánto puede crecer al abrirse la conversación. En una pantalla pequeña se ajusta al espacio que hay.",
+      "quickSizes": {
+        "normal": "Normal",
+        "large": "Grande",
+        "extraLarge": "Muy grande"
+      }
+    }
+  },
+  "conversations": {
+    "new": "Nueva conversación",
+    "newWithShortcut": "Nueva conversación ({{shortcut}})",
+    "search": "Buscar conversaciones",
+    "searchHint": "Busca en los títulos, los mensajes y los archivos ({{shortcut}})",
+    "navLabel": "Conversaciones",
+    "pinned": "Fijados",
+    "folders": "Carpetas",
+    "newFolder": "Nueva carpeta",
+    "chats": "Chats",
+    "results": "Resultados",
+    "removeFromFolder": "Quitar de la carpeta",
+    "searchFailed": "No se pudo buscar en los mensajes: {{error}}",
+    "noResults": "Sin resultados",
+    "storageFailed": "No se pudo guardar o leer el historial: {{error}}",
+    "settingsWithShortcut": "Configuración ({{shortcut}})",
+    "movedTo": "«{{title}}» se movió a {{folder}}.",
+    "theFolder": "la carpeta",
+    "removedFromFolder": "«{{title}}» se quitó de su carpeta y está en Chats.",
+    "folderCreated": "Carpeta «{{name}}» creada.",
+    "folderRenamed": "Carpeta renombrada a «{{name}}».",
+    "folderDeleted": "Carpeta «{{name}}» eliminada.",
+    "damaged": "La conversación guardada está dañada y no se pudo abrir.",
+    "row": {
+      "pending": "Tiene algo pendiente de revisar",
+      "busy": "Nyra está trabajando aquí",
+      "inFolder": "En la carpeta {{folder}}",
+      "renameLabel": "Nuevo nombre de la conversación"
+    },
+    "menu": {
+      "optionsOf": "Opciones de «{{title}}»",
+      "label": "Opciones de la conversación",
+      "unpin": "Desfijar",
+      "pin": "Fijar",
+      "rename": "Renombrar",
+      "moveTo": "Mover a…",
+      "delete": "Eliminar conversación",
+      "moveLabel": "Mover «{{title}}» a una carpeta",
+      "back": "Volver al menú anterior",
+      "moveToTitle": "Mover a",
+      "newFolder": "Nueva carpeta…",
+      "removeFromFolder": "Quitar de la carpeta"
+    },
+    "folder": {
+      "optionsOf": "Opciones de la carpeta «{{name}}»",
+      "rename": "Renombrar",
+      "delete": "Eliminar carpeta",
+      "namePlaceholder": "Nombre de la carpeta",
+      "newNameLabel": "Nombre de la carpeta nueva",
+      "renameLabel": "Nuevo nombre de la carpeta",
+      "moveHere": "Mover aquí",
+      "empty": "<strong>Carpeta vacía.</strong> Arrastra conversaciones aquí.",
+      "deleteTitle": "¿Eliminar la carpeta «<name>{{name}}</name>»?",
+      "deleteConfirm": "Eliminar",
+      "keeps_one": "Su conversación <strong>no se borra</strong>: volverá a «Chats».",
+      "keeps_other": "Sus {{count, number}} conversaciones <strong>no se borran</strong>: volverán a «Chats».",
+      "nameRequired": "Escribe un nombre para la carpeta.",
+      "nameTooLong": "Máximo {{max}} caracteres: sobran {{extra}}.",
+      "nameTaken": "Ya existe una carpeta llamada «{{name}}».",
+      "keeps_many": "Sus {{count, number}} conversaciones <strong>no se borran</strong>: volverán a «Chats»."
+    },
+    "hit": {
+      "matches": "{{count, number}} coincidencias"
+    },
+    "import": {
+      "sources": "Orígenes de importación",
+      "from": "Importar desde",
+      "thisComputerSessions": "Sesiones de este equipo",
+      "label": "Importar desde Claude Code",
+      "description": "Trae a Nyra las conversaciones que tuviste con Claude Code en este equipo, con tus mensajes, las respuestas de Claude y los archivos que adjuntaste. Cada una va al proyecto de su carpeta en Código.",
+      "imported_one": "Se importó {{count, number}} conversación.",
+      "imported_other": "Se importaron {{count, number}} conversaciones.",
+      "copied_one": "{{count, number}} conversación continuada en Nyra se importó aparte.",
+      "copied_other": "{{count, number}} conversaciones continuadas en Nyra se importaron aparte.",
+      "unreadPdfs_one": "{{count, number}} PDF no se pudo leer: puede estar dañado o tener contraseña. El modelo no verá su contenido, y se volverá a intentar en la próxima importación.",
+      "unreadPdfs_many": "{{count, number}} PDF no se pudieron leer: pueden estar dañados o tener contraseña. El modelo no verá su contenido, y se volverá a intentar en la próxima importación.",
+      "unreadPdfs_other": "{{count, number}} PDF no se pudieron leer: pueden estar dañados o tener contraseña. El modelo no verá su contenido, y se volverá a intentar en la próxima importación.",
+      "keptInChat_one": "{{count, number}} conversación se hizo en una carpeta general (tu carpeta personal, Escritorio, Documentos, Descargas o una temporal) y quedó en el chat. Para llevarla a Código, añade esa carpeta como proyecto y vuelve a importarla.",
+      "keptInChat_many": "{{count, number}} conversaciones se hicieron en una carpeta general (tu carpeta personal, Escritorio, Documentos, Descargas o una temporal) y quedaron en el chat. Para llevarlas a Código, añade esa carpeta como proyecto y vuelve a importarlas.",
+      "keptInChat_other": "{{count, number}} conversaciones se hicieron en una carpeta general (tu carpeta personal, Escritorio, Documentos, Descargas o una temporal) y quedaron en el chat. Para llevarlas a Código, añade esa carpeta como proyecto y vuelve a importarlas.",
+      "skipped_one": "{{count, number}} conversación no tenía nada nuevo en Claude Code.",
+      "skipped_other": "{{count, number}} conversaciones no tenían nada nuevo en Claude Code.",
+      "searching": "Buscando sesiones de Claude Code…",
+      "noneFound": "No se encontraron sesiones de Claude Code",
+      "noneFoundHint": "Claude Code guarda las conversaciones en la carpeta .claude/projects de tu usuario.",
+      "selectedOf": "{{selected}} de {{total}} seleccionadas",
+      "selectAll": "Seleccionar todas",
+      "selectNone": "Ninguna",
+      "importing": "Importando…",
+      "importCount_one": "Importar {{count, number}} conversación",
+      "importCount_other": "Importar {{count, number}} conversaciones",
+      "project": "Proyecto {{name}}",
+      "statusImported": "Importada",
+      "statusContinued": "Continuada en Nyra",
+      "continuedHint": "La continuaste en Nyra, así que volver a importarla no la reemplaza",
+      "messages_one": "{{count, number}} mensaje",
+      "messages_other": "{{count, number}} mensajes",
+      "conflictTitle_one": "Una de estas conversaciones ya siguió en Nyra",
+      "conflictTitle_other": "{{count, number}} de estas conversaciones ya siguieron en Nyra",
+      "conflictText": "Para no perder lo que escribiste en Nyra, no se van a reemplazar. Si Claude Code tiene mensajes nuevos, su versión se importará como una conversación aparte. Si no, se omitirá.",
+      "newMessages_one": "{{count, number}} mensaje nuevo",
+      "newMessages_other": "{{count, number}} mensajes nuevos",
+      "edited": "editada",
+      "unchanged": "sin cambios",
+      "progress": "En Nyra: {{nyra}} · En Claude Code: {{claudeCode}}",
+      "willCopy": "Se importará como conversación aparte",
+      "willSkip": "Se omitirá",
+      "continue": "Continuar con la importación",
+      "imported_many": "Se importaron {{count, number}} conversaciones.",
+      "copied_many": "{{count, number}} conversaciones continuadas en Nyra se importaron aparte.",
+      "skipped_many": "{{count, number}} conversaciones no tenían nada nuevo en Claude Code.",
+      "importCount_many": "Importar {{count, number}} conversaciones",
+      "messages_many": "{{count, number}} mensajes",
+      "conflictTitle_many": "{{count, number}} de estas conversaciones ya siguieron en Nyra",
+      "newMessages_many": "{{count, number}} mensajes nuevos"
+    },
+    "rail": {
+      "label": "Lista de conversaciones plegada"
+    },
+    "sidebar": {
+      "fold": "Plegar la barra lateral",
+      "foldWithShortcut": "Plegar la barra lateral ({{shortcut}})",
+      "unfold": "Desplegar la barra lateral",
+      "unfoldWithShortcut": "Desplegar la barra lateral ({{shortcut}})"
+    }
+  },
+  "dictation": {
+    "start": "Dictar ({{shortcut}})",
+    "stop": "Terminar de dictar",
+    "listening": "Escuchando… Pulsa el micrófono para escribirlo o Esc para descartarlo.",
+    "transcribing": "Transcribiendo lo que dijiste…",
+    "needsModel": "Para dictar, añade un modelo de Whisper en Configuración → Proveedores de audio. Funciona sin conexión.",
+    "nothingHeard": "No se oyó nada. Habla más cerca del micrófono, o revisa que Nyra tenga permiso para usarlo en el sistema.",
+    "dismiss": "Cerrar aviso"
+  },
+  "quick": {
+    "window": "Chat rápido de Nyra",
+    "untitled": "Conversación nueva",
+    "searching": "Buscando «{{query}}»",
+    "captureFile": "captura.png",
+    "handle": "Arrastra para moverla · Doble clic para volver a su sitio",
+    "messageLabel": "Mensaje para Nyra",
+    "setUpModel": "Configura un modelo para empezar",
+    "ask": "Pregúntale a Nyra…",
+    "help": "Enter envía, Mayúsculas más Enter hace un salto de línea, Escape oculta la barra.",
+    "capture": "Capturar un área de la pantalla",
+    "modelButton": "Modelo: {{name}}. Cambiar de modelo",
+    "noModelConfigured": "Sin modelo configurado",
+    "noModel": "Sin modelo",
+    "stop": "Detener respuesta",
+    "send": "Enviar",
+    "resumedAgo": "hace {{minutes}} min",
+    "afterReply": "Cuando termine la respuesta",
+    "continueInNyra": "Continuar en Nyra",
+    "startNew": "Nueva conversación",
+    "new": "Nueva",
+    "hide": "Ocultar la barra (Esc)",
+    "thinking": "Nyra está pensando",
+    "answered": "Nyra respondió: {{text}}",
+    "messages": "Mensajes",
+    "resumedSeparator": "Conversación de hace {{minutes}} min",
+    "attachments": "Archivos adjuntos",
+    "chooseModel": "Elegir modelo",
+    "pickerHelp": "↑ ↓ para moverte · Enter elige · Esc vuelve",
+    "manageModels": "Gestionar modelos",
+    "noModelTitle": "Aún no hay ningún modelo configurado",
+    "noModelHint": "Conecta un proveedor en Configuración y vuelve aquí.",
+    "openNyra": "Abrir Nyra",
+    "documentLines_one": "Documento · {{count, number}} línea",
+    "documentLines_other": "Documento · {{count, number}} líneas",
+    "writing": "Escribiendo…",
+    "openDocument": "Abrir {{title}} en Nyra",
+    "openInNyra": "Abrir en Nyra",
+    "pressKeys": "Pulsa la combinación…",
+    "change": "Cambiar",
+    "keys": {
+      "space": "Espacio",
+      "enter": "Intro",
+      "backspace": "Retroceso"
+    },
+    "documentLines_many": "Documento · {{count, number}} líneas",
+    "pin": "Fijar la barra",
+    "unpin": "Dejar de fijar la barra",
+    "pinHelp": "Fijar: no se oculta al hacer clic en otra app",
+    "unpinHelp": "Fijada: se queda aunque hagas clic en otra app. Pulsa para que vuelva a ocultarse sola",
+    "attach": "Adjuntar archivos",
+    "dropHere": "Suelta para adjuntar"
+  },
+  "markdown": {
+    "copyImage": "Copiar imagen",
+    "copy": "Copiar",
+    "code": "código",
+    "viewTabs": "Ver el diagrama o su código",
+    "diagram": "Diagrama",
+    "codeTab": "Código",
+    "diagramError": "<strong>No se pudo dibujar el diagrama:</strong> el código tiene un error. Se muestra el código.",
+    "drawing": "Dibujando el diagrama…",
+    "diagramAlt": "Diagrama generado a partir del código Mermaid",
+    "imageFailed": "No se pudo preparar la imagen del diagrama.",
+    "source": "Fuente {{number}}: {{domain}}, {{title}}",
+    "opensInBrowser": "Se abre en el navegador",
+    "callouts": {
+      "note": "Nota",
+      "tip": "Consejo",
+      "important": "Importante",
+      "warning": "Atención",
+      "caution": "Peligro"
+    },
+    "format": {
+      "label": "Cómo ver el código",
+      "original": "Original",
+      "formatted": "Formateado",
+      "compact": "Compacto",
+      "invalidJson": "JSON no válido · línea {{line}}, columna {{column}}",
+      "formatting": "Formateando…",
+      "failed": "No se pudo formatear"
+    }
+  },
+  "ui": {
+    "copied": "Copiado",
+    "copyFailed": "No se pudo copiar",
+    "status": {
+      "idle": "Sin conectar",
+      "loading": "Conectando…",
+      "loaded": "Conectado",
+      "error": "Sin conexión"
+    },
+    "disclaimer": "Nyra puede cometer errores. Verifica la información importante.",
+    "externalImage": "Imagen externa",
+    "externalImageNamed": "Imagen externa: {{alt}}",
+    "openInBrowser": "Abrir en el navegador",
+    "openFailed": "No se pudo abrir {{url}}",
+    "nameEditorHint": "<kbd>Enter</kbd> guarda · <kbd>Esc</kbd> cancela",
+    "remove": "Quitar {{name}}",
+    "hideSection": "Ocultar {{name}}",
+    "showSection": "Mostrar {{name}}",
+    "quotedName": "«{{name}}»",
+    "loadFailed": "No se pudo cargar esta parte de Nyra."
+  },
+  "lib": {
+    "outOfMemoryFolder": "{{model}} se quedó sin memoria: el modelo y todo lo que leyó de la carpeta no caben en este equipo. Nyra ha bajado para este modelo lo que lee de una vez. Pulsa Reintentar. Si vuelve a pasar, haz una pregunta más concreta o usa un modelo más pequeño.",
+    "outOfMemory": "{{model}} se quedó sin memoria: el modelo y el texto de la conversación no caben en este equipo. Prueba con menos archivos adjuntos, una conversación nueva o un modelo más pequeño.",
+    "keptOpenTitle": "Nyra sigue abierta",
+    "keptOpenBody": "Está en {{where}}. Para salir del todo, usa Salir en su icono.",
+    "replyTitle": "Nyra ha respondido",
+    "replyBody": "Vuelve para leer su respuesta.",
+    "approvalTitle_one": "Nyra quiere ejecutar un comando",
+    "approvalTitle_other": "Nyra quiere ejecutar {{count, number}} comandos",
+    "approvalBody": "Vuelve a Nyra para revisar y decidir.",
+    "questionTitle": "Un comando espera tu respuesta",
+    "questionBody": "Vuelve a Nyra para contestarle.",
+    "approvalTitle_many": "Nyra quiere ejecutar {{count, number}} comandos"
+  },
+  "commands": {
+    "compact": {
+      "description": "Resume la conversación ahora para liberar contexto",
+      "details": "Resume los mensajes anteriores y conserva entero solo el último intercambio. Es el mismo resumen que Nyra hace sola al llenarse el contexto, cuando tú quieras: al cambiar de tema, antes de una tarea larga o si tienes desactivado el resumen automático.",
+      "unavailableWhen": "mientras Nyra responde, o si solo hay un intercambio desde el último resumen."
+    },
+    "fork": {
+      "description": "Crea una conversación nueva desde aquí, con todo lo hablado hasta ahora",
+      "details": "Copia la conversación en otra, «(rama)», con sus mensajes, skills y carpeta, y la abre. La original queda como estaba. Es lo mismo que «Crear conversación nueva desde aquí» en el último mensaje.",
+      "unavailableWhen": "mientras Nyra responde, o en una conversación sin mensajes."
+    },
+    "new": {
+      "description": "Empieza una conversación nueva. Si escribes un mensaje detrás, lo envía en ella",
+      "details": "Solo, abre una conversación vacía, como el atajo de conversación nueva. Con un mensaje detrás, la crea con ese mensaje y Nyra lo responde, con el modelo que tengas elegido.",
+      "example": "/new explícame qué es una API con un ejemplo"
+    },
+    "init": {
+      "description": "Escribe el NYRA.md del proyecto: las instrucciones que Nyra sigue al trabajar en él",
+      "details": "Nyra explora la carpeta (cómo se compila y se prueba, su estructura, sus convenciones) y te propone un NYRA.md breve, que revisas y aplicas como cualquier cambio. Si ya hay uno, propone mejoras. Si hay un CLAUDE.md o un AGENTS.md, lo importa en vez de copiarlo. Con un texto detrás, lo tiene en cuenta.",
+      "example": "/init céntrate en cómo se prueban los cambios",
+      "unavailableWhen": "sin una carpeta conectada o un proyecto.",
+      "message": "Escribe el NYRA.md de este proyecto.",
+      "noFolder": "Conecta una carpeta para escribir su NYRA.md.",
+      "busy": "Espera a que Nyra termine para escribir el NYRA.md."
+    },
+    "model": {
+      "description": "Cambia de modelo: escribe parte de su nombre y elígelo",
+      "details": "Muestra los modelos del selector y los filtra mientras escribes parte del nombre, del id o del proveedor. Enter elige el resaltado, igual que el selector de modelos. Los modelos ocultos no salen, salvo el que está en uso.",
+      "unavailableWhen": "si aún no hay ningún modelo."
+    }
+  },
+  "shortcuts": {
+    "chatSpace": {
+      "action": "Ir a Chat",
+      "detail": "Vuelve a la conversación que tenías abierta allí."
+    },
+    "codeSpace": {
+      "action": "Ir a Código",
+      "detail": "Tus proyectos y sus conversaciones."
+    },
+    "newConversation": {
+      "action": "Nueva conversación",
+      "detail": "También desde Configuración: vuelve al chat."
+    },
+    "newPrivateConversation": {
+      "action": "Nueva conversación privada",
+      "detail": "No se guarda y desaparece en cuanto sales de ella."
+    },
+    "searchConversation": {
+      "action": "Buscar en la conversación abierta"
+    },
+    "searchAll": {
+      "action": "Buscar en todas las conversaciones"
+    },
+    "settings": {
+      "action": "Abrir Configuración"
+    },
+    "workspace": {
+      "action": "Trabajar con una carpeta",
+      "detail": "O cambiar la conectada a la conversación."
+    },
+    "moveConversation": {
+      "action": "Mover la conversación abierta a una carpeta"
+    },
+    "projectPanel": {
+      "action": "Abrir o cerrar el panel del proyecto",
+      "detail": "En Código: archivos, Git y lo pendiente del proyecto."
+    },
+    "dictate": {
+      "action": "Dictar",
+      "detail": "Empieza a escuchar, y al pulsarlo otra vez escribe lo dicho en la caja. Esc lo descarta. También en la barra rápida."
+    },
+    "applyChange": {
+      "action": "Aplicar el cambio que estás revisando",
+      "detail": "En el panel de revisión de cambios propuestos."
+    },
+    "other": {
+      "send": {
+        "action": "Enviar el mensaje",
+        "detail": "Mayús+Enter añade un salto de línea."
+      },
+      "list": {
+        "action": "Abrir la lista de comandos y skills",
+        "detail": "Al principio del mensaje."
+      },
+      "moveList": {
+        "action": "Moverse por la lista de comandos y skills",
+        "detail": "Enter o Tab elige y Esc la cierra."
+      },
+      "jumpChanges": {
+        "action": "Saltar entre los cambios de un archivo",
+        "detail": "En la revisión."
+      },
+      "moveProjects": {
+        "action": "Moverse por los proyectos de Código",
+        "detail": "→ despliega, ← pliega o sube al proyecto, Enter abre."
+      },
+      "rename": {
+        "action": "Renombrar la fila de la barra lateral",
+        "detail": "Un proyecto o una conversación."
+      },
+      "rowMenu": {
+        "keys": "Mayús+F10",
+        "action": "Abrir el menú de la fila de la barra lateral",
+        "detail": "O la tecla de menú."
+      },
+      "close": {
+        "action": "Cerrar menús, el visor, la búsqueda o la edición de un mensaje"
+      }
+    },
+    "sidebar": {
+      "action": "Plegar o desplegar la barra lateral",
+      "detail": "La deja en iconos para darle más sitio a la conversación. En Código, con la ventana estrecha ya va plegada."
+    }
+  },
+  "reply": {
+    "stopped": "La respuesta se detuvo.",
+    "forkSuffix": "(rama)",
+    "chooseModelToFix": "Elige un modelo para que Nyra corrija el cambio.",
+    "tooLarge": "Tu último mensaje no cabe en el contexto de {{model}}: ocupa unos {{needed, number}} tokens y quedan unos {{left, number}}. Edita el mensaje para quitar algún adjunto, elimínalo o elige un modelo con más contexto.",
+    "fileVersionFailed": "Nyra no pudo preparar la versión nueva del archivo: {{error}}",
+    "changesFailed": "Nyra no pudo preparar los cambios propuestos: {{error}}",
+    "memoryFailed": "Nyra no pudo guardar un recuerdo: {{error}}",
+    "noSummary": "El modelo no devolvió ningún resumen.",
+    "summaryStalled": "El modelo dejó de responder mientras resumía. Puedes reintentarlo."
+  },
+  "chat": {
+    "private": {
+      "label": "Privada",
+      "title": "Conversación privada",
+      "description": "No se guarda y desaparece en cuanto sales de ella."
+    },
+    "isolated": {
+      "label": "Aislada",
+      "title": "Conversación aislada",
+      "description": "Privada, y solo tú, el modelo y tus archivos: sin recuerdos, personalización, skills, búsqueda en internet, carpetas, comandos, navegador ni conexiones MCP.",
+      "toggleTitle": "Conversación aislada: no se guarda y Nyra no usa nada más que el modelo y los archivos",
+      "cloudWarning": "Este modelo está en la nube: lo que escribes y adjuntas en esta conversación aislada se envía a {{provider}}. Para que nada salga de tu equipo, elige un modelo local."
+    },
+    "privacyChoice": "Tipo de conversación",
+    "undo": {
+      "deleted": "Mensaje eliminado.",
+      "action": "Deshacer"
+    },
+    "metadata": {
+      "title": "Metadatos",
+      "optional": "Opcional",
+      "key": "Clave",
+      "value": "Valor",
+      "removeNamed": "Quitar {{name}}",
+      "removeField": "Quitar el campo",
+      "add": "Añadir campo"
+    },
+    "summary": {
+      "divider": "Conversación resumida aquí",
+      "running": "Resumiendo la conversación…",
+      "runningDetail": "Puede tardar unos segundos. Espera a que termine para seguir, o cancélalo.",
+      "failed": "No se pudo resumir la conversación"
+    },
+    "reasoning": {
+      "thinking": "Pensando… {{seconds}} s",
+      "label": "Razonamiento",
+      "thoughtFor": "Pensó durante {{duration}}"
+    },
+    "versions": {
+      "label": "Versiones de la respuesta",
+      "previous": "Versión anterior",
+      "next": "Versión siguiente"
+    },
+    "search": {
+      "label": "Buscar en la conversación",
+      "none": "Sin resultados",
+      "position": "{{current}} de {{total}}",
+      "previous": "Resultado anterior",
+      "previousTitle": "Anterior (Enter)",
+      "next": "Resultado siguiente",
+      "nextTitle": "Siguiente (Mayús + Enter)",
+      "close": "Cerrar búsqueda",
+      "closeTitle": "Cerrar (Esc)",
+      "hint": "Encuentra un texto en todos los mensajes"
+    },
+    "message": {
+      "copy": "Copiar respuesta",
+      "regenerate": "Regenerar respuesta",
+      "regenerateTitle": "Regenerar con el modelo seleccionado",
+      "branch": "Crear una rama desde esta respuesta",
+      "branchTitle": "Crear una conversación nueva con todo hasta aquí",
+      "statsTitle": "Tokens generados y tiempo total de la respuesta",
+      "stats_one": "{{count, number}} token · {{duration}}",
+      "stats_other": "{{count, number}} tokens · {{duration}}",
+      "stats_many": "{{count, number}} tokens · {{duration}}"
+    },
+    "user": {
+      "edit": "Editar mensaje",
+      "editTitleFiles": "Editar el texto o quitar archivos",
+      "withoutFiles": "Se enviará sin los archivos que quitaste.",
+      "laterReplaced": "Los mensajes posteriores se reemplazarán por la nueva respuesta.",
+      "send": "Enviar",
+      "deleteWithConversation": "Eliminar mensaje y conversación",
+      "delete": "Eliminar mensaje y su respuesta",
+      "onlyMessage": "Es el único mensaje: al eliminarlo se elimina la conversación.",
+      "deleteConversation": "Eliminar conversación",
+      "manualSkill": "Skill aplicada a mano: {{name}}"
+    },
+    "welcome": {
+      "hello": "Hola",
+      "question": "¿En qué te ayudo hoy?",
+      "privateToggleTitle": "Una conversación privada no se guarda ni aparece en la barra lateral ({{shortcut}})",
+      "applySkill": "Aplicar la skill «{{name}}» a tu mensaje",
+      "suggestions": {
+        "writing": {
+          "title": "Escribir",
+          "description": "Un relato, un correo o la descripción de un personaje"
+        },
+        "summarize": {
+          "title": "Resumir",
+          "description": "Condensa un documento o una conversación larga"
+        },
+        "explain": {
+          "title": "Explicar",
+          "description": "Entiende un concepto paso a paso"
+        },
+        "plan": {
+          "title": "Planificar",
+          "description": "Un viaje, una semana de estudio o un proyecto, paso a paso"
+        }
+      }
+    },
+    "composer": {
+      "noModels": "Aún no hay modelos: conecta un proveedor en Configuración.",
+      "hidden_one": "{{count, number}} dato oculto antes de enviar.",
+      "hidden_other": "{{count, number}} datos ocultos antes de enviar.",
+      "inputLabel": "Escribe un mensaje para Nyra",
+      "placeholderSkill": "Escribe o pega lo que quieres para «{{name}}»…",
+      "placeholderWelcome": "Pregúntale lo que quieras a Nyra…",
+      "placeholder": "Escribe un mensaje para Nyra…",
+      "pdfNoImages": "Este modelo no admite imágenes: del PDF solo leerá el texto, sin sus páginas escaneadas ni sus figuras.",
+      "stop": "Detener respuesta",
+      "send": "Enviar mensaje",
+      "sensitiveAnnounce": "Aviso: el mensaje parece contener datos sensibles ({{labels}}). Se enviará a {{destination}}. No bloquea el envío.",
+      "skillAnnounce": "Skill {{name}} aplicada a este mensaje. Retroceso para quitarla.",
+      "skillMarked": "<name>{{name}}</name> se marcó en esta conversación.",
+      "folderError": "No se pudo abrir la carpeta.",
+      "closeError": "Cerrar mensaje de error",
+      "hidden_many": "{{count, number}} datos ocultos antes de enviar.",
+      "placeholderAnswer": "Pregúntale o dile qué prefieres en lugar de ejecutarlo…"
+    },
+    "menu": {
+      "more": "Más opciones",
+      "label": "Opciones del mensaje",
+      "attach": "Adjuntar archivo",
+      "attachHint": "Imágenes, PDF o archivos de texto",
+      "folder": "Carpeta conectada: {{name}}",
+      "readOnly": "Solo lectura",
+      "files_one": "{{count, number}} archivo · solo lectura",
+      "files_other": "{{count, number}} archivos · solo lectura",
+      "changeFolder": "Cambiar carpeta…",
+      "disconnect": "Desconectar",
+      "workWithFolder": "Trabajar con una carpeta…",
+      "workWithFolderHint": "Nyra podrá interactuar con tus archivos",
+      "mention": "Mencionar un archivo",
+      "mentionHint": "Nyra lo lee y lo manda con tu mensaje",
+      "useSkill": "Usar skill",
+      "useSkillLabel": "Usar skill. {{active}}: {{names}}",
+      "activeSkills_one": "{{count, number}} skill activa",
+      "activeSkills_other": "{{count, number}} skills activas",
+      "activeCount_one": "{{count, number}} activa",
+      "activeCount_other": "{{count, number}} activas",
+      "useSkillHint": "Añade instrucciones especializadas a esta conversación",
+      "activeTip": "Activas en esta conversación",
+      "activeTipNote": "El modelo decide en cada mensaje si usa alguna.",
+      "files_many": "{{count, number}} archivos · solo lectura",
+      "activeSkills_many": "{{count, number}} skills activas",
+      "activeCount_many": "{{count, number}} activas"
+    },
+    "view": {
+      "usingSkills_one": "Usando la skill {{names}}",
+      "usingSkills_other": "Usando las skills {{names}}",
+      "using": "Usando <name>{{names}}</name>…",
+      "compactBusy": "Espera a que Nyra termine para compactar.",
+      "compactNoModel": "Elige un modelo para compactar.",
+      "compactNothing": "Aún no hay nada que compactar: hace falta más de un intercambio.",
+      "forkBusy": "Espera a que Nyra termine para crear otra conversación.",
+      "forkEmpty": "La conversación aún no tiene mensajes.",
+      "taskSkillTitle": "Cada mensaje sigue la skill «{{name}}»",
+      "removeTaskSkill": "Quitar la skill {{name}} de esta conversación",
+      "removeTaskSkillTitle": "Quitar la skill",
+      "filesLabel_one": "Archivos de la conversación, {{count, number}} adjunto",
+      "filesLabel_other": "Archivos de la conversación, {{count, number}} adjuntos",
+      "files": "Archivos",
+      "processes": "Procesos",
+      "processesLabel_one": "{{count}} proceso en marcha",
+      "processesLabel_many": "{{count}} procesos en marcha",
+      "processesLabel_other": "{{count}} procesos en marcha",
+      "messages": "Mensajes",
+      "earlier": "{{count, number}} mensajes anteriores · sube para verlos",
+      "today": "Hoy",
+      "loading": "Cargando conversación…",
+      "fromHere": "Desde aquí, {{model}}",
+      "writing": "Nyra está escribiendo",
+      "close": "Cerrar",
+      "reviewSettings": "Revisar la configuración",
+      "usingSkills_many": "Usando las skills {{names}}",
+      "filesLabel_many": "Archivos de la conversación, {{count, number}} adjuntos"
+    },
+    "context": {
+      "parts": {
+        "conversation": "Conversación",
+        "files": "Archivos",
+        "folder": "Carpeta «{{name}}»",
+        "skills": "Skills",
+        "memories": "Recuerdos",
+        "instructions": "Instrucciones de Nyra"
+      },
+      "listed": {
+        "conversation": "la conversación",
+        "folder": "la carpeta «{{name}}»",
+        "files": "los archivos",
+        "skills": "las skills",
+        "memories": "los recuerdos"
+      },
+      "share": {
+        "almostAll": "casi todo lo usado",
+        "almostHalf": "casi la mitad",
+        "third": "un tercio",
+        "largest": "la mayor parte"
+      },
+      "suggestion": {
+        "biggestFile": "<b>«{{name}}» ocupa {{share}}.</b> Quitarlo, o referenciarlo solo cuando haga falta, libera espacio.",
+        "files": "<b>Los archivos ocupan {{share}}.</b> Quitar o referenciar los que no necesites libera espacio.",
+        "conversation": "<b>La conversación ocupa {{share}}.</b> Al llenarse, Nyra resumirá los mensajes antiguos. Para empezar de cero, abre una conversación nueva.",
+        "skills": "<b>Las skills ocupan {{share}}.</b> Desmarca las que no uses en esta conversación.",
+        "memories": "<b>Los recuerdos ocupan {{share}}.</b> Borra los que ya no sirvan.",
+        "instructions": "<b>Las instrucciones ocupan {{share}}.</b> Acortar la personalización libera espacio."
+      },
+      "modelMaximum": "El máximo del modelo.",
+      "ringNoData": "Uso del contexto: sin datos todavía",
+      "ringUnknownLimit": "Uso del contexto: unos {{used}} tokens, límite desconocido",
+      "ring": "Uso del contexto: {{percent}}",
+      "ringCritical": "Uso del contexto: {{percent}}, casi lleno",
+      "ringHigh": "Uso del contexto: {{percent}}, uso alto",
+      "spokenPart": "{{name}}, {{tokens}} tokens",
+      "spokenPartShare": "{{name}}, {{tokens}} tokens, {{share}}",
+      "rowPart": "{{name}}: {{tokens}} tokens",
+      "rowPartShare": "{{name}}: {{tokens}} tokens, {{share}}",
+      "spokenBreakdown": "Reparto aproximado: {{parts}}.",
+      "noData": "Contexto: sin datos todavía",
+      "noDataHint": "Se calculará con la próxima respuesta.",
+      "coming": "Incluirá {{parts}}, además de las instrucciones de Nyra.",
+      "headWithTotal": "Contexto: {{used}} / {{total}} tokens ({{percent}})",
+      "headWithoutTotal": "Contexto: ≈ {{used}} tokens",
+      "limitNotYetKnown": "Límite aún desconocido",
+      "limitUnknown": "Límite desconocido",
+      "criticalHint": "Casi lleno: considera empezar una conversación nueva.",
+      "highHint": "Uso alto. Quedan {{free}} tokens libres.",
+      "high": "Uso alto",
+      "critical": "Casi lleno",
+      "unknownLimitMark": "límite desconocido",
+      "breakdown": "Reparto aproximado",
+      "free": "Libres",
+      "freeSpoken": "Libres: {{tokens}} tokens, {{share}}",
+      "footTotal": "El total lo informa el modelo y el reparto es una estimación.",
+      "footOllama": "Todo es una estimación hasta que Ollama cargue el modelo.",
+      "footProvider": "Todo es una estimación: {{provider}} no informa del contexto de este modelo.",
+      "theProvider": "el proveedor",
+      "autoSize": "Tamaño automático: Ollama decidirá el límite al cargar el modelo, con la primera respuesta.",
+      "setSize": "Para medirlo y resumir a tiempo, pon el «Tamaño del contexto» en Configuración → Proveedores → {{provider}}.",
+      "yourProvider": "su proveedor"
+    }
+  },
+  "panel": {
+    "tabs": {
+      "files": "Archivos",
+      "git": "Git",
+      "pending": "Pendiente"
+    },
+    "folded": "Panel del proyecto plegado",
+    "gitChanged_one": "Git, {{count, number}} archivo cambiado",
+    "gitChanged_other": "Git, {{count, number}} archivos cambiados",
+    "pendingCount": "Pendiente, {{count, number}}",
+    "label": "Panel del proyecto {{name}}",
+    "tabsLabel": "Panel del proyecto",
+    "close": "Cerrar el panel del proyecto",
+    "closeWithShortcut": "Cerrar el panel ({{shortcut}})",
+    "missingTitle": "La carpeta ya no existe",
+    "missingBody": "No encuentro <path>{{path}}</path>.",
+    "findFolder": "Buscar la carpeta…",
+    "nothingPendingTitle": "Nada pendiente",
+    "nothingPendingBody": "Aquí verás los cambios y comandos de {{name}} que esperan tu respuesta.",
+    "mention": "Mencionar en el mensaje",
+    "files": {
+      "reading": "Leyendo la carpeta…",
+      "empty": "Nyra no encuentra archivos que pueda leer en esta carpeta.",
+      "unreadable": "Nyra no puede leer esta carpeta ahora.",
+      "folder": "{{name}}, carpeta",
+      "folderWithMarked": "{{name}}, carpeta, contiene archivos de esta conversación",
+      "readHere": "leído en esta conversación",
+      "proposedHere": "cambio propuesto sin revisar",
+      "appliedHere": "cambio aplicado",
+      "which": "Qué archivos mostrar",
+      "all": "Todos",
+      "thisConversation": "De esta conversación",
+      "legend": "En esta conversación:",
+      "read": "leído",
+      "proposed": "propuesto",
+      "applied": "aplicado",
+      "treeLabel": "Archivos de {{name}}",
+      "untouched": "Esta conversación aún no ha tocado ningún archivo.",
+      "truncated": "La carpeta es muy grande: solo se muestran los primeros archivos que Nyra indexó.",
+      "enterHint": "<kbd>↩</kbd> abre el archivo, o su revisión si tiene un cambio por revisar."
+    },
+    "pending": {
+      "change": "Cambio sin revisar",
+      "newFile": "Archivo nuevo sin revisar",
+      "command": "Esperando permiso",
+      "commit": "Commit sin hacer",
+      "conversation": "Conversación",
+      "thisConversation": "Esta conversación",
+      "view": "Ver",
+      "review": "Revisar",
+      "viewItem": "Ver {{name}}",
+      "reviewItem": "Revisar {{name}}"
+    },
+    "gitChanged_many": "Git, {{count, number}} archivos cambiados"
+  },
+  "git": {
+    "status": {
+      "A": "añadido",
+      "M": "modificado",
+      "D": "borrado"
+    },
+    "statusTitle": {
+      "A": "Añadido",
+      "M": "Modificado",
+      "D": "Borrado"
+    },
+    "unavailableTitle": "No encuentro Git en este equipo",
+    "unavailableBody": "Instálalo y vuelve a abrir Nyra para ver aquí la rama y los cambios.",
+    "notTrustedTitle": "Git no confía en esta carpeta",
+    "notTrustedBody": "Es de otro usuario del equipo, o está en un disco externo o en la red. Si es tuya, puedes permitirla desde la terminal con <cmd>git config --global --add safe.directory</cmd> y la ruta de la carpeta.",
+    "notRepoTitle": "Esta carpeta no es un repositorio de Git",
+    "notRepoBody": "Nyra puede leer y cambiar archivos igual, con copia del original y «Deshacer». Lo que no hay es historial con el que comparar.",
+    "init": "Iniciar repositorio",
+    "ahead_one": "↑{{count, number}} commit sin subir",
+    "ahead_other": "↑{{count, number}} commits sin subir",
+    "upToDate": "Al día",
+    "refresh": "Volver a leer los cambios",
+    "changes": "Cambios en el proyecto",
+    "reading": "Leyendo el estado de Git…",
+    "noChanges": "No hay cambios desde el último commit.",
+    "linesUncounted": "líneas sin contar",
+    "linesAdded_one": "{{count, number}} línea añadida",
+    "linesAdded_other": "{{count, number}} líneas añadidas",
+    "linesRemoved_one": "{{count, number}} quitada",
+    "linesRemoved_other": "{{count, number}} quitadas",
+    "fileLabel": "{{name}}, {{status}}, {{lines}}",
+    "fileInFolderLabel": "{{name}} en {{folder}}, {{status}}, {{lines}}",
+    "changedByNyra": ", lo cambió Nyra",
+    "byNyra": "por Nyra",
+    "showingFirst": "Se muestran los primeros {{shown, number}} de {{total, number}}. Si son archivos generados (una carpeta de compilación), añádelos al .gitignore.",
+    "legend": "A = añadido, M = modificado, D = borrado. Nyra no hace commits ni push por su cuenta.",
+    "prepareCommit": "Preparar un commit",
+    "diff": {
+      "kind": "{{status}} · diferencia con el último commit, solo lectura",
+      "how": "Cómo mostrar los cambios",
+      "unified": "Una columna",
+      "split": "Dos columnas",
+      "close": "Cerrar",
+      "reading": "Leyendo la diferencia…",
+      "unavailable": "Es un archivo binario o demasiado grande para mostrarlo aquí.",
+      "noDifference": "No hay diferencias de contenido (quizá solo cambiaron sus permisos)."
+    },
+    "commit": {
+      "done": "Commit hecho <id>{{id}}</id> · {{title}}",
+      "discarded": "Commit descartado · {{title}}",
+      "recover": "Recuperar",
+      "proposed": "Commit propuesto",
+      "proposedHint": "Revisa el mensaje y los archivos. Nyra no hace push.",
+      "message": "Mensaje del commit",
+      "readingChanges": "Leyendo los cambios…",
+      "nothingToSave": "No hay cambios desde el último commit: no hay nada que guardar.",
+      "files_one": "{{count, number}} archivo en el commit",
+      "files_other": "{{count, number}} archivos en el commit",
+      "committing": "Haciendo el commit…",
+      "commit": "Hacer commit",
+      "discard": "Descartar",
+      "files_many": "{{count, number}} archivos en el commit"
+    },
+    "ahead_many": "↑{{count, number}} commits sin subir",
+    "linesAdded_many": "{{count, number}} líneas añadidas",
+    "linesRemoved_many": "{{count, number}} quitadas"
+  },
+  "terminal": {
+    "view": "Ver",
+    "close": "Cerrar (Esc)",
+    "risks": {
+      "delete": {
+        "title": "Borra archivos o carpetas sin pasar por la papelera.",
+        "detail": "Lo que borre desaparecerá del todo. Ejecútalo solo si sabes qué hay ahí o si se puede regenerar."
+      },
+      "downloadAndRun": {
+        "title": "Descarga un programa de internet y lo ejecuta directamente.",
+        "detail": "Ejecutará lo que haya en esa dirección en el momento de pulsar, sin que puedas leerlo antes. Hazlo solo si confías en el sitio."
+      },
+      "admin": {
+        "title": "Pide permisos de administrador.",
+        "detail": "Podrá cambiar cosas fuera de la carpeta. Si pide la contraseña, se escribe en la propia tarjeta, oculta, y no se guarda."
+      },
+      "gitHistory": {
+        "title": "Reescribe el historial de Git o descarta cambios sin guardar.",
+        "detail": "Lo que se pierda así puede no tener vuelta atrás."
+      },
+      "outside": {
+        "title": "Toca archivos fuera de {{folder}}.",
+        "detail": "Revisa la ruta antes de ejecutarlo."
+      },
+      "codeDelete": {
+        "title": "Borra archivos.",
+        "detail": "Lo que borre no pasa por la papelera. Revisa qué archivos toca antes de ejecutarlo."
+      },
+      "codeRuns": {
+        "title": "Ejecuta otros programas o comandos.",
+        "detail": "Puede hacer lo mismo que un comando en la terminal. Revisa qué ejecuta."
+      },
+      "codeNetwork": {
+        "title": "Se conecta a internet.",
+        "detail": "Puede descargar o enviar datos. Revisa a qué dirección se conecta y qué envía."
+      }
+    },
+    "keptOmitted": "… {{lines}} líneas omitidas …",
+    "card": {
+      "nonZeroHelp": "Muchos programas terminan con un código distinto de 0 cuando encuentran algo (tests que fallan, avisos de un linter, problemas de un análisis), no solo cuando algo se rompe. Revisa la salida.",
+      "notFound": "No se encontró el programa",
+      "notRunnable": "No se pudo ejecutar",
+      "announce": {
+        "pending": "Nyra quiere ejecutar un comando y espera tu permiso.",
+        "running": "El comando está en marcha.",
+        "asking": "El comando espera tu respuesta.",
+        "done": "El comando terminó correctamente.",
+        "failed": "El comando terminó con un código distinto de 0.",
+        "stopped": "Detuviste el comando."
+      },
+      "rejected": "No ejecutaste",
+      "queued": "Después del anterior",
+      "review": "Revisa antes de ejecutar",
+      "waiting": "Esperando tu permiso",
+      "running": "En marcha · {{time}}",
+      "asking": "Esperando tu respuesta",
+      "done": "Terminó correctamente · {{time}}",
+      "nonZero": "Terminó con código {{code}} · {{time}}",
+      "code": "código {{code}}",
+      "stopped": "Detenido por ti · tras {{time}}",
+      "label": "Comando {{command}}",
+      "titlePending": "Nyra quiere ejecutar un comando",
+      "title": "Comando",
+      "in": "en",
+      "skillScript": "Script de la skill «{{name}}»",
+      "viewScript": "Ver script",
+      "editLabel": "Editar el comando",
+      "editedByYou": "Editado por ti",
+      "run": "Ejecutar",
+      "reject": "Rechazar",
+      "editBefore": "Editar el comando antes de ejecutarlo",
+      "edit": "Editar",
+      "useThis": "Usar este comando",
+      "cancel": "Cancelar",
+      "editHelp": "Enter guarda · Esc cancela, no ejecuta",
+      "stop": "Detener",
+      "noTimeLimit": "No tiene límite de tiempo: termina solo o cuando lo detengas.",
+      "background": "En segundo plano",
+      "backgroundHelp": "Nyra sigue trabajando mientras se ejecuta y recibe el resultado cuando termina.",
+      "detachedHelp": "Sigue en marcha tras la respuesta, y Nyra recibirá su resultado con tu próximo mensaje. Se detiene al cerrar Nyra.",
+      "answeredInstead": "No se ejecutó: le respondiste"
+    },
+    "answer": {
+      "passwordLabel": "Contraseña para el comando",
+      "answerLabel": "Respuesta para el comando",
+      "password": "Contraseña",
+      "placeholder": "Escribe tu respuesta…",
+      "send": "Enviar",
+      "noteSecret": "Va al comando, no a Nyra. Se escribe oculta y no se guarda.",
+      "note": "Va al comando, no a Nyra. Pulsa Enter sin escribir nada para aceptar la opción por defecto."
+    },
+    "reminder": {
+      "asking": "está esperando tu respuesta.",
+      "answer": "Contestar",
+      "running": "sigue en marcha. Podrás escribirle a Nyra cuando termine, o detenerlo desde su tarjeta.",
+      "pendingBefore": "Nyra quiere ejecutar",
+      "pendingAfter": "y espera tu permiso.",
+      "goTo": "Ir al comando"
+    },
+    "compact": {
+      "viewOutput": "Ver la salida de {{command}}"
+    },
+    "output": {
+      "live": "Salida en directo",
+      "toEnd": "Ir al final",
+      "lines_one": "Salida · {{count, number}} línea",
+      "lines_other": "Salida · {{count, number}} líneas",
+      "copy": "Copiar la salida",
+      "viewAll": "Ver completa",
+      "earlier_one": "… {{count, number}} línea antes",
+      "earlier_other": "… {{count, number}} líneas antes",
+      "lastLines": "Últimas líneas de la salida",
+      "empty": "(no mostró nada)",
+      "lines_many": "Salida · {{count, number}} líneas",
+      "earlier_many": "… {{count, number}} líneas antes"
+    },
+    "reads": {
+      "label": "Partes de la salida que leyó Nyra",
+      "text": "Nyra leyó las líneas {{from}}–{{to}} de la salida",
+      "viewLines": "Ver las líneas {{from}} a {{to}}"
+    },
+    "viewer": {
+      "done": "terminó correctamente",
+      "failed": "terminó con un código distinto de 0",
+      "stopped": "detenido por ti",
+      "file": "salida.txt",
+      "titlePrefix": "Salida de",
+      "lines_one": "{{count, number}} línea",
+      "lines_other": "{{count, number}} líneas",
+      "searchLabel": "Buscar en la salida",
+      "search": "Buscar",
+      "full": "Salida completa",
+      "highlighted": "Resaltadas las líneas que leyó Nyra",
+      "keptUpTo": "Se guarda completa en la conversación hasta {{lines}} líneas.",
+      "copyAll": "Copiar todo",
+      "saveAs": "Guardar como…",
+      "lines_many": "{{count, number}} líneas"
+    },
+    "script": {
+      "note": "Script de la skill «{{skill}}». Léelo antes de ejecutarlo: lo escribió otra persona.",
+      "reading": "Leyendo el script…",
+      "copy": "Copiar el script"
+    },
+    "group": {
+      "label": "{{n}} comandos propuestos, en orden",
+      "title": "Comandos propuestos",
+      "order": "· {{n}}, en este orden"
+    },
+    "couldNotRun": "No se pudo ejecutar: {{error}}",
+    "code": {
+      "titlePending": "Nyra quiere ejecutar un programa",
+      "title": "Programa",
+      "editLabel": "Editar el programa",
+      "editBefore": "Editar el programa antes de ejecutarlo",
+      "useThis": "Usar este programa",
+      "editHelp": "{{modifier}} Enter guarda · Esc cancela, no ejecuta",
+      "announce": {
+        "pending": "Nyra quiere ejecutar un programa y espera tu permiso.",
+        "running": "El programa está en marcha.",
+        "asking": "El programa espera tu respuesta.",
+        "done": "El programa terminó correctamente.",
+        "failed": "El programa terminó con un error.",
+        "stopped": "Detuviste el programa."
+      },
+      "files_one": "Creó {{count, number}} archivo",
+      "files_other": "Creó {{count, number}} archivos",
+      "files_many": "Creó {{count, number}} archivos",
+      "save": "Guardar",
+      "saved": "Guardado",
+      "saveFile": "Guardar {{name}}",
+      "noRuntime": "Este equipo no tiene con qué ejecutar programas en {{language}}.",
+      "noCommandsHere": "Aquí Nyra solo puede ejecutar programas, no comandos. Para comandos, conecta una carpeta y activa «Ejecutar comandos en carpetas» en Configuración.",
+      "conversationFolder": "la carpeta de la conversación"
+    },
+    "processes": {
+      "label": "Procesos en marcha",
+      "title": "Procesos",
+      "close": "Cerrar procesos",
+      "running": "En marcha",
+      "asking": "Espera tu respuesta",
+      "show": "Ir al mensaje",
+      "emptyTitle": "Nada en marcha",
+      "emptyText": "Aquí aparecen los comandos y programas que siguen ejecutándose, como un servidor que Nyra dejó en marcha."
+    }
+  },
+  "code": {
+    "skills": {
+      "explainProject": {
+        "title": "Explicar el proyecto",
+        "task": "Explicar el proyecto",
+        "description": "Recorre la carpeta y resume la arquitectura, las piezas principales y cómo se ejecuta.",
+        "start": "Explícame cómo está organizado este proyecto."
+      },
+      "codeReview": {
+        "title": "Revisar código",
+        "task": "Revisar el código",
+        "description": "Lee los cambios de Git (o los archivos que elijas) y señala fallos, riesgos y mejoras.",
+        "start": "Revisa los cambios que tengo sin hacer commit."
+      },
+      "writeTests": {
+        "title": "Escribir tests",
+        "task": "Escribir tests",
+        "description": "Escribe tests con las herramientas que ya usa el proyecto y los ejecuta con tu permiso.",
+        "start": "¿Qué quieres probar? Menciona un archivo con @…"
+      },
+      "debug": {
+        "title": "Depurar",
+        "task": "Depurar un error",
+        "description": "Parte del error o del síntoma, busca la causa y propone el arreglo más pequeño posible.",
+        "start": "Pega el error o describe qué falla…"
+      },
+      "refactor": {
+        "title": "Refactorizar",
+        "task": "Refactorizar",
+        "description": "Reorganiza sin cambiar el comportamiento, en pasos pequeños y fáciles de revisar.",
+        "start": "¿Qué parte quieres reorganizar?"
+      },
+      "commitAndPr": {
+        "title": "Commit y descripción de PR",
+        "task": "Preparar un commit",
+        "description": "Resume tus cambios en un mensaje de commit y una descripción de PR para que los revises.",
+        "start": "Prepara el mensaje de commit de los cambios actuales."
+      },
+      "updateDependencies": {
+        "title": "Actualizar dependencias",
+        "task": "Actualizar dependencias",
+        "description": "Mira qué está desactualizado o es vulnerable y propone en qué orden actualizarlo.",
+        "start": "¿Qué dependencias conviene actualizar?"
+      },
+      "documentCode": {
+        "title": "Documentar",
+        "task": "Documentar",
+        "description": "Escribe o pone al día el README y los comentarios de las partes que toques.",
+        "start": "¿Qué quieres documentar?"
+      }
+    }
+  },
+  "projects": {
+    "welcome": {
+      "title": "Programa con Nyra en tus carpetas",
+      "folders": "Cada proyecto es una carpeta de tu equipo, con sus conversaciones dentro.",
+      "reads": "Nyra lee y busca en el código. Los cambios y los comandos esperan a que los apruebes.",
+      "local": "Nada sale de tu equipo si usas un modelo local.",
+      "choose": "Elegir una carpeta…"
+    },
+    "drawer": "Barra lateral",
+    "space": {
+      "label": "Espacio",
+      "chat": "Chat",
+      "code": "Código",
+      "title": "{{space}} ({{shortcut}})",
+      "titleWithDraft": "{{space}} ({{shortcut}}). Tienes un borrador sin enviar aquí",
+      "labelWithDraft": "{{space}}, tienes un borrador sin enviar",
+      "draft": ", tienes un borrador sin enviar"
+    },
+    "remove": {
+      "title": "¿Quitar «<name>{{name}}</name>» de Nyra?",
+      "confirm": "Quitar",
+      "body": "Desaparece de esta lista con sus conversaciones. La carpeta y sus archivos <strong>siguen en tu disco</strong>. Si la vuelves a añadir, recuperas las conversaciones."
+    },
+    "menu": {
+      "findFolder": "Buscar la carpeta…",
+      "skills": "Skills del proyecto",
+      "remove": "Quitar de la lista",
+      "removeHint": "La carpeta no se borra",
+      "actionsOf": "Acciones de «{{name}}»"
+    },
+    "home": {
+      "branch": "Rama",
+      "unpushed_one": "↑{{count, number}} commit sin subir",
+      "unpushed_other": "↑{{count, number}} commits sin subir",
+      "noGit": "Sin Git",
+      "notTrusted": "Git sin permiso",
+      "notTrustedHint": "Git no confía en esta carpeta: es de otro usuario o está en otro disco",
+      "modelPreferred": "Las conversaciones nuevas empiezan con {{model}}.",
+      "modelDefault": "Las conversaciones nuevas empiezan con el modelo principal.",
+      "modelStays": "El que elijas aquí queda para este proyecto.",
+      "skills": "Skills",
+      "missing": "<strong>No encuentro la carpeta <path>{{path}}</path>.</strong> Puede que la hayas movido o renombrado, o que esté en un disco desconectado. Las conversaciones siguen aquí y puedes leerlas, pero Nyra no puede trabajar hasta que la encuentres.",
+      "reading": "<strong>Nyra está leyendo la carpeta</strong>. Ya puedes empezar a escribir.",
+      "readingProgress": "<strong>Nyra está leyendo la carpeta</strong> para poder buscar por significado · {{done}} de {{total}} archivos. Ya puedes empezar a escribir.",
+      "notRepo": "Esta carpeta no es un repositorio de Git. Todo funciona igual, Git solo sirve para guardar versiones.",
+      "initializing": "Iniciando…",
+      "initRepo": "Iniciar repositorio",
+      "placeholderMissing": "Busca la carpeta para seguir trabajando en este proyecto",
+      "placeholder": "Pide algo sobre {{name}}… empieza una conversación nueva",
+      "tasks": "Tareas habituales",
+      "taskLabel": "{{task}}. Empieza una conversación con la skill {{skill}}",
+      "taskLabelNeedsGit": "{{task}}. Empieza una conversación con la skill {{skill}}. Necesita Git",
+      "needsGit": "Necesita Git",
+      "recent": "Conversaciones recientes",
+      "noConversations": "Todavía no hay conversaciones.",
+      "pending": "Pendiente de revisar",
+      "nothingPending": "Nada pendiente. Los cambios sin revisar y los comandos que esperan permiso aparecerán aquí.",
+      "unpushed_many": "↑{{count, number}} commits sin subir"
+    },
+    "sidebar": {
+      "renamed": "Proyecto renombrado a «{{name}}».",
+      "removed": "«{{name}}» se quitó de la lista.",
+      "restored": "«{{name}}» volvió a la lista.",
+      "namePlaceholder": "Nombre del proyecto",
+      "renameLabel": "Nuevo nombre del proyecto",
+      "folderGoneState": "la carpeta ya no existe",
+      "readingState": "leyendo la carpeta",
+      "branchState": "rama {{branch}}",
+      "changes_one": "{{count, number}} cambio sin revisar",
+      "changes_other": "{{count, number}} cambios sin revisar",
+      "commands_one": "{{count, number}} comando esperando permiso",
+      "commands_other": "{{count, number}} comandos esperando permiso",
+      "folderGone": "La carpeta ya no existe",
+      "reading": "Leyendo la carpeta…",
+      "newProject": "Nuevo proyecto",
+      "newProjectHint": ": elegir una carpeta del equipo",
+      "searchLabel": "Buscar proyectos y conversaciones",
+      "search": "Buscar",
+      "searchHint": "Busca en los nombres de los proyectos y de sus conversaciones ({{shortcut}})",
+      "nav": "Proyectos",
+      "empty": "<strong>Aún no hay proyectos.</strong> Un proyecto es una carpeta de tu equipo: Nyra la lee, propone cambios que tú revisas y guarda dentro las conversaciones sobre ese código.",
+      "tree": "Proyectos y sus conversaciones",
+      "undoNotice": "«{{name}}» se quitó de la lista. La carpeta sigue en tu disco.",
+      "undo": "Deshacer",
+      "closeNotice": "Cerrar el aviso",
+      "readError": "No se pudieron leer los proyectos: {{error}}",
+      "changes_many": "{{count, number}} cambios sin revisar",
+      "commands_many": "{{count, number}} comandos esperando permiso"
+    },
+    "rail": {
+      "label": "Barra lateral plegada",
+      "showSidebar": "Mostrar la barra lateral",
+      "folderGone": "la carpeta ya no existe",
+      "pending_one": "{{count, number}} pendiente",
+      "pending_other": "{{count, number}} pendientes",
+      "pending_many": "{{count, number}} pendientes"
+    },
+    "skillsDialog": {
+      "title": "Skills de {{name}}",
+      "close": "Cerrar",
+      "intro": "Vienen con Nyra para programar. Las activas aparecen en las tareas del inicio y Nyra las usa cuando tu mensaje encaja con ellas.",
+      "included": "Incluida",
+      "needsGit": "Necesita Git: esta carpeta no es un repositorio.",
+      "note": "Tus propias skills se activan en cada conversación con «/» o con el menú +, como en el chat."
+    },
+    "name": {
+      "required": "Escribe un nombre para el proyecto.",
+      "tooLong": "Máximo {{max}} caracteres: sobran {{extra}}."
+    },
+    "git": {
+      "none": "sin Git",
+      "notTrusted": "Git sin permiso"
+    }
+  },
+  "workspace": {
+    "close": "Cerrar",
+    "disconnect": "Desconectar",
+    "thisModel": "este modelo",
+    "files_one": "{{count, number}} archivo",
+    "files_other": "{{count, number}} archivos",
+    "matches_one": "{{count, number}} coincidencia",
+    "matches_other": "{{count, number}} coincidencias",
+    "fragments_one": "{{count, number}} fragmento",
+    "fragments_other": "{{count, number}} fragmentos",
+    "inFiles": "{{what}} en {{files}}",
+    "chip": {
+      "reading": "leyendo…",
+      "doesNotFit": "no cabe",
+      "nothingReadable": "nada legible",
+      "noAccess": "sin acceso",
+      "labelReady": "Carpeta conectada: {{name}}, {{files}}. Ver detalles",
+      "labelReadyNote": "Carpeta conectada: {{name}}, {{files}}, {{note}}. Ver detalles",
+      "label": "Carpeta {{name}}. Ver detalles",
+      "labelNote": "Carpeta {{name}}: {{note}}. Ver detalles",
+      "disconnectFolder": "Desconectar la carpeta {{name}}",
+      "connectedReadOnly": "Conectada a esta conversación · solo lectura",
+      "readableFiles": "archivos legibles",
+      "binariesAndSecrets": "binarios y secretos",
+      "indexTokens": "tokens del índice",
+      "indexTokensSummarized": "tokens del índice (resumido)",
+      "meaning": "Búsqueda por significado:",
+      "meaningReady": "lista ({{model}})",
+      "meaningPreparing": "preparando la carpeta · {{done}} de {{total}} archivos",
+      "meaningUnavailable": "necesita un modelo de huellas en Ollama, como qwen3-embedding:0.6b.",
+      "meaningError": "no se pudo preparar ({{message}}). Nyra busca por palabras exactas.",
+      "whatNot": "Qué no lee Nyra",
+      "ignoredGit": "Lo que indique el <mono>.gitignore</mono> y <mono>node_modules</mono>: no los busca ni los lista, y solo lee uno si pide su ruta exacta.",
+      "ignoredHidden": "<mono>.git</mono>, carpetas de caché y entornos ocultos, y binarios que no son imágenes.",
+      "ignoredSecrets": "Archivos de secretos como <mono>.env</mono>: nunca. En los demás, los valores que parecen contraseñas o claves se ocultan antes de enviarlos al modelo.",
+      "rereads": "Se vuelve a leer antes de cada mensaje, así que ve los archivos nuevos y los cambios.",
+      "change": "Cambiar…"
+    },
+    "privacy": {
+      "cloud": "Con {{model}}, solo se envían a {{provider}} los archivos y fragmentos que Nyra lea. La carpeta entera no sale de tu equipo.",
+      "local": "Con {{model}} (local), nada sale de tu equipo."
+    },
+    "notice": {
+      "gotIt": "Entendido",
+      "missingTitle": "No se encuentra la carpeta {{name}}.",
+      "missingText": "Estaba en <path>{{path}}</path>. Puede que se haya movido, renombrado o borrado. Hasta que la encuentres, Nyra responde sin ella.",
+      "findIt": "Buscarla…",
+      "noAccessTitle": "Nyra no tiene permiso para leer {{name}}.",
+      "noAccessText": "El sistema bloquea el acceso a <path>{{path}}</path>. Vuelve a elegirla para dárselo.",
+      "giveAccess": "Dar acceso…",
+      "errorTitle": "No se pudo leer la carpeta {{name}}.",
+      "errorText": "{{message}} Mientras tanto, Nyra responde sin ella.",
+      "chooseAnother": "Elegir otra carpeta…",
+      "emptyTitle": "No hay nada que Nyra pueda leer en {{name}}.",
+      "emptyText": "Solo tiene archivos que Nyra no puede leer, como binarios o comprimidos, o lo ignora su .gitignore. Nyra lee texto, código, PDF e imágenes.",
+      "tooBigTitle": "El índice de {{name}} no cabe en {{model}}.",
+      "tooBigText": "Ni resumido por carpetas cabe en la parte del contexto que le corresponde. Nyra responde sin la carpeta hasta que conectes una subcarpeta o elijas un modelo con más contexto.",
+      "connectSubfolder": "Conectar una subcarpeta…",
+      "readingTitle": "Leyendo la carpeta…",
+      "readingText": "Nyra hace un índice con las rutas, todavía sin leer el contenido. Puedes escribir mientras.",
+      "cloudTitle": "Con {{model}}, lo que Nyra lea se enviará a {{provider}}.",
+      "cloudText": "Solo los archivos y fragmentos que necesite para responder, no la carpeta entera. Con un modelo local, nada sale de tu equipo."
+    },
+    "skip": {
+      "secret": "Archivo de secretos. Nyra nunca los lee.",
+      "ignored": "Ignorado: .gitignore, archivo oculto o dependencias.",
+      "outside": "Está fuera de la carpeta conectada.",
+      "binary": "No es un archivo de texto.",
+      "tooLarge": "Pesa demasiado: más de 2 MB, o de 10 MB si es un PDF, una imagen o una hoja de cálculo.",
+      "missing": "No existe en la carpeta.",
+      "unreadable": "No se pudo abrir: puede estar dañado o protegido con contraseña.",
+      "noText": "El PDF no tiene texto ni nada más que mostrar.",
+      "scannedNoVision": "El PDF son páginas escaneadas y este modelo no lee imágenes. Usa uno con visión.",
+      "imageNoVision": "Es una imagen y este modelo no lee imágenes. Usa uno con visión.",
+      "readOnly": "Nyra no puede escribir este formato (.xls, .ods) sin riesgo de perder formatos. Puede guardar los cambios en una copia nueva .xlsx junto al original, que no se toca.",
+      "sheetProtected": "La hoja está protegida en Excel. Nyra no quita protecciones: desprotégela si quieres el cambio."
+    },
+    "steps": {
+      "modified_one": "{{count, number}} modificado",
+      "modified_other": "{{count, number}} modificados",
+      "added_one": "{{count, number}} nuevo",
+      "added_other": "{{count, number}} nuevos",
+      "removed_one": "{{count, number}} borrado",
+      "removed_other": "{{count, number}} borrados",
+      "noChanges": "sin cambios",
+      "linesOf": "{{shown}} de {{total}} líneas",
+      "ready": "Carpeta lista",
+      "checking": "Comprobando cambios en la carpeta",
+      "compacting": "Resumiendo lo leído para seguir",
+      "compactedDetail_one": "{{count, number}} resultado retirado, guardado en sus notas",
+      "compactedDetail_other": "{{count, number}} resultados retirados, guardados en sus notas",
+      "changedSinceRead": "<path>{{path}}</path> cambió desde que lo leyó",
+      "opening": "Abriendo <path>{{path}}</path>",
+      "outline": "Mirando el esquema de <path>{{path}}</path>",
+      "outlineAll": "Mirando el esquema de <path>la carpeta</path>",
+      "definitions_one": "{{count, number}} definición",
+      "definitions_other": "{{count, number}} definiciones",
+      "noMatches": "sin coincidencias",
+      "searching": "Buscando <path>{{query}}</path>",
+      "nothingSimilar": "nada parecido",
+      "searchingMeaning": "Buscando por significado <path>{{query}}</path>",
+      "readingLines": "Leyendo líneas {{from}}–{{to}} de <path>{{path}}</path>",
+      "reading": "Leyendo <path>{{path}}</path>",
+      "ignoredByGit": "ignorado por .gitignore",
+      "hiddenSecrets_one": "{{count, number}} secreto oculto",
+      "hiddenSecrets_other": "{{count, number}} secretos ocultos",
+      "notRead": "No leído: <path>{{path}}</path>",
+      "ran": "Ejecutó <path>{{command}}</path>",
+      "outputLines_one": "{{count, number}} línea",
+      "outputLines_other": "{{count, number}} líneas",
+      "outputRead": "Leyendo las líneas {{from}}–{{to}} de la salida de <path>{{command}}</path>",
+      "outputSearch": "Buscando <path>{{query}}</path> en la salida de <command>{{command}}</command>",
+      "consulting": "Consultando la carpeta",
+      "label": "Pasos en la carpeta",
+      "earlier_one": "{{count, number}} paso antes",
+      "earlier_other": "{{count, number}} pasos antes",
+      "modified_many": "{{count, number}} modificados",
+      "added_many": "{{count, number}} nuevos",
+      "removed_many": "{{count, number}} borrados",
+      "compactedDetail_many": "{{count, number}} resultados retirados, guardados en sus notas",
+      "definitions_many": "{{count, number}} definiciones",
+      "hiddenSecrets_many": "{{count, number}} secretos ocultos",
+      "outputLines_many": "{{count, number}} líneas",
+      "earlier_many": "{{count, number}} pasos antes"
+    },
+    "consult": {
+      "searches_one": "{{count, number}} búsqueda",
+      "searches_other": "{{count, number}} búsquedas",
+      "folders_one": "{{count, number}} carpeta",
+      "folders_other": "{{count, number}} carpetas",
+      "notRead_one": "{{count, number}} no leído",
+      "notRead_other": "{{count, number}} no leídos",
+      "usedAllSteps": "usó todos sus pasos",
+      "stoppedStuck": "dejó de explorar porque no avanzaba",
+      "label": "Consultó la carpeta: {{details}}. Ver detalles",
+      "consulted": "Consultó la carpeta",
+      "noMoreSteps": "sin más pasos",
+      "stopped": "dejó de avanzar",
+      "title": "Lo que Nyra consultó",
+      "inFolder": "En <path>{{folder}}</path> para esta respuesta",
+      "readWhole": "Leídos enteros",
+      "someLines": "Solo unas líneas",
+      "linesOf": "líneas {{from}}–{{to}} de {{total}} · archivo de {{size}}",
+      "foundByMeaning": "Encontrados por significado",
+      "foundBySearch": "Encontrados al buscar",
+      "nothingSimilar": "Nada parecido.",
+      "noMatches": "Sin coincidencias.",
+      "openFolders": "Carpetas abiertas",
+      "outlines": "Esquemas de código",
+      "guides": "Instrucciones del proyecto que siguió",
+      "wholeFolder": "toda la carpeta",
+      "notReadTitle": "No leídos",
+      "openInViewer": "Abrir {{path}} en el visor",
+      "openInViewerShort": "Abrir en el visor",
+      "compacted_one": " · lo leído se resumió una vez para seguir explorando",
+      "compacted_other": " · lo leído se resumió {{count, number}} veces para seguir explorando",
+      "footer": "≈ {{tokens}} tokens leídos{{compacted}}. El contenido no se guarda en la conversación, solo esta lista: si vuelves a preguntar, Nyra lee la versión actual.",
+      "searches_many": "{{count, number}} búsquedas",
+      "folders_many": "{{count, number}} carpetas",
+      "notRead_many": "{{count, number}} no leídos",
+      "compacted_many": " · lo leído se resumió {{count, number}} veces para seguir explorando"
+    },
+    "mention": {
+      "header": "Mencionar un archivo de la carpeta",
+      "none": "Ningún archivo coincide con <mono>@{{query}}</mono>",
+      "hint": "Prueba con otra parte del nombre, o pulsa Esc para escribirlo como texto.",
+      "files": "Archivos de la carpeta"
+    },
+    "files_many": "{{count, number}} archivos",
+    "matches_many": "{{count, number}} coincidencias",
+    "fragments_many": "{{count, number}} fragmentos",
+    "viewer": {
+      "cannotOpen": "No se puede abrir {{path}}. {{reason}}",
+      "openFailed": "No se pudo abrir {{path}}: {{error}}",
+      "revealFailed": "No se pudo mostrar {{path}}: {{error}}"
+    }
+  },
+  "changes": {
+    "state": {
+      "pending": "sin revisar",
+      "applied": "aplicado",
+      "discarded": "descartado",
+      "undone": "deshecho",
+      "noMatch": "no encaja",
+      "conflict": "cambió en disco",
+      "protected": "no se puede aplicar",
+      "fixing": "corrigiendo",
+      "reviewed": "revisado",
+      "reviewedNotApplied": "revisado, sin aplicar"
+    },
+    "linesAdded_one": "{{count, number}} línea añadida",
+    "linesAdded_other": "{{count, number}} líneas añadidas",
+    "linesRemoved_one": "{{count, number}} quitada",
+    "linesRemoved_other": "{{count, number}} quitadas",
+    "blocks_one": "{{count, number}} cambio",
+    "blocks_other": "{{count, number}} cambios",
+    "files_one": "{{count, number}} archivo",
+    "files_other": "{{count, number}} archivos",
+    "totalLines_one": "{{count, number}} línea",
+    "totalLines_other": "{{count, number}} líneas",
+    "sizeSheet": "hoja de cálculo, {{sheets}}",
+    "sizeNew": "archivo nuevo, {{added}}, {{removed}}",
+    "sizeEdit": "editar, {{added}}, {{removed}}",
+    "lines": "<added>+{{added}}</added> <removed>−{{removed}}</removed> líneas",
+    "tag": {
+      "spreadsheet": "Hoja de cálculo",
+      "newFile": "Archivo nuevo",
+      "edit": "Editar",
+      "byClaudeCode": "Hecho en Claude Code",
+      "applied": "Aplicado",
+      "discarded": "Descartado",
+      "undone": "Deshecho",
+      "fixing": "Corrigiendo…",
+      "corrected": "Corregido",
+      "failedOf": "{{block}} de {{total}} no encaja",
+      "noMatch": "No encaja",
+      "exists": "Ya existe",
+      "changedOnDisk": "Cambió en disco",
+      "reviewed": "Revisado",
+      "sheetProtected": "Hoja protegida",
+      "readOnly": "Solo lectura",
+      "protected": "Protegido"
+    },
+    "action": {
+      "review": "Revisar",
+      "apply": "Aplicar",
+      "applyPath": "Aplicar {{path}}",
+      "applyPathUnreviewed": "Aplicar {{path}}: revísalo antes",
+      "create": "Crear",
+      "createFile": "Crear archivo",
+      "reviewFirst": "Revísalo antes de aplicarlo",
+      "discard": "Descartar",
+      "discardPath": "Descartar {{path}}",
+      "discardAll": "Descartar todos",
+      "applyAll": "Aplicar los {{total}}",
+      "undo": "Deshacer",
+      "viewApplied": "Ver los cambios aplicados",
+      "restore": "Recuperar propuesta",
+      "view": "Ver",
+      "reapply": "Volver a aplicar",
+      "askAgain": "Pedir de nuevo",
+      "askFix": "Pedir que lo corrija",
+      "askNyraFix": "Pedir a Nyra que lo corrija",
+      "askNyraRedo": "Pedir a Nyra que lo rehaga",
+      "convert": "Crear copia .xlsx",
+      "copyChange": "Copiar el cambio"
+    },
+    "reason": {
+      "copied": "Copia creada: {{path}}. El original no cambió.",
+      "cellsNoMatch": "Una hoja o una celda que Nyra quería cambiar ya no existe en el archivo. No se aplica nada de este archivo hasta que lo rehaga.",
+      "cellsConflict": "El archivo cambió después de que Nyra lo leyera (quizá lo tenías abierto en Excel). Para no pisar tus cambios, no se aplica.",
+      "undone": "El archivo volvió a como estaba antes del cambio.",
+      "noMatch": "Uno de los cambios no coincide con lo que hay en el archivo: Nyra copió mal las líneas que quería sustituir. No se aplica nada de este archivo hasta que lo corrija.",
+      "exists": "Ya existe un archivo con ese nombre. Para no pisarlo, no se crea.",
+      "conflict": "El archivo cambió después de que Nyra lo leyera (quizá en tu editor). Para no pisar tus cambios, no se aplica.",
+      "protectedNote": "Nyra no escribe ahí. Si quieres el cambio, cópialo y hazlo tú."
+    },
+    "review": {
+      "label": "Revisión de cambios propuestos",
+      "back": "Chat",
+      "willCreateIn": "Se creará en",
+      "theFolder": "la carpeta",
+      "close": "Cerrar la revisión (Esc)",
+      "newFileLegend": "Contenido completo propuesto. No hay original.",
+      "view": "Vista",
+      "table": "Tabla",
+      "sideBySide": "Lado a lado",
+      "needsWider": "Necesita una ventana más ancha",
+      "unified": "Unificada",
+      "firstRowHeader": "La primera fila es la cabecera",
+      "removed": "quitada",
+      "added": "añadida",
+      "previous": "Cambio anterior ({{keys}})",
+      "next": "Cambio siguiente ({{keys}})",
+      "position": "Cambio {{current}} de {{total}}",
+      "conflictExists": "Ya existe {{path}}.",
+      "conflictChanged": "{{path}} cambió en disco después de que Nyra lo leyera.",
+      "conflictNote": "Lo que ves es lo que Nyra propuso. No se aplica porque podría pisar tus cambios.",
+      "noMatchBlock": "El cambio {{block}} no encaja con el archivo actual.",
+      "noMatchExplain": "Nyra quería sustituir unas líneas, pero en el archivo no están escritas igual (quizá las copió mal).",
+      "expected": "Nyra esperaba encontrar:",
+      "diffOf": "Diferencias de {{path}}",
+      "reading": "Leyendo el archivo…",
+      "tableOf": "Cambios de {{path}} en una tabla",
+      "appliedByClaudeCode": "Claude Code ya hizo este cambio. Nyra no tiene una copia de antes, así que no se puede deshacer desde aquí.",
+      "appliedBackup": "Aplicado. Nyra guardó una copia del original.",
+      "cantApply": "No se puede aplicar hasta que Nyra lo rehaga.",
+      "noWrite": "Nyra no escribe en este archivo.",
+      "discarded": "Descartado.",
+      "willCreate": "Se creará el archivo.",
+      "backupFirst": "Se guarda una copia antes de escribir.",
+      "keepsCsv": "Se mantienen el separador {{separator}}, la codificación ({{encoding}}) y los saltos de línea ({{eol}}).",
+      "keepsText": "Se respetan la codificación ({{encoding}}) y los saltos de línea {{eol}}.",
+      "tabsLabel": "Archivos propuestos"
+    },
+    "diff": {
+      "wholeContent": "Contenido completo",
+      "blockHeader": "Cambio {{block}} de {{total}} · línea {{line}}",
+      "notFit": "Este cambio no encaja con el archivo actual.",
+      "notFitExplain": "Nyra quería sustituir unas líneas, pero en el archivo no están escritas igual (quizá las copió mal). No se puede aplicar tal cual.",
+      "showUnchanged_one": "Mostrar {{count, number}} línea sin cambios, desde la {{from}}",
+      "showUnchanged_other": "Mostrar {{count, number}} líneas sin cambios, desde la {{from}}",
+      "fold_one": "… {{count, number}} línea sin cambios · Mostrar",
+      "fold_other": "… {{count, number}} líneas sin cambios · Mostrar",
+      "splitLabel": "Original a la izquierda, propuesto a la derecha",
+      "unifiedLabel": "Cambios en una columna",
+      "originalLine": "Línea original",
+      "sign": "Signo",
+      "original": "Original",
+      "proposedLine": "Línea propuesta",
+      "proposed": "Propuesto",
+      "text": "Texto",
+      "showUnchanged_many": "Mostrar {{count, number}} líneas sin cambios, desde la {{from}}",
+      "fold_many": "… {{count, number}} líneas sin cambios · Mostrar"
+    },
+    "proposals": {
+      "label": "Cambios propuestos",
+      "decided": "{{decided}} de {{total}} decididos",
+      "allReviewed": "Has revisado los {{total}}. Se aplicarán uno tras otro y cada uno se puede deshacer.",
+      "reviewEach": "Revisa cada archivo para poder aplicarlos todos a la vez · {{reviewed}} de {{total}} revisados",
+      "pendingNotice_one": "<strong>{{count, number}} cambio propuesto sin decidir</strong> en una respuesta anterior. Sigue esperando y no se ha escrito nada.",
+      "pendingNotice_other": "<strong>{{count, number}} cambios propuestos sin decidir</strong> en una respuesta anterior. Siguen esperando y no se ha escrito nada.",
+      "goTo_one": "Ir a él",
+      "goTo_other": "Ir a ellos",
+      "hideUntilNext": "Ocultar hasta la próxima propuesta",
+      "preparing": "Preparando cambios",
+      "preparingDots": "Preparando cambios…",
+      "pendingNotice_many": "<strong>{{count, number}} cambios propuestos sin decidir</strong> en una respuesta anterior. Siguen esperando y no se ha escrito nada.",
+      "goTo_many": "Ir a ellos"
+    },
+    "error": {
+      "copyFailed": "Nyra no pudo crear la copia .xlsx: el archivo parece dañado.",
+      "fileGone": "El archivo ya no está en la carpeta o Nyra no puede leerlo.",
+      "tooLargeToFix": "El archivo es demasiado grande para corregirlo aquí. Pídeselo a Nyra en el chat.",
+      "fixFailed": "Nyra tampoco acertó con las líneas esta vez. Pídeselo en el chat explicándole qué quieres.",
+      "undoConflict": "El archivo cambió después de aplicarlo, y deshacer perdería esos cambios.",
+      "backupGone": "Ya no queda la copia del original (se guardan 30 días)."
+    },
+    "ask": {
+      "cellsConflict": "{{path}} cambió después de que lo leyeras. Léelo de nuevo y vuelve a proponer el cambio.",
+      "cellsMissing": "Alguna hoja o celda que querías cambiar en {{path}} ya no existe. Léelo de nuevo y vuelve a proponer el cambio.",
+      "takenName": "Ya existe un archivo en {{path}}. Léelo y propón el cambio sobre él."
+    },
+    "announce": {
+      "fixed": "Cambio en {{name}} corregido. Revísalo antes de aplicarlo.",
+      "applied": "{{name}} aplicado. Nyra guardó una copia del original.",
+      "undone": "Deshecho. {{name}} volvió a como estaba.",
+      "discarded": "Cambio en {{name}} descartado.",
+      "copied": "Copia creada junto a {{name}}. El original no cambió."
+    },
+    "csv": {
+      "tab": "tabulador",
+      "quoted": "«{{separator}}»"
+    },
+    "linesAdded_many": "{{count, number}} líneas añadidas",
+    "linesRemoved_many": "{{count, number}} quitadas",
+    "blocks_many": "{{count, number}} cambios",
+    "files_many": "{{count, number}} archivos",
+    "totalLines_many": "{{count, number}} líneas"
+  },
+  "cells": {
+    "kind": {
+      "modified": "Modificada",
+      "added": "Nueva",
+      "emptied": "Vaciada",
+      "formula": "Fórmula"
+    },
+    "legend": {
+      "modified": "modificada",
+      "added": "nueva",
+      "emptied": "vaciada",
+      "formula": "fórmula"
+    },
+    "count_one": "{{count, number}} celda",
+    "count_other": "{{count, number}} celdas",
+    "sheetCount_one": "{{count, number}} hoja",
+    "sheetCount_other": "{{count, number}} hojas",
+    "empty": "vacía",
+    "spokenFormulaNew": "fórmula {{formula}}, valor que se calcula al abrir el archivo",
+    "spokenFormula": "fórmula {{formula}}, valor {{value}}",
+    "notCalculated": "sin calcular",
+    "currentValue": "= {{value}} (valor actual)",
+    "calculatedInExcel": "El nuevo valor se calcula al abrir el archivo en Excel",
+    "calculatedShort": "se calcula al abrir en Excel",
+    "spokenCell": "{{cell}}{{around}}, {{kind}}: antes {{before}}, después {{after}}",
+    "csvSpoken": "{{column}}, fila {{row}}: antes {{before}}, después {{after}}",
+    "sheetChanges_one": "Hoja {{sheet}}: {{count, number}} cambio propuesto",
+    "sheetChanges_other": "Hoja {{sheet}}: {{count, number}} cambios propuestos",
+    "row": "Fila",
+    "rowsRange": "Filas {{from}} a {{to}}",
+    "rowsFold": "Filas {{from}}–{{to}} sin cambios · Mostrar",
+    "columnsShow": "Mostrar columnas {{from}} a {{to}}, sin cambios",
+    "columnsTitle": "Columnas {{from}}–{{to}} sin cambios",
+    "listOf": "Cambios de {{label}}",
+    "cell": "Celda",
+    "type": "Tipo",
+    "before": "Antes",
+    "to": "a",
+    "after": "Después",
+    "sheets": "Hojas",
+    "grid": "Cuadrícula",
+    "list": "Lista",
+    "newRow": "fila nueva",
+    "removedRow": "fila quitada",
+    "panel": {
+      "label": "Revisión de cambios en {{path}}",
+      "tag": "Hoja de cálculo · {{extension}}",
+      "cellsInSheets": "{{cells}} en {{sheets}}",
+      "conflict": "<strong>{{name}} cambió en disco después de que Nyra lo leyera</strong> (quizá lo tenías abierto en Excel). Aplicarlo podría pisar tus cambios, así que no se aplica.",
+      "noMatch": "<strong>Una hoja o una celda que Nyra quería cambiar ya no existe en el archivo.</strong> No se aplica nada de este archivo hasta que Nyra lo rehaga.",
+      "reading": "Leyendo la hoja de cálculo…",
+      "savedIn": "Guardado en {{path}}. El original no cambió.",
+      "appliedBackup": "Aplicado. La copia del original está guardada.",
+      "copyNote": "Los cambios se guardan en una copia nueva .xlsx junto al original, que no se toca.",
+      "backupNote": "Se guarda una copia del original. Formatos, gráficos y macros no se tocan."
+    },
+    "count_many": "{{count, number}} celdas",
+    "sheetCount_many": "{{count, number}} hojas",
+    "sheetChanges_many": "Hoja {{sheet}}: {{count, number}} cambios propuestos"
+  },
+  "attachments": {
+    "errors": {
+      "passwordProtected": "«{{name}}» está protegido con contraseña.",
+      "pdfDamaged": "No se pudo leer «{{name}}». Puede que el PDF esté dañado.",
+      "pdfTextTooLarge": "El texto de «{{name}}» supera el máximo de 1 MB.",
+      "over10MB": "«{{name}}» supera el máximo de 10 MB.",
+      "over1MB": "«{{name}}» supera el máximo de 1 MB.",
+      "spreadsheetUnreadable": "No se pudo leer «{{name}}». Puede que esté dañado o protegido con contraseña.",
+      "notText": "«{{name}}» no parece un archivo de texto.",
+      "unsupported": "«{{name}}» no es un tipo de archivo admitido.",
+      "imageOpen": "No se pudo abrir la imagen.",
+      "imagePrepare": "No se pudo preparar la imagen.",
+      "pageUnreadable": "No se pudo leer «{{domain}}»: {{error}}",
+      "saveFailed": "No se pudo guardar {{name}}: {{error}}"
+    },
+    "imagesUnsupported": "Este modelo no admite imágenes. Elige un modelo con visión o quita la imagen.",
+    "help": "Admitidos: imágenes, PDF, audio y archivos de texto o código.",
+    "pastedName": "captura",
+    "types": {
+      "spreadsheet": "Hoja de cálculo",
+      "text": "Texto",
+      "webPage": "Página web",
+      "image": "Imagen",
+      "imageFormat": "Imagen {{format}}"
+    },
+    "webPageFrom": "Página web · {{domain}}",
+    "pages_one": "{{count, number}} página",
+    "pages_other": "{{count, number}} páginas",
+    "lines_one": "{{count, number}} línea",
+    "lines_other": "{{count, number}} líneas",
+    "state": {
+      "complete": {
+        "label": "Completo",
+        "hint": "Nyra ve este archivo completo: está en los mensajes recientes."
+      },
+      "summarized": {
+        "label": "En el resumen",
+        "hint": "Nyra solo conoce un resumen de este archivo. Referéncialo para que lo vuelva a leer completo."
+      },
+      "referenced": {
+        "label": "Referenciado",
+        "hint": "Lo volviste a enviar con «Referenciar». Nyra vuelve a verlo completo."
+      }
+    },
+    "panel": {
+      "label": "Archivos de la conversación",
+      "title": "Archivos",
+      "close": "Cerrar panel de archivos",
+      "show": "Mostrar archivos",
+      "filters": {
+        "all": "Todos",
+        "uploaded": "Subidos",
+        "generated": "De Nyra"
+      },
+      "emptyTitle": "Aún no hay archivos en esta conversación",
+      "emptyText": "Las imágenes y los archivos que adjuntes, y los documentos que Nyra cree, aparecerán aquí.",
+      "inContext": "En contexto",
+      "inSummary": "En el resumen",
+      "summaryNote": "Nyra solo conoce lo que dice el resumen sobre estos archivos."
+    },
+    "row": {
+      "open": "Abrir {{name}}",
+      "byNyra": "Creado por Nyra",
+      "pendingLabel": "{{name}} ya está en tu próximo mensaje",
+      "reference": "Referenciar {{name}}",
+      "pendingTip": "Ya está en tu próximo mensaje",
+      "referenceTip": "Volver a enviar este archivo en tu próximo mensaje",
+      "menu": "Opciones de «{{name}}»",
+      "showMessage": "Ver mensaje"
+    },
+    "chip": {
+      "view": "Ver {{name}}",
+      "viewReference": "Ver referencia a {{name}}",
+      "remove": "Quitar {{name}}",
+      "removeReference": "Quitar la referencia a {{name}}",
+      "reference": "Referencia"
+    },
+    "composer": {
+      "list": "Archivos adjuntos",
+      "readingPdf": "Leyendo PDF…",
+      "pdfProgress": "{{page}} de {{pages}} páginas",
+      "readingPage": "Leyendo página…",
+      "closeError": "Cerrar mensaje de error"
+    },
+    "viewer": {
+      "copyText": "Copiar texto",
+      "copy": "Copiar",
+      "openInBrowser": "Abrir en el navegador",
+      "close": "Cerrar visor",
+      "page": "Página {{page}} de {{pages}}",
+      "pdfFailed": "No se pudo mostrar el PDF. Puede que esté dañado.",
+      "openingPdf": "Abriendo el PDF…"
+    },
+    "drop": {
+      "files": "Archivos",
+      "count_one": "{{count, number}} archivo",
+      "count_other": "{{count, number}} archivos",
+      "title": "Suelta los archivos para adjuntarlos",
+      "subtitle": "Imágenes, PDF y archivos de texto o código",
+      "count_many": "{{count, number}} archivos"
+    },
+    "versions": {
+      "suffix": "(versión {{number}})",
+      "errors": {
+        "readOnly": "Nyra solo puede leer {{file}}: los archivos .xls y .ods no se modifican.",
+        "sheetMissing": "La hoja «{{sheet}}» no existe en {{file}}.",
+        "sheetProtected": "La hoja «{{sheet}}» está protegida en Excel y Nyra no quita protecciones.",
+        "badCell": "«{{cell}}» no es una celda válida.",
+        "damaged": "No se pudo modificar {{file}}: el archivo parece dañado.",
+        "noAttachment": "No hay ningún archivo adjunto llamado {{file}}."
+      },
+      "group": {
+        "attachedByYou": "La adjuntaste tú",
+        "copyOfOriginal": "Copia del original",
+        "copyOfVersion": "Copia de la versión {{number}}",
+        "count_one": "{{count, number}} versión",
+        "count_other": "{{count, number}} versiones",
+        "originalUnchanged": "el adjunto original no cambia",
+        "list": "Versiones de {{name}}, de la más reciente a la original",
+        "original": "Original",
+        "version": "Versión {{number}}",
+        "latest": "la última",
+        "nextChanges": "Nyra hará los próximos cambios sobre esta",
+        "viewChangesOf": "Ver los cambios de la versión {{number}}",
+        "viewChanges": "Ver cambios",
+        "saveAs": "Guardar como…",
+        "saveOriginal": "Guardar como… el original",
+        "saveVersion": "Guardar como… la versión {{number}}",
+        "continueFromOriginal": "Seguir desde el original",
+        "continueFromVersion": "Seguir desde la versión {{number}}",
+        "continueTip": "Seguir desde esta: los próximos cambios partirán de aquí",
+        "count_many": "{{count, number}} versiones"
+      },
+      "cards": {
+        "label": "Versiones nuevas de archivos adjuntos",
+        "failedLabel": "{{file}}: no se pudo crear la versión nueva",
+        "noNewVersion": "Sin versión nueva",
+        "unchanged": "Tu adjunto no cambió.",
+        "theOriginal": "el original",
+        "theVersion": "la versión {{number}}",
+        "cardLabel": "{{file}}, versión {{number}}: {{summary}}. Tu adjunto no cambia",
+        "copyOf": "copia de {{from}}",
+        "fileVersion": "{{file}} · versión {{number}}",
+        "newCopy": "Copia nueva",
+        "sameAs": "Igual que {{from}}",
+        "notChanging": "· tu adjunto no cambia"
+      },
+      "panel": {
+        "label": "Cambios de {{file}}, versión {{number}}",
+        "back": "Chat",
+        "spreadsheet": "Hoja de cálculo · {{ext}}",
+        "cellsInSheets": "{{cells}} en {{sheets}}",
+        "cells_one": "{{count, number}} celda",
+        "cells_other": "{{count, number}} celdas",
+        "sheets_one": "{{count, number}} hoja",
+        "sheets_other": "{{count, number}} hojas",
+        "comparedOriginal": "Comparado con el original",
+        "comparedVersion": "Comparado con la versión {{number}}",
+        "close": "Cerrar la revisión (Esc)",
+        "reviewLabel": "{{file}}, versión {{number}}",
+        "gone": "Esta versión ya no está en la conversación.",
+        "footer": "El archivo que adjuntaste no cambia: esto es la versión {{number}}, guardada en la conversación.",
+        "cells_many": "{{count, number}} celdas",
+        "sheets_many": "{{count, number}} hojas"
+      }
+    },
+    "pages_many": "{{count, number}} páginas",
+    "lines_many": "{{count, number}} líneas"
+  },
+  "documents": {
+    "defaultTitle": "Documento",
+    "fallbackName": "documento",
+    "label": "Documento: {{title}}",
+    "writing": "Escribiendo…",
+    "copy": "Copiar",
+    "less": "Ver menos",
+    "more": "Ver documento completo",
+    "save": {
+      "idle": "Guardar…",
+      "saving": "Guardando…",
+      "saved": "Guardado",
+      "error": "No se pudo guardar"
+    },
+    "saveMenu": "Guardar el documento",
+    "markdownHint": "El texto tal cual, para editarlo o usarlo en otra app",
+    "markdownZip": "Markdown con imágenes (.zip)",
+    "markdownZipHint": "El texto y sus imágenes juntos: al descomprimirlo se ven en cualquier editor de Markdown",
+    "pdfHint": "Listo para leer, imprimir o enviar",
+    "pdfFailed": "No se pudo crear el PDF.",
+    "diagramCode": "Diagrama (Mermaid)"
+  },
+  "share": {
+    "done": {
+      "copy": "Imagen copiada",
+      "save": "Imagen guardada",
+      "markdown": "Markdown guardado",
+      "pdf": "PDF guardado"
+    },
+    "share": "Compartir respuesta",
+    "copyImage": "Copiar imagen",
+    "copyImageHint": "Tu pregunta y esta respuesta, para pegarlas en otra app",
+    "saveImage": "Guardar como imagen",
+    "saveImageHint": "Elige dónde guardar la imagen",
+    "saveMarkdown": "Guardar como Markdown",
+    "saveMarkdownHint": "El texto de la respuesta en un archivo .md",
+    "savePdf": "Guardar como PDF",
+    "savePdfHint": "La respuesta como documento, lista para leer o enviar",
+    "fileName": "respuesta-nyra",
+    "pdfTitle": "Respuesta de Nyra",
+    "imageFailed": "No se pudo crear la imagen del mensaje.",
+    "referenced_one": "{{count, number}} archivo referenciado",
+    "referenced_other": "{{count, number}} archivos referenciados",
+    "sources": "Fuentes",
+    "referenced_many": "{{count, number}} archivos referenciados"
+  },
+  "capture": {
+    "hint": "Arrastra para elegir el área · Esc para cancelar"
+  },
+  "providers": {
+    "contextOf": "{{size}} de contexto",
+    "missingKey": "Añade tu API Key de {{name}} en Configuración → Proveedores → {{name}}.",
+    "connectionCloud": "No se pudo conectar con {{name}}. Revisa tu conexión a internet.",
+    "connectionLocal": "No se pudo conectar con {{name}}. ¿Está encendido su servidor local?",
+    "invalidKey": "La API Key de {{name}} no es válida.",
+    "forbidden": "Tu API Key de {{name}} no tiene permiso para esto.",
+    "forbiddenDetail": "Tu API Key de {{name}} no tiene permiso para esto: {{detail}}",
+    "notFound": "{{name}} no encuentra ese modelo o esa dirección.",
+    "notFoundDetail": "{{name}} no encuentra ese modelo o esa dirección: {{detail}}",
+    "rateLimit": "Has llegado al límite de uso de {{name}}. Espera un poco y vuelve a intentarlo.",
+    "serverError": "Los servidores de {{name}} fallaron. Vuelve a intentarlo en un momento.",
+    "rejected": "{{name}} rechazó la petición ({{status}}).",
+    "rejectedDetail": "{{name}} rechazó la petición: {{detail}}",
+    "unreadable": "{{name}} envió una respuesta que no se pudo leer.",
+    "replyError": "{{name}} respondió con un error: {{detail}}",
+    "noDetails": "sin detalles",
+    "filtered": "{{name}} cortó la respuesta por sus filtros de seguridad.",
+    "anthropic": {
+      "description": "Modelos Claude de Anthropic, en la nube. Necesitas una API Key de console.anthropic.com.",
+      "notFound": "Ese modelo de Claude no existe o tu cuenta no tiene acceso.",
+      "overloaded": "Los servidores de Anthropic están saturados o fallaron. Vuelve a intentarlo en un momento.",
+      "refusal": "Claude no ha querido responder a este mensaje. Prueba a reformularlo o elige otro modelo.",
+      "refusalReason": "Claude no ha querido responder a este mensaje (motivo: {{reason}}). Prueba a reformularlo o elige otro modelo."
+    },
+    "openai": {
+      "description": "Modelos GPT de OpenAI, en la nube. Necesitas una API Key de platform.openai.com: la suscripción a ChatGPT no sirve."
+    },
+    "gemini": {
+      "description": "Modelos Gemini de Google, en la nube. Necesitas una API Key de aistudio.google.com."
+    },
+    "lmstudio": {
+      "description": "Modelos que se ejecutan con LM Studio en tu equipo. Enciende su servidor local en la sección Developer."
+    },
+    "ollama": {
+      "description": "Modelos que se ejecutan con Ollama, en tu equipo o en otro de tu red.",
+      "connection": "No se pudo conectar con Ollama. ¿Está abierto?",
+      "status": "Ollama respondió {{status}}",
+      "statusDetail": "Ollama respondió {{status}}: {{detail}}",
+      "noEmbeddings": "Ollama no devolvió las huellas de los textos."
+    }
+  },
+  "models": {
+    "available": "Modelos disponibles",
+    "default": "Principal",
+    "contextTokens": "{{tokens, number}} tokens de contexto",
+    "isDefaultLabel": "{{name}} es el modelo principal",
+    "useAsDefaultLabel": "Usar {{name}} como modelo principal",
+    "defaultTitle": "Modelo principal. Pulsa para quitarlo.",
+    "useAsDefault": "Usar como principal",
+    "percent": "{{percent}} %",
+    "place": {
+      "local": "este equipo",
+      "remote": "el equipo {{host}}"
+    },
+    "groups": {
+      "cloud": "{{name}} · en la nube",
+      "local": "{{name}} · en tu equipo"
+    },
+    "capabilities": {
+      "readsImages": "Lee imágenes",
+      "readsFiles": "Recibe archivos",
+      "thinks": "Razona"
+    },
+    "visibility": {
+      "showLabel": "Mostrar {{name}} en el selector del chat",
+      "hideLabel": "Ocultar {{name}} del selector del chat",
+      "hiddenTitle": "Oculto en el selector del chat. Pulsa para mostrarlo.",
+      "hideTitle": "Ocultar del selector del chat"
+    },
+    "apiKeys": {
+      "readAll": "No se pudieron leer las API Keys guardadas: {{error}}",
+      "read": "No se pudo leer la API Key guardada: {{error}}",
+      "save": "No se pudo guardar la API Key: {{error}}",
+      "delete": "No se pudo borrar la API Key guardada: {{error}}"
+    },
+    "form": {
+      "nameMissing": "Escribe el nombre de un modelo, por ejemplo qwen3:8b.",
+      "nameInvalid": "El nombre solo puede tener letras, números, puntos, guiones y «:» para la etiqueta.",
+      "installed": "{{name}} ya está instalado.",
+      "downloading": "{{name}} ya se está descargando.",
+      "nameLabel": "Nombre del modelo",
+      "placeholder": "nombre:etiqueta, p. ej. qwen3:8b",
+      "download": "Descargar",
+      "hint": "Escribe el nombre tal como aparece en la biblioteca de Ollama.",
+      "library": "Ver la biblioteca"
+    },
+    "indicator": {
+      "downloadingOne": "Descargando {{name}}",
+      "downloadingMany_one": "Descargando {{count, number}} modelo",
+      "downloadingMany_other": "Descargando {{count, number}} modelos",
+      "amount": "{{completed}} de {{total}}",
+      "label": "{{label}}, {{percent}} %. Ir a la gestión de modelos",
+      "failedLabel": "No se pudo descargar {{name}}. Ir a la gestión de modelos",
+      "failed": "No se pudo descargar",
+      "doneLabel": "{{name}} descargado. Ir a la gestión de modelos",
+      "ready": "{{name}} listo",
+      "downloaded": "Se ha descargado",
+      "doneAnnounce": "{{name}} se descargó y ya está disponible.",
+      "failedAnnounce": "No se pudo descargar {{name}}.",
+      "downloadingMany_many": "Descargando {{count, number}} modelos"
+    },
+    "row": {
+      "forSearch": "Para buscar",
+      "forSearchAuto": "Para buscar · elegido por Nyra",
+      "justDownloaded": "Recién descargado",
+      "loadedTitle": "Cargado en memoria: {{memory}}. Se libera solo a las {{time}} si no se usa.",
+      "unloading": "Liberando…",
+      "inMemory": "En memoria · {{memory}}",
+      "unloadLabel": "Liberar la memoria de {{name}}",
+      "unload": "Liberar",
+      "searchChosenLabel": "Nyra usa {{name}} para buscar en carpetas. Pulsa para dejar que Nyra elija sola",
+      "searchAutoLabel": "Nyra está usando {{name}} para buscar en carpetas porque no has marcado ninguno. Pulsa para fijarlo",
+      "searchUseLabel": "Usar {{name}} para buscar en carpetas",
+      "searchChosenTitle": "Lo usa para buscar · pulsa para que Nyra elija sola",
+      "searchAutoTitle": "Nyra lo eligió sola · pulsa para fijarlo",
+      "searchUseTitle": "Usar este para buscar en carpetas",
+      "deleteLabel": "Eliminar {{name}}",
+      "delete": "Eliminar"
+    },
+    "deleteConfirm": {
+      "title": "¿Eliminar <name>{{name}}</name>?",
+      "deleting": "Eliminando…",
+      "confirm": "Eliminar y liberar {{size}}",
+      "body": "Se borrará de {{place}} y se liberarán <strong>{{size}}</strong>. Podrás volver a descargarlo cuando quieras.",
+      "isDefault": "Es tu modelo principal.",
+      "nextDefault": "Las conversaciones nuevas usarán <name>{{name}}</name>.",
+      "noneLeft": "No quedará ningún modelo para chatear."
+    },
+    "downloadCard": {
+      "phases": {
+        "preparing": "Preparando…",
+        "downloading": "Descargando",
+        "verifying": "Comprobando el archivo",
+        "writing": "Terminando…"
+      },
+      "notFound": "No existe «{{name}}» en la biblioteca de Ollama.",
+      "notFoundHelp": "Revisa el nombre y la etiqueta.",
+      "disk": "No hay espacio suficiente en {{place}}.",
+      "diskHelp": "Elimina algún modelo de la lista y vuelve a intentarlo.",
+      "connection": "Ollama se desconectó a mitad de la descarga.",
+      "connectionResume": "Llegó a {{size}}. Al reintentar, continuará desde ahí.",
+      "connectionHelp": "Comprueba que Ollama sigue abierto y reinténtalo.",
+      "failed": "No se pudo descargar el modelo.",
+      "dismissLabel": "Descartar el error de {{name}}",
+      "editName": "Editar nombre",
+      "cancelled": "Cancelada",
+      "removeLabel": "Quitar {{name}} de la lista",
+      "resumeFrom": "Si vuelves a descargarlo, continuará desde {{size}}.",
+      "resumeFromOf": "Si vuelves a descargarlo, continuará desde {{size}} de {{total}}.",
+      "downloadAgain": "Volver a descargar",
+      "preparingValue": "Preparando la descarga",
+      "progressValue": "{{percent}} %, {{completed}} de {{total}}",
+      "cancelLabel": "Cancelar la descarga de {{name}}",
+      "barLabel": "Descarga de {{name}}",
+      "checkingLibrary": "Consultando la biblioteca de Ollama…",
+      "ofTotal": "de {{total}}",
+      "downloadedTotal": "{{total}} descargados",
+      "verifying": "comprobando que el archivo está completo",
+      "saving": "guardando el modelo"
+    },
+    "menu": {
+      "preferred": "Preferido",
+      "search": "Buscar modelo",
+      "searchPlaceholder": "Buscar modelo…",
+      "listLabel": "Seleccionar modelo",
+      "empty": "Aún no hay modelos cargados.",
+      "setUpProvider": "Configurar un proveedor",
+      "noMatch": "Ningún modelo coincide con «{{query}}».",
+      "recent": "Recientes",
+      "model": "Modelo",
+      "downloading": "Descargando",
+      "alwaysIn": "Usar siempre en {{project}}",
+      "alwaysInHint": "Las conversaciones nuevas empezarán con este modelo",
+      "manage": "Gestionar modelos",
+      "choose": "Elegir modelo",
+      "auto": "Automático",
+      "autoDescription": "{{main}} y, para tareas exigentes, {{demanding}}"
+    },
+    "unavailable": {
+      "title": "No se pudo conectar con Ollama",
+      "body": "No hay respuesta en <address>{{address}}</address>. Sin conexión no se pueden ver, descargar ni eliminar modelos.",
+      "openApp": "Abre la aplicación Ollama, o ejecuta <code>ollama serve</code> en una terminal.",
+      "checkUrl": "Comprueba que la Base URL es correcta (por defecto, <code>http://localhost:11434</code>).",
+      "network": "Si Ollama está en otro equipo, debe aceptar conexiones de la red: <code>OLLAMA_HOST=0.0.0.0</code>.",
+      "download": "Descargar Ollama"
+    },
+    "suggested": {
+      "installedLabel": "{{name}}, ya instalado",
+      "downloadingLabel": "{{name}}, descargándose",
+      "downloadLabel": "Descargar {{name}}, {{size}}, {{purpose}}",
+      "installed": "Instalado",
+      "downloading": "Descargando",
+      "toStart": "Para empezar",
+      "purposes": {
+        "fast": "Rápido para el día a día",
+        "balanced": "Equilibrado, buen español",
+        "vision": "Lee imágenes",
+        "code": "Programación",
+        "reasoning": "Razona paso a paso",
+        "capable": "Más capaz, con imágenes"
+      }
+    },
+    "manager": {
+      "downloaded": "<name>{{name}}</name> se descargó ({{size}}) y ya puedes usarlo.",
+      "deleted": "<name>{{name}}</name> se eliminó de {{place}} y se liberaron {{size}}.",
+      "deletedNewDefault": "<name>{{name}}</name> se eliminó de {{place}} y se liberaron {{size}}. Ahora el modelo principal es {{next}}.",
+      "unloaded": "<name>{{name}}</name> ya no ocupa memoria en {{place}} ({{size}} liberados). Se volverá a cargar solo la próxima vez que lo uses.",
+      "loading": "Buscando modelos en {{address}}…",
+      "downloads": "Descargas",
+      "firstModel": "Descarga tu primer modelo",
+      "downloadModel": "Descargar un modelo",
+      "suggested": "Sugeridos",
+      "emptyTitle": "Aún no tienes modelos",
+      "emptyBody": "Descarga tu primer modelo para empezar a chatear. Si no sabes cuál elegir, <name>{{name}}</name> es un buen punto de partida: responde bien en español y funciona con 8 GB de memoria.",
+      "installed": "Modelos instalados",
+      "onDisk": "{{size}} en disco",
+      "refreshLabel": "Actualizar la lista de modelos",
+      "refresh": "Actualizar",
+      "closeNote": "Cerrar aviso",
+      "filterLabel": "Filtrar modelos por nombre",
+      "filterPlaceholder": "Filtrar por nombre",
+      "chatGroup": "Para chatear",
+      "chatGroupHint": "La ★ elige con cuál empiezan los chats nuevos.",
+      "noChatTitle": "Aún no tienes un modelo para chatear",
+      "seeChatModels": "Ver modelos de chat",
+      "noChatBody": "Los modelos de búsqueda de abajo no saben responder mensajes. Descarga uno de chat para empezar a hablar con Nyra.",
+      "noChatMatch": "Ningún modelo de chat coincide.",
+      "searchGroup": "Para buscar en carpetas",
+      "searchGroupHint": "Convierten texto en vectores para encontrar código o notas por lo que significan, aunque usen otras palabras u otro idioma. No sirven para chatear.",
+      "noSearchTitle": "Aún no tienes ninguno",
+      "downloadingShort": "Descargando…",
+      "downloadNamed": "Descargar {{name}}",
+      "noSearchBody": "Sin un modelo de búsqueda, Nyra no puede buscar por significado en tus carpetas. Te recomendamos <name>{{name}}</name>: ocupa {{size}} y entiende muchos idiomas.",
+      "noSearchMatch": "Ningún modelo de búsqueda coincide."
+    },
+    "embedding": {
+      "chosen": "Nyra usa <name>{{name}}</name> para buscar en carpetas. Lo elegiste tú.",
+      "letNyraChoose": "Que elija Nyra",
+      "onlyOne": "Es el único que tienes, así que Nyra usa <name>{{name}}</name> para buscar.",
+      "auto": "No has marcado ninguno, así que Nyra usa <name>{{name}}</name>. Marca otro con <icon/> si lo prefieres.",
+      "iconLabel": "la carpeta con lupa"
+    },
+    "offer": {
+      "title": "¿Pasar a {{model}}?",
+      "body": "Esta tarea va mejor con {{model}}, que funciona en la nube ({{provider}}). Si aceptas, se le enviará esta conversación y seguirá con ese modelo.",
+      "hint": "Puedes dejar de ver esta pregunta en Configuración → Proveedores.",
+      "accept": "Pasar a {{model}}",
+      "decline": "Seguir con {{model}}"
+    },
+    "demanding": "Tareas exigentes",
+    "isDemandingLabel": "{{name}} es el modelo para tareas exigentes",
+    "useAsDemandingLabel": "Usar {{name}} para tareas exigentes",
+    "demandingTitle": "Modelo para tareas exigentes. Pulsa para quitarlo.",
+    "useAsDemanding": "Usar para tareas exigentes"
+  },
+  "skills": {
+    "new": "Nueva skill",
+    "import": "Importar",
+    "invoked": {
+      "title": "Se aplicará a este mensaje",
+      "remove": "Quitar la skill {{name}} de este mensaje"
+    },
+    "tokens": {
+      "count": "≈ {{tokens}} tokens",
+      "light": "Ligera",
+      "large": "Grande"
+    },
+    "source": {
+      "own": "Propia",
+      "file": "Archivo",
+      "nyra": "Incluida en Nyra"
+    },
+    "heavy": {
+      "title": "Las skills activas ocupan ≈ {{tokens}} tokens, el {{percent}} del contexto de <model>{{model}}</model>.",
+      "body": "Quedará poco espacio para la conversación. Quita alguna skill o elige un modelo con más contexto.",
+      "show": "Ver skills activas"
+    },
+    "empty": {
+      "label": "Sin skills",
+      "title": "Todavía no tienes skills",
+      "text": "Una skill es un conjunto de instrucciones que puedes activar en una conversación para que Nyra trabaje de una forma concreta: revisar código, escribir con tu estilo, resumir reuniones…",
+      "hint": "Puedes importar skills de Claude Code o archivos .zip y .skill. Por ahora Nyra usa solo las instrucciones de su <code>SKILL.md</code>."
+    },
+    "list": {
+      "label": "Lista de skills",
+      "title": "Skills"
+    },
+    "card": {
+      "default": "Por defecto",
+      "defaultTitle": "Viene marcada en las conversaciones nuevas",
+      "code": "Código",
+      "codeTitle": "Viene marcada en las conversaciones nuevas de código"
+    },
+    "drop": {
+      "tooManyFiles": "Hay demasiados archivos (más de {{max}}).",
+      "tooBig": "Lo que soltaste ocupa más de 20 MB."
+    },
+    "cost": {
+      "title": "Coste en el contexto",
+      "share": "{{percent}} del contexto de <model>{{model}}</model> ({{limit}} tokens)",
+      "yourDefault": ", tu modelo principal",
+      "meter": "Ocupa el {{percent}} del contexto",
+      "hint": "Lo que ocupa cuando el modelo la usa. Mientras está activa, cada mensaje lleva solo su nombre y su descripción."
+    },
+    "files": {
+      "title": "Archivos que trae",
+      "count_one": "{{count, number}} archivo",
+      "count_other": "{{count, number}} archivos",
+      "used": "Se usa",
+      "kept": "Se conserva",
+      "count_many": "{{count, number}} archivos"
+    },
+    "candidates": {
+      "statuses": {
+        "new": "Nueva",
+        "update": "Versión más reciente",
+        "conflict": "Ya existe",
+        "imported": "Ya importada",
+        "invalid": "No válida"
+      },
+      "selectAll": "Seleccionar todas",
+      "selected": "{{selected}} de {{total}} seleccionadas",
+      "unnamed": "Sin nombre"
+    },
+    "adapt": {
+      "label": "Adaptar la skill a cualquier modelo",
+      "title": "Adaptar <name>{{name}}</name>",
+      "introWithModel": "<model>{{model}}</model> reescribe la skill para que se centre en lo que hace y no en la herramienta para la que se escribió (Claude, ChatGPT, Gemini…), y así funcione con cualquier modelo, en la nube o local. Revisa el resultado antes de guardarlo: el original se conserva y puedes restaurarlo.",
+      "intro": "El modelo reescribe la skill para que se centre en lo que hace y no en la herramienta para la que se escribió (Claude, ChatGPT, Gemini…), y así funcione con cualquier modelo, en la nube o local. Revisa el resultado antes de guardarlo: el original se conserva y puedes restaurarlo.",
+      "waiting": "Esperando al modelo…",
+      "writing": "Adaptando… {{chars}} caracteres escritos",
+      "back": "Volver",
+      "skip": "Saltar esta skill",
+      "position": "{{current}} de {{total}}",
+      "noModel": "No hay ningún modelo cargado. Carga los modelos de un proveedor primero.",
+      "tooLong": "La skill es demasiado larga para {{model}}: necesita unos {{needed}} tokens de contexto y el modelo admite {{limit}}. Prueba con un modelo de más contexto.",
+      "badFormat": "La respuesta del modelo no tiene el formato esperado o se cortó antes de terminar.",
+      "emptyParts": "El modelo devolvió la descripción o las instrucciones vacías.",
+      "descriptionTooLong": "La descripción adaptada supera los {{max}} caracteres permitidos.",
+      "stillMentions": "<strong>Aún menciona {{products}}.</strong> Puedes corregirlo aquí abajo antes de guardar, o volver a generarla.",
+      "original": "Original",
+      "adapted": "Adaptada",
+      "description": "Descripción",
+      "instructions": "Instrucciones",
+      "discardAndContinue": "Descartar y seguir",
+      "discard": "Descartar",
+      "regenerate": "Volver a generar",
+      "saving": "Guardando…",
+      "save": "Guardar versión adaptada"
+    },
+    "picker": {
+      "title": "Usar skill",
+      "close": "Cerrar selector de skills",
+      "search": "Buscar skills",
+      "searchPlaceholder": "Buscar por nombre o descripción",
+      "none": "Aún no tienes skills. Crea o importa una desde «Gestionar skills».",
+      "noMatch": "Ninguna skill coincide con la búsqueda.",
+      "footerTitle": "La lista de skills va en cada mensaje, pero las instrucciones de una skill solo cuando el modelo la usa.",
+      "active_one": "{{count, number}} activa",
+      "active_other": "{{count, number}} activas",
+      "footer": "{{active}} · ≈ {{tokens}} tokens",
+      "footerWithShare": "{{active}} · ≈ {{tokens}} tokens ({{percent}} del contexto)",
+      "manage": "Gestionar skills",
+      "active_many": "{{count, number}} activas"
+    },
+    "used": {
+      "label_one": "Nyra usó la skill {{names}}. Ver detalles",
+      "label_other": "Nyra usó {{count, number}} skills: {{names}}. Ver detalles",
+      "tip_one": "Nyra usó esta skill para esta respuesta:",
+      "tip_other": "Nyra usó estas skills para esta respuesta:",
+      "clickForDetails": "Clic para ver detalles",
+      "title_one": "Skill usada en esta respuesta",
+      "title_other": "Skills usadas en esta respuesta",
+      "count_one": "{{count, number}} skill · el modelo puede elegir hasta 2 por respuesta",
+      "count_other": "{{count, number}} skills · el modelo puede elegir hasta 2 por respuesta",
+      "close": "Cerrar",
+      "chosenByYou": "Elegida por ti",
+      "openInSettings": "Ver en Configuración",
+      "byModel_one": "El modelo la aplicó porque encajaba con tu mensaje.",
+      "byModel_other": "El modelo las aplicó porque encajaban con tu mensaje.",
+      "byYou": "La elegiste con «/{{name}}» en tu mensaje.",
+      "both_one": "Elegiste {{chosen}} con «/{{chosen}}», y el modelo añadió {{added}} porque encajaba con tu mensaje.",
+      "both_other": "Elegiste {{chosen}} con «/{{chosen}}», y el modelo añadió {{added}} porque encajaban con tu mensaje.",
+      "label_many": "Nyra usó {{count, number}} skills: {{names}}. Ver detalles",
+      "tip_many": "Nyra usó estas skills para esta respuesta:",
+      "title_many": "Skills usadas en esta respuesta",
+      "count_many": "{{count, number}} skills · el modelo puede elegir hasta 2 por respuesta",
+      "byModel_many": "El modelo las aplicó porque encajaban con tu mensaje.",
+      "both_many": "Elegiste {{chosen}} con «/{{chosen}}», y el modelo añadió {{added}} porque encajaban con tu mensaje."
+    },
+    "filesEditor": {
+      "tooBig": "La skill pasaría de 20 MB con estos archivos.",
+      "title": "Archivos",
+      "optional": "Opcional",
+      "list": "Archivos de la skill",
+      "new": "Nuevo",
+      "replaced": "Se reemplaza",
+      "removed": "Se quitará",
+      "dontAdd": "No añadir {{path}}",
+      "keepPath": "Mantener {{path}}",
+      "removePath": "Quitar {{path}}",
+      "keep": "Mantener",
+      "remove": "Quitar",
+      "builtinFiles": "Las skills incluidas en Nyra mantienen sus archivos.",
+      "add": "Añadir archivos",
+      "dropHint": "o arrastra aquí archivos sueltos o carpetas completas",
+      "hint": "En las instrucciones, explica qué hacer con cada archivo o con el conjunto y menciónalos por su ruta (<code>contar.py</code>, <code>plantillas/informe.md</code>). Los scripts los ejecuta Nyra con tu permiso en una conversación con carpeta conectada."
+    },
+    "command": {
+      "changeModel": "Cambiar de modelo",
+      "commandsAndSkills": "Comandos y skills",
+      "applyToMessage": "Aplicar una skill a este mensaje",
+      "replaces": "Sustituirá a {{name}}",
+      "noModel": "Ningún modelo coincide con <code>{{query}}</code>",
+      "noModelHint": "Prueba con otra parte del nombre, o pulsa Esc para cerrar.",
+      "noMatch": "Ningún comando ni skill coincide con <code>/{{query}}</code>",
+      "noMatchHint": "Pulsa Esc para escribirlo como texto, o crea una skill nueva.",
+      "models": "Modelos",
+      "inUse": "En uso",
+      "commands": "Comandos",
+      "skills": "Skills",
+      "marked": "Marcada",
+      "keys": "↑ ↓ moverse · Enter elegir · Esc cerrar",
+      "showCommands": "Ver comandos"
+    },
+    "summary": {
+      "label": "Resultado de la importación",
+      "almostDone": "Importación casi terminada",
+      "done": "Importación terminada",
+      "imported_one": "{{count, number}} importada",
+      "imported_other": "{{count, number}} importadas",
+      "updated_one": "{{count, number}} actualizada",
+      "updated_other": "{{count, number}} actualizadas",
+      "skipped_one": "{{count, number}} omitida",
+      "skipped_other": "{{count, number}} omitidas",
+      "pending": "{{n}} por decidir",
+      "toDecide": "Por decidir",
+      "exists": "Ya existe una skill llamada <code>{{name}}</code>.",
+      "editedHere": "La versión de Nyra se editó aquí el {{date}}: si la reemplazas, perderás esos cambios.",
+      "fromElsewhere": "La de Nyra vino de otro sitio: si la reemplazas, se sustituirá por esta.",
+      "replace": "Reemplazar",
+      "skip": "Omitir",
+      "applyAll": "Aplicar a todos los conflictos ({{n}})",
+      "details": "Detalle",
+      "importedOne": "Importada",
+      "updatedOne": "Actualizada",
+      "skippedOne": "Omitida",
+      "keptNyras": "Conservaste la de Nyra",
+      "importMore": "Importar más",
+      "adaptTitle": "Reescribirlas para que funcionen con cualquier modelo. Revisarás cada una antes de guardarla",
+      "adapt": "Adaptar a cualquier modelo ({{n}})",
+      "seeSkills": "Ver skills",
+      "imported_many": "{{count, number}} importadas",
+      "updated_many": "{{count, number}} actualizadas",
+      "skipped_many": "{{count, number}} omitidas"
+    },
+    "importer": {
+      "title": "Importar skills",
+      "intro": "Trae skills que ya tengas en el formato estándar <code>SKILL.md</code>.",
+      "sources": "Origen de la importación",
+      "fromClaudeCode": "Desde Claude Code",
+      "fromFile": "Desde un archivo",
+      "searching": "Buscando skills de Claude Code…",
+      "noneFound": "No se encontraron skills de Claude Code",
+      "dropZone": "Zona para soltar archivos",
+      "dropTitle": "Arrastra aquí un .zip, un .skill o una carpeta",
+      "dropText": "La carpeta debe contener un <code>SKILL.md</code>. Puedes soltar varios a la vez.",
+      "reading": "Leyendo…",
+      "chooseFiles": "Elegir archivos…",
+      "chooseFolder": "Elegir carpeta…",
+      "searchedIn": "Se buscó en <code>~/.claude/skills</code>, en los plugins de Claude Code y en las carpetas <code>.claude/skills</code> de tus proyectos.",
+      "searchElsewhere": "Buscar en otra carpeta…",
+      "importing": "Importando…",
+      "importCount_one": "Importar {{count, number}} skill",
+      "importCount_other": "Importar {{count, number}} skills",
+      "invalid": "No es una skill válida",
+      "unchanged": "Ya estaba importada y no ha cambiado",
+      "importCount_many": "Importar {{count, number}} skills"
+    },
+    "form": {
+      "edit": "Editar skill",
+      "intro": "Los cambios se guardan en el <code>SKILL.md</code> de la skill y en su carpeta.",
+      "newBody": "# Título\n\nQué debe hacer Nyra cuando uses esta skill.\n",
+      "nameError": "El nombre no cumple las reglas de abajo.",
+      "nameTaken": "Ya hay otra skill con ese nombre.",
+      "descriptionMissing": "Escribe una descripción.",
+      "descriptionTooLong": "Supera {{max}} caracteres.",
+      "theName": "el nombre",
+      "theDescription": "la descripción",
+      "review_one": "Revisa un campo antes de guardar:",
+      "review_other": "Revisa {{count, number}} campos antes de guardar:",
+      "name": "Nombre",
+      "useSuggestion": "Usar «{{name}}»",
+      "builtinName": "Las skills incluidas en Nyra mantienen su nombre.",
+      "nameRules": "Reglas del nombre",
+      "folderName": "También es el nombre de su carpeta, como pide el estándar.",
+      "description": "Descripción",
+      "descriptionHint": "Di qué hace y, sobre todo, <strong>cuándo usarla</strong>: «Úsala cuando…». Así sabrás elegirla después.",
+      "license": "Licencia",
+      "optional": "Opcional",
+      "instructions": "Instrucciones",
+      "editor": "Editor de instrucciones",
+      "write": "Escribir",
+      "preview": "Vista previa",
+      "markdownLabel": "Instrucciones en Markdown",
+      "previewLabel": "Vista previa de las instrucciones",
+      "tokensHint": "≈ {{tokens}} tokens · Markdown. La cabecera YAML se genera a partir de los campos de arriba.",
+      "lastEdited": "Editada en Nyra por última vez el {{date}}",
+      "saving": "Guardando…",
+      "save": "Guardar",
+      "review_many": "Revisa {{count, number}} campos antes de guardar:"
+    },
+    "nameRules": {
+      "length": "Entre 1 y 64 caracteres",
+      "chars": "Solo minúsculas, números y guiones",
+      "edges": "Sin guion al inicio ni al final",
+      "double": "Sin dos guiones seguidos («--»)"
+    },
+    "detail": {
+      "label": "Detalle de la skill",
+      "adapted": "Adaptada",
+      "adaptedOn": "Adaptada el {{date}}",
+      "edit": "Editar",
+      "adaptTitle": "Reescribirla para que funcione con cualquier modelo, sin depender de Claude, ChatGPT u otras herramientas",
+      "adapt": "Adaptar a cualquier modelo",
+      "restore": "Restaurar original",
+      "export": "Exportar (.zip)",
+      "delete": "Eliminar",
+      "exportedTo": "Exportada en <path>{{path}}</path>",
+      "restoreTitle": "¿Restaurar la versión original?",
+      "restoreText": "Vuelve la skill tal como estaba antes de adaptarla. Se pierden la versión adaptada y los cambios que hiciste después.",
+      "deleteTitle": "¿Eliminar <name>{{name}}</name>?",
+      "deleteText_one": "Se borrará la carpeta de la skill con su archivo. Las conversaciones que la usaban seguirán abiertas, pero sin ella. No se puede deshacer.",
+      "deleteText_other": "Se borrará la carpeta de la skill con sus {{count, number}} archivos. Las conversaciones que la usaban seguirán abiertas, pero sin ella. No se puede deshacer.",
+      "deleteButton": "Eliminar skill",
+      "license": "Licencia",
+      "author": "Autor",
+      "version": "Versión",
+      "compatibility": "Compatibilidad",
+      "newConversations": "Activar en conversaciones nuevas",
+      "newConversationsHint": "Viene marcada en cada conversación nueva. En cada una la puedes desmarcar desde «+» → «Usar skill».",
+      "newCode": "Activar en conversaciones nuevas de código",
+      "newCodeHint": "Viene marcada en cada conversación nueva de un proyecto de Código, en lugar de las de arriba. Si un proyecto la desactiva en sus skills, ahí no se marca.",
+      "compatibilityTitle": "Compatibilidad con Nyra",
+      "scripts": "<strong>Incluye scripts.</strong> Nyra puede ejecutarlos en una conversación con una carpeta conectada, siempre con tu permiso y con el script a la vista antes de ejecutarlo.",
+      "references": "<strong>Menciona archivos de <code>references/</code></strong> que Nyra aún no puede consultar por su cuenta. Si los necesitas, adjúntalos al mensaje.",
+      "compatibilityNote": "<strong>Su campo <code>compatibility</code> indica requisitos que Nyra quizá no cumpla:</strong> «{{value}}»",
+      "instructions": "Instrucciones",
+      "previewAside": "Vista previa del SKILL.md",
+      "deleteText_many": "Se borrará la carpeta de la skill con sus {{count, number}} archivos. Las conversaciones que la usaban seguirán abiertas, pero sin ella. No se puede deshacer."
+    }
+  },
+  "memory": {
+    "saved": {
+      "open": "Ver en Memoria",
+      "deleted": "borrado",
+      "edited": "editado",
+      "label_one": "Recuerdo guardado",
+      "label_other": "{{count, number}} recuerdos guardados",
+      "remembered": "Nyra recordó:",
+      "rememberedThings_one": "Nyra recordó {{count, number}} cosa",
+      "rememberedThings_other": "Nyra recordó {{count, number}} cosas",
+      "label_many": "{{count, number}} recuerdos guardados",
+      "rememberedThings_many": "Nyra recordó {{count, number}} cosas"
+    },
+    "editor": {
+      "placeholder": "Por ejemplo: Prefiere respuestas cortas",
+      "sensitive": "Parece un dato sensible. Los recuerdos se envían con cada mensaje: mejor no guardar claves ni contraseñas.",
+      "hint": "Enter guarda · Esc cancela · {{length}}/{{max}}",
+      "save": "Guardar"
+    },
+    "status": {
+      "show": "Ver recuerdos"
+    },
+    "row": {
+      "manual": "Añadido a mano",
+      "goneConversation": "Nyra lo guardó en una conversación que ya no está",
+      "savedIn": "Nyra lo guardó en",
+      "editLabel": "Editar recuerdo",
+      "editOf": "Editar: {{text}}",
+      "edit": "Editar",
+      "deleteOf": "Borrar: {{text}}",
+      "delete": "Borrar"
+    },
+    "settings": {
+      "description": "Datos breves sobre ti que Nyra utiliza con cada mensaje, en todas las conversaciones. Se guardan solo en este equipo y puedes cambiarlos cuando quieras.",
+      "on": "Memoria activada",
+      "off": "Memoria desactivada",
+      "onHint": "Nyra envía estos recuerdos y puede guardar otros nuevos. Te avisa en la conversación cada vez.",
+      "offHint": "No se envían recuerdos ni se crean nuevos. Los guardados se conservan.",
+      "goToFeatures": "Ir a Funciones de Nyra",
+      "tokens": "≈ {{tokens}} tokens de recuerdos",
+      "notSent": "no se envían",
+      "sentEach": "se envían con cada mensaje",
+      "noneToSend": "no hay ninguno que enviar",
+      "limit": "Límite recomendado: {{limit}}",
+      "meter": "{{percent}} % del límite recomendado",
+      "heavy": "<strong>Los recuerdos ocupan ≈ {{tokens}} tokens.</strong> Con un modelo local de 32k son el {{percent}} % de cada mensaje, y en la nube se pagan en cada envío. Borra los que ya no sirvan o junta varios en uno.",
+      "list": "Recuerdos",
+      "add": "Añadir",
+      "deleteAll": "Borrar todos",
+      "confirm_one": "¿Borrar el recuerdo?",
+      "confirm_other": "¿Borrar los {{count, number}} recuerdos?",
+      "confirmText": "Nyra dejará de usarlos en todas las conversaciones. No se puede deshacer. Las conversaciones no se borran.",
+      "confirmButton_one": "Borrar el recuerdo",
+      "confirmButton_other": "Borrar {{count, number}} recuerdos",
+      "deletedOne": "Recuerdo borrado: {{text}}",
+      "undo": "Deshacer",
+      "loadError": "No se pudieron leer los recuerdos: {{error}}",
+      "deleteFailed": "No se pudo borrar el recuerdo",
+      "restoreFailed": "No se pudo recuperar el recuerdo",
+      "deleteAllFailed": "No se pudieron borrar los recuerdos",
+      "empty": "Aún no hay recuerdos",
+      "emptyText": "Pídele a Nyra «recuerda que…» en una conversación, o añádelos aquí. También puede guardarlos ella cuando detecte algo duradero, y siempre te avisa en la conversación.",
+      "examplesLabel": "Ejemplos",
+      "examples": {
+        "city": "Vive en Valencia",
+        "short": "Prefiere respuestas cortas",
+        "dog": "Tiene un perro llamado Toby",
+        "language": "Está aprendiendo inglés"
+      },
+      "avoid": "Mejor no guardar contraseñas, claves ni datos de salud.",
+      "newMemory": "Nuevo recuerdo",
+      "privacy": "<strong>Privacidad.</strong> Con un proveedor en la nube, los recuerdos se envían a sus servidores con cada mensaje. Con un modelo local no salen de tu equipo. En las conversaciones privadas se usan, pero no se crean recuerdos nuevos.",
+      "confirm_many": "¿Borrar los {{count, number}} recuerdos?",
+      "confirmButton_many": "Borrar {{count, number}} recuerdos"
+    }
+  },
+  "sensitive": {
+    "labels": {
+      "anthropicKey": "API Key de Anthropic",
+      "openaiKey": "API Key de OpenAI",
+      "googleKey": "API Key de Google",
+      "awsKey": "Clave de acceso de AWS",
+      "githubToken": "Token de GitHub",
+      "gitlabToken": "Token de GitLab",
+      "slackToken": "Token de Slack",
+      "stripeKey": "Clave de Stripe",
+      "privateKey": "Clave privada",
+      "password": "Contraseña o secreto",
+      "card": "Número de tarjeta"
+    },
+    "hidden": {
+      "value": "[oculto]",
+      "card": "[tarjeta oculta]",
+      "key": "[clave oculta]"
+    },
+    "place": {
+      "file": "en {{name}}",
+      "messageLine": "en el mensaje · línea {{line}}",
+      "message": "en el mensaje"
+    },
+    "trigger_one": "Posible dato sensible en el mensaje: {{label}}. Ver detalles",
+    "trigger_other": "{{count, number}} posibles datos sensibles en el mensaje. Ver detalles",
+    "title": "Tu mensaje parece contener datos sensibles",
+    "detections_one": "{{count, number}} detección",
+    "detections_other": "{{count, number}} detecciones",
+    "close": "Cerrar aviso",
+    "list": "Detecciones",
+    "masked": "Valor enmascarado",
+    "point": "Señalar",
+    "pointLabel": "Señalar {{label}} en el mensaje",
+    "remove": "Quitar",
+    "removeLabel": "Quitar el archivo {{name}}",
+    "destination": "Si lo envías, saldrá de tu equipo hacia <strong>un proveedor en la nube</strong>.",
+    "hideAll": "Ocultar antes de enviar",
+    "hideAllHint": "Cambia cada valor por <code>{{hidden}}</code> y deja el nombre, para que Nyra sepa de qué hablas.",
+    "help": "Bórralo antes de enviar si no quieres compartirlo.",
+    "helpLocal": "Con un modelo local no saldría de tu equipo.",
+    "checked": "Revisado en tu equipo, sin enviar nada",
+    "disable": "Desactivar este aviso",
+    "sent": "Incluía datos sensibles · enviado a {{destination}}",
+    "sentTip": "{{labels}}. Si era una clave real, conviene cambiarla.",
+    "trigger_many": "{{count, number}} posibles datos sensibles en el mensaje. Ver detalles",
+    "detections_many": "{{count, number}} detecciones"
+  },
+  "web": {
+    "failed": "<b>No se pudo buscar en internet.</b> Respondo con lo que sé, así que puede estar desactualizado.",
+    "progress": {
+      "searched": "Buscó",
+      "onWikipedia": "en Wikipedia",
+      "searching": "Buscando",
+      "pages_one": "{{count, number}} página",
+      "pages_other": "{{count, number}} páginas",
+      "reading_one": "Leyendo {{count, number}} página…",
+      "reading_other": "Leyendo {{count, number}} páginas…",
+      "readOf": "{{read}} de {{total}}",
+      "pages_many": "{{count, number}} páginas",
+      "reading_many": "Leyendo {{count, number}} páginas…"
+    },
+    "summary": {
+      "searchedWikipedia": "Buscó en Wikipedia",
+      "searchedWeb": "Buscó en internet",
+      "searches_one": "{{count, number}} búsqueda",
+      "searches_other": "{{count, number}} búsquedas",
+      "sources_one": "{{count, number}} fuente",
+      "sources_other": "{{count, number}} fuentes",
+      "duckDuckGoDown": "DuckDuckGo no respondió",
+      "searches_many": "{{count, number}} búsquedas",
+      "sources_many": "{{count, number}} fuentes"
+    },
+    "sources": {
+      "search": "Búsqueda {{number}} ·",
+      "uncited": "Sin citar",
+      "source": "Fuente {{number}}",
+      "cited": "Citada",
+      "label": "{{state}}: {{title}}, {{domain}}. Se abre en el navegador"
+    },
+    "cited": {
+      "list": "Fuentes citadas",
+      "label": "Fuentes:",
+      "sourceLabel": "Fuente {{number}}: {{domain}}, {{title}}"
+    }
+  },
+  "native": {
+    "tray": {
+      "open": "Abrir Nyra",
+      "new": "Nueva conversación",
+      "recent": "Recientes",
+      "noRecent": "Ninguna todavía",
+      "quick": "Chat rápido",
+      "quit": "Salir"
+    },
+    "dictation": {
+      "noMicrophone": "No se encontró un micrófono. Conecta uno o revisa cuál usa el sistema.",
+      "noPermission": "Nyra no tiene permiso para usar el micrófono. Actívalo en la configuración de privacidad del sistema.",
+      "couldNotRecord": "No se pudo grabar el micrófono: {{error}}",
+      "unsupported": "El micrófono usa un formato de audio que Nyra no puede leer.",
+      "alreadyRecording": "Ya se está dictando en otra ventana de Nyra.",
+      "notRecording": "No había ningún dictado en curso."
+    },
+    "quick": {
+      "notOpen": "La barra de chat rápido no está abierta.",
+      "noScreen": "No se encontró ninguna pantalla.",
+      "forgetPosition": "No se pudo olvidar la posición de la barra: {{error}}",
+      "shortcutTaken": "Otra aplicación ya usa esta combinación, o el sistema la reserva. Elige otra."
+    },
+    "capture": {
+      "openFailed": "No se pudo abrir la captura: {{error}}",
+      "noneInProgress": "No hay ninguna captura en curso.",
+      "closed": "La captura ya se cerró.",
+      "prepareFailed": "No se pudo preparar la captura: {{error}}",
+      "noScreen": "No se encontró ninguna pantalla.",
+      "screenNotFound": "No se encontró la pantalla: {{error}}",
+      "captureFailed": "No se pudo capturar la pantalla: {{error}}",
+      "readFailed": "No se pudo leer la captura: {{error}}",
+      "unavailable": "La captura de pantalla aún no está disponible en este sistema.",
+      "toolFailed": "No se pudo abrir la captura de pantalla: {{error}}",
+      "didNotFinish": "La captura de pantalla no terminó bien.",
+      "permission": "Nyra necesita permiso para capturar la pantalla. Actívalo en Ajustes del Sistema → Privacidad y seguridad → Grabación de pantalla y vuelve a abrir Nyra."
+    },
+    "share": {
+      "invalidImage": "La imagen del mensaje no es válida.",
+      "copyFailed": "No se pudo copiar la imagen al portapapeles.",
+      "imageFile": "nyra-respuesta.png",
+      "pngFilter": "Imagen PNG",
+      "saveImageFailed": "No se pudo guardar la imagen.",
+      "invalidPdf": "El PDF no es válido.",
+      "savePdfFailed": "No se pudo guardar el PDF.",
+      "saveDocumentFailed": "No se pudo guardar el documento.",
+      "fallbackName": "documento",
+      "documentTooLarge": "El documento y sus imágenes pasan de 200 MB: es demasiado para guardarlos juntos."
+    },
+    "web": {
+      "searchFailed": "No se pudo buscar en internet ahora mismo.",
+      "onlyWebPages": "Solo se pueden leer páginas web (http o https).",
+      "invalidAddress": "La dirección no es válida.",
+      "addressNotFound": "No se encontró esa dirección.",
+      "notPublic": "Esa dirección no es pública: Nyra solo lee páginas de internet.",
+      "couldNotOpen": "No se pudo abrir la página.",
+      "badRedirect": "La página redirige a una dirección no válida.",
+      "answered": "La página respondió {{status}}.",
+      "notText": "No es una página de texto.",
+      "tooManyRedirects": "La página redirige demasiadas veces."
+    },
+    "terminal": {
+      "alreadyFinished": "El comando ya terminó.",
+      "answerFailed": "No se pudo enviar la respuesta al comando: {{error}}",
+      "notReading": "El comando no está leyendo lo que escribes. Puede que aún no lo haya pedido, o que espere otra cosa.",
+      "saveFailed": "No se pudo guardar la salida.",
+      "textFilter": "Texto",
+      "invalidId": "Identificador de comando no válido.",
+      "emptyOrLong": "El comando está vacío o es demasiado largo.",
+      "folderGone": "La carpeta conectada ya no existe.",
+      "alreadyRunning": "Ese comando ya se está ejecutando.",
+      "terminalFailed": "No se pudo abrir una terminal: {{error}}",
+      "runFailed": "No se pudo ejecutar el comando: {{error}}",
+      "statusUnknown": "No se pudo saber cómo terminó el comando: {{error}}"
+    },
+    "git": {
+      "timedOut": "git no respondió a tiempo",
+      "fileNotInFolder": "Ese archivo no está en la carpeta.",
+      "secretFile": "Ese archivo guarda claves o contraseñas y Nyra no lo muestra.",
+      "diffFailed": "No se pudo leer la diferencia con el último commit.",
+      "unsafeConfig": "La configuración de Git de esta carpeta define un filtro que Nyra no puede desactivar con seguridad, así que no lee su estado.",
+      "emptyMessage": "Escribe un mensaje para el commit.",
+      "tooMuch": "Elige entre uno y 500 archivos y un mensaje más corto.",
+      "fileOutside": "Uno de los archivos no está en la carpeta.",
+      "notInstalled": "No encuentro Git en este equipo. Instálalo y vuelve a abrir Nyra para usarlo en tus proyectos.",
+      "commitFailed": "No se pudo hacer el commit: {{error}}",
+      "noCommitId": "El commit se hizo, pero no pude leer su id.",
+      "initFailed": "No se pudo iniciar el repositorio: {{error}}"
+    },
+    "secrets": {
+      "invalidProvider": "El proveedor no es válido.",
+      "damagedFile": "El archivo de API Keys está dañado.",
+      "keychain": "No se pudo usar el llavero del sistema: {{error}}"
+    },
+    "util": {
+      "tooLong": "Máximo {{max}} caracteres: sobran {{extra}}."
+    },
+    "spreadsheet": {
+      "cantOpen": "No se pudo abrir la hoja de cálculo: el archivo está dañado o protegido con contraseña.",
+      "damaged": "La hoja de cálculo está dañada.",
+      "defaultName": "hoja.xlsx",
+      "saveFailed": "No se pudo guardar la hoja de cálculo.",
+      "notReceived": "La hoja de cálculo no llegó bien.",
+      "tooBig": "La hoja de cálculo supera el máximo de 10 MB."
+    },
+    "workspace": {
+      "notConnected": "Esa carpeta no está conectada a Nyra.",
+      "fileNotInFolder": "Ese archivo no está en la carpeta.",
+      "fileNotInConnectedFolder": "Ese archivo no está en la carpeta conectada.",
+      "encoding": "El cambio tiene caracteres que no caben en la codificación del archivo (Windows-1252).",
+      "invalidCopy": "La copia del archivo no es válida.",
+      "cantChange": "Ese archivo no se puede cambiar.",
+      "copyOfAnother": "Esa copia no es de este archivo.",
+      "noFreeName": "No se encontró un nombre libre para la copia.",
+      "noAccess": "No se pudo acceder a la carpeta."
+    },
+    "skills": {
+      "frontmatterMissing": "SKILL.md no empieza con una cabecera YAML (---).",
+      "frontmatterNotClosed": "La cabecera YAML de SKILL.md no está cerrada con ---.",
+      "yamlInvalid": "La cabecera YAML no es válida: {{error}}",
+      "yamlNotFields": "La cabecera YAML debe ser una lista de campos.",
+      "nameLength": "Nombre no válido: debe tener entre 1 y 64 caracteres",
+      "nameCharacters": "Nombre no válido: usa solo minúsculas, números y guiones",
+      "nameEdges": "Nombre no válido: no puede empezar ni terminar con guion",
+      "nameDoubleHyphen": "Nombre no válido: no puede tener dos guiones seguidos",
+      "descriptionMissing": "Falta la descripción",
+      "descriptionTooLong": "La descripción supera 1024 caracteres ({{length}})",
+      "thousandsSeparator": ".",
+      "nameFieldMissing": "Falta el campo name",
+      "compatibilityTooLong": "El campo compatibility supera 500 caracteres",
+      "skillFileMissing": "Falta SKILL.md",
+      "tooManyFiles": "Tiene más de {{max}} archivos",
+      "tooBig": "Ocupa más de 20 MB",
+      "notZip": "No es un archivo .zip válido",
+      "reservedByNyra": "Ya hay una skill incluida en Nyra con este nombre. Cámbiale el nombre en su SKILL.md para importarla.",
+      "installFailed": "No se pudieron instalar algunas skills de Nyra ({{details}}). Cierra Nyra y vuelve a abrirla. Si sigue pasando, comprueba que el antivirus no bloquea su carpeta de datos.",
+      "notSkillFile": "Ese archivo no es de la skill.",
+      "fileGone": "Ese archivo ya no existe.",
+      "fileTooBig": "El archivo es demasiado grande para mostrarlo.",
+      "invalidFileName": "«{{path}}» no es un nombre de archivo válido para una skill.",
+      "unreadableFile": "No se pudo leer «{{path}}».",
+      "builtinFilesLocked": "Los archivos de las skills incluidas en Nyra no se pueden cambiar.",
+      "notText": "No es un archivo de texto.",
+      "nameTaken": "Ya existe una skill llamada «{{name}}»",
+      "builtinRename": "Las skills incluidas en Nyra no se pueden renombrar.",
+      "adaptedEmpty": "Las instrucciones adaptadas están vacías.",
+      "noOriginal": "Esta skill no tiene una versión original guardada.",
+      "builtinDelete": "Las skills incluidas en Nyra no se pueden eliminar.",
+      "importUnavailable": "La importación no está disponible.",
+      "droppedFiles": "Archivos soltados",
+      "versionChange": "De la {{old}} a la {{new}}"
+    },
+    "claudeCode": {
+      "untitledSession": "Sesión de Claude Code",
+      "copyTitle": "{{title}} (desde Claude Code)",
+      "noProject": "Sin proyecto",
+      "imageName": "imagen-{{index}}",
+      "documentName": "documento-{{index}}",
+      "unsupportedFile": "[Archivo no compatible con Nyra: {{name}}]"
+    },
+    "memories": {
+      "invalid": "El recuerdo no es válido.",
+      "empty": "Escribe qué quieres que Nyra recuerde.",
+      "tooLong": "Un recuerdo debe ser breve: máximo {{max}} caracteres (sobran {{extra}}).",
+      "invalidSource": "El origen del recuerdo no es válido.",
+      "gone": "Ese recuerdo ya no existe."
+    },
+    "folders": {
+      "nameEmpty": "Escribe un nombre para la carpeta.",
+      "nameTaken": "Ya existe una carpeta llamada «{{name}}».",
+      "invalid": "La carpeta no es válida.",
+      "gone": "Esa carpeta ya no existe."
+    },
+    "storage": {
+      "unavailable": "La base de datos de conversaciones no está disponible.",
+      "titleEmpty": "El nombre de la conversación no puede estar vacío.",
+      "titleTooLong": "El nombre de la conversación no puede superar los {{max}} caracteres.",
+      "attachmentGone": "Ese archivo adjunto ya no existe."
+    },
+    "projects": {
+      "nameEmpty": "Escribe un nombre para el proyecto.",
+      "invalid": "El proyecto no es válido.",
+      "invalidSkill": "Esa skill no es válida.",
+      "invalidModel": "Ese modelo no es válido.",
+      "folderWasRemoved": "Esa carpeta era el proyecto «{{name}}», que quitaste de la lista. Añádela con «Nuevo proyecto» para recuperarlo, o elige otra carpeta para este.",
+      "folderTaken": "Esa carpeta ya es el proyecto «{{name}}». Elige la carpeta nueva de este proyecto."
+    },
+    "code": {
+      "invalidConversation": "Identificador de conversación no válido.",
+      "invalidPath": "Esa ruta no es de la carpeta de la conversación.",
+      "inputsTooLarge": "Los archivos de la conversación ocupan demasiado para pasárselos al programa (más de 50 MB).",
+      "noRuntime": "No se encontró un intérprete para {{language}} en este equipo.",
+      "fileGone": "Ese archivo ya no existe.",
+      "fileTooLarge": "El archivo es demasiado grande para mostrarlo.",
+      "saveFailed": "No se pudo guardar el archivo."
+    },
+    "browser": {
+      "notFound": "No encontré un navegador que Nyra pueda usar. Instala Google Chrome, Microsoft Edge, Brave o Chromium.",
+      "couldNotStart": "No se pudo abrir el navegador.",
+      "closed": "El navegador se cerró.",
+      "noAnswer": "El navegador no respondió a tiempo.",
+      "pageError": "La página dio un error: {{error}}",
+      "navigateFailed": "No se pudo abrir la dirección: {{error}}",
+      "noElement": "La página ya no tiene el elemento {{n}}.",
+      "unknownKey": "Nyra no sabe pulsar la tecla «{{key}}».",
+      "screenshotFailed": "No se pudo hacer la captura."
+    },
+    "transcription": {
+      "unreadable": "No se pudo leer el audio. Prueba con un archivo mp3, m4a, wav, flac u ogg.",
+      "noAudio": "El archivo no tiene sonido que transcribir.",
+      "modelFailed": "No se pudieron cargar los modelos de transcripción. Bórralo y vuelve a añadirlo en Configuración → Proveedores de audio.",
+      "notDownloaded": "Faltan modelos de transcripción. Añade un Whisper en Configuración → Proveedores de audio.",
+      "unknownModel": "Ese modelo de transcripción ya no está. Elige otro en Configuración → Proveedores de audio.",
+      "downloadFailed": "No se pudo descargar {{file}}. Revisa la conexión y vuelve a intentarlo.",
+      "downloadCancelled": "Descarga cancelada.",
+      "downloadRunning": "Ya se está añadiendo un modelo de transcripción.",
+      "cancelled": "Transcripción cancelada.",
+      "tooLong": "El audio es demasiado largo: Nyra transcribe hasta 4 horas.",
+      "gone": "El audio ya no está: se borró con su conversación o en una sesión anterior. Vuelve a adjuntarlo.",
+      "badRepository": "Escribe el repositorio de Hugging Face como usuario/nombre, o pega su enlace.",
+      "repositoryNotFound": "No se encontró {{repository}} en Hugging Face. Revisa el nombre y la conexión.",
+      "noWhisperIn": "{{place}} no tiene un Whisper que Nyra pueda usar: en formato Transformers (config.json, tokenizer.json y sus pesos) o en formato sherpa-onnx (un codificador, un decodificador y sus tokens).",
+      "adapterOnly": "{{place}} solo trae un adaptador (LoRA) para ponerlo encima de otro modelo. Hace falta el modelo completo.",
+      "notWhisper": "{{place}} no es un Whisper: es otro tipo de modelo de voz."
+    },
+    "mcp": {
+      "damagedConfig": "No se pudo leer la configuración de los servidores MCP.",
+      "unknownServer": "Ese servidor MCP no existe.",
+      "missingCommand": "Escribe un nombre y el comando que inicia el servidor.",
+      "commandNotFound": "No se encontró «{{command}}» en este equipo. Instálalo o escribe su ruta completa.",
+      "couldNotStart": "No se pudo conectar con {{name}}: {{error}}",
+      "timedOut": "El servidor tardó demasiado en responder.",
+      "badArguments": "Los datos para la herramienta no son válidos.",
+      "serverOff": "Ese servidor MCP está desactivado en Configuración.",
+      "toolOff": "Esa herramienta está apagada en Configuración.",
+      "unknownTool": "El servidor no ofrece esa herramienta.",
+      "callFailed": "La herramienta falló: {{error}}"
+    },
+    "screen": {
+      "noLook": "Nyra aún no ha mirado la pantalla en esta conversación.",
+      "notTaken": "No se pudo capturar la pantalla.",
+      "windowFailed": "No se pudo abrir la ventana de las marcas: {{error}}",
+      "noAccessibility": "Nyra necesita el permiso de Accesibilidad para usar el ratón y el teclado. Actívalo en Ajustes del Sistema → Privacidad y seguridad → Accesibilidad."
+    },
+    "access": {
+      "settingsFailed": "No se pudieron abrir los ajustes del sistema."
+    }
+  },
+  "markdown.chart": "Gráfico",
+  "markdown.chartViewTabs": "Ver el gráfico o sus datos",
+  "markdown.chartData": "Datos",
+  "markdown.chartError": "<strong>No se pudo dibujar el gráfico:</strong> los datos tienen un error. Se muestran los datos.",
+  "markdown.drawingChart": "Dibujando el gráfico…",
+  "markdown.chartAlt": "Gráfico generado a partir de los datos de la respuesta",
+  "markdown.chartErrors.notJson": "Los datos no son un JSON válido.",
+  "markdown.chartErrors.type": "Falta el tipo de gráfico: bar, line o pie.",
+  "markdown.chartErrors.labels": "Faltan las etiquetas (labels), o hay más de 60.",
+  "markdown.chartErrors.series": "Falta al menos una serie de valores, o hay más de 12.",
+  "markdown.chartErrors.values": "Cada serie necesita un número por etiqueta.",
+  "markdown.chartErrors.pieValues": "Un gráfico de tarta necesita valores positivos.",
+  "documents.chartCode": "Gráfico (datos)",
+  "native.share.tableSheet": "Tabla",
+  "native.share.excelFilter": "Libro de Excel",
+  "native.share.invalidTable": "La tabla está vacía o es demasiado grande para guardarla.",
+  "native.share.saveTableFailed": "No se pudo guardar la tabla.",
+  "markdown.copyTable": "Copiar tabla",
+  "markdown.saveTable": "Guardar como Excel",
+  "markdown.tableSaved": "Guardada",
+  "markdown.tableSaveFailed": "No se pudo guardar",
+  "markdown.sortBy": "Ordenar por {{column}}",
+  "markdown.tableFileName": "tabla-nyra",
+  "browser": {
+    "screenshotName": "Captura {{n}}",
+    "action": {
+      "open": "Abriendo {{site}}",
+      "click": "Pulsando «{{label}}»",
+      "type": "Escribiendo en «{{label}}»",
+      "key": "Pulsando la tecla {{key}}",
+      "screenshot": "Haciendo una captura",
+      "pageSearch": "Buscando «{{text}}» en la página",
+      "mark": "Señalando «{{label}}»"
+    },
+    "ask": {
+      "hint": {
+        "open": "Para ir a {{site}}. Mientras siga abierto podrá ir a otras páginas sin volver a preguntarte. Lo verás en su ventana y puedes cerrarlo cuando quieras.",
+        "use": "Para pulsar, escribir e ir a otras páginas desde {{site}}. Si entraste en alguna cuenta, podrá usarla. Mientras siga abierto no volverá a preguntarte.",
+        "local": "{{site}} está en este equipo o en tu red local (tu proyecto, el router, otros aparatos). Permítelo solo si se lo pediste. Mientras siga abierto no volverá a preguntarte."
+      },
+      "allow": "Permitir",
+      "deny": "No permitir"
+    },
+    "control": {
+      "take": "Tomar el control",
+      "giveBack": "Devolver a Nyra"
+    },
+    "button": {
+      "open": "Abrir el navegador",
+      "openTitle": "Abrir el navegador: navega tú o pídele a Nyra que revise, rellene o capture una página",
+      "show": "Mostrar el navegador",
+      "showTitle": "Mostrar la ventana del navegador. Pídele a Nyra lo que quieras sobre la página"
+    },
+    "card": {
+      "label": "Navegador de Nyra",
+      "working": "Nyra está usando el navegador",
+      "asking": "Esperando tu permiso",
+      "yours": "Lo estás usando tú · Nyra espera",
+      "yoursHint": "Usa la página con tranquilidad. Nyra no tocará nada hasta que se la devuelvas.",
+      "done": "Terminó",
+      "stopped": "Se paró en un fallo",
+      "you": "Tú",
+      "thumbnail": "Ver en grande la última imagen de la ventana: {{title}}",
+      "thumbnailName": "Navegador · {{title}}",
+      "showWindow": "Mostrar ventana",
+      "earlier_one": "{{count, number}} paso anterior",
+      "earlier_many": "{{count, number}} pasos anteriores",
+      "earlier_other": "{{count, number}} pasos anteriores",
+      "steps_one": "{{count, number}} paso",
+      "steps_many": "{{count, number}} pasos",
+      "steps_other": "{{count, number}} pasos",
+      "ok": "{{count, number}} bien",
+      "noEffect": "{{count, number}} sin efecto",
+      "failed": "{{count, number}} con fallo",
+      "showSteps": "Ver los pasos",
+      "hideSteps": "Ocultar los pasos",
+      "stepsLabel": "Lo que hizo Nyra en el navegador"
+    },
+    "step": {
+      "browse": "Abrió {{target}}",
+      "click": "Pulsó «{{target}}»",
+      "type": "Escribió en «{{target}}»",
+      "key": "Pulsó la tecla {{target}}",
+      "pageSearch": "Buscó «{{target}}»",
+      "screenshot": "Hizo una captura de la página",
+      "hidden": "oculto",
+      "mark": "Señaló «{{target}}»",
+      "unmark": "Quitó las marcas"
+    },
+    "stepNow": {
+      "browse": "Abriendo {{target}}…",
+      "click": "Pulsando «{{target}}»…",
+      "type": "Escribiendo en «{{target}}»…",
+      "key": "Pulsando la tecla {{target}}…",
+      "pageSearch": "Buscando «{{target}}»…",
+      "screenshot": "Haciendo una captura…",
+      "mark": "Señalando «{{target}}»…",
+      "unmark": "Quitando las marcas…"
+    },
+    "outcome": {
+      "ok": "Bien",
+      "noEffect": "Sin efecto",
+      "failed": "Falló",
+      "checking": "Comprobando el resultado…",
+      "navigated": "Ahora en {{site}}",
+      "changed": "La página cambió",
+      "unchanged": "La página no cambió",
+      "notTyped": "El campo no tiene lo que escribió",
+      "filled": "Rellenado",
+      "found_one": "{{count, number}} coincidencia",
+      "found_many": "{{count, number}} coincidencias",
+      "found_other": "{{count, number}} coincidencias",
+      "notFound": "No aparece en la página",
+      "shot": "La tienes debajo",
+      "refused": "No lo permitiste",
+      "marked": "Lo ves marcado en la página",
+      "markedFirst_one": "Marcó el primero de {{count, number}}",
+      "markedFirst_many": "Marcó el primero de {{count, number}}",
+      "markedFirst_other": "Marcó el primero de {{count, number}}",
+      "markMissing": "No está en la página",
+      "markHidden": "Está en la página, pero fuera de la vista"
+    },
+    "strip": {
+      "label": "Estado del navegador",
+      "open": "Navegador abierto",
+      "working": "Nyra lo está usando",
+      "asking": {
+        "open": "Nyra quiere abrir el navegador",
+        "use": "Nyra quiere usar tu navegador",
+        "local": "Nyra quiere abrir una dirección de tu red"
+      },
+      "yours": "Lo estás usando tú",
+      "steps": "Ver los pasos",
+      "close": "Cerrar",
+      "closeLabel": "Cerrar el navegador"
+    }
+  },
+  "transcription": {
+    "settings": {
+      "model": "Modelo",
+      "speakers": "Separar quién habla",
+      "speakersHint": "Pone «Hablante 1», «Hablante 2»… en cada línea. Los nombres los puede deducir Nyra si alguien se presenta.",
+      "cancel": "Cancelar",
+      "delete": "Borrar",
+      "empty": "Aún no hay ningún modelo de Whisper. Añade uno desde Hugging Face, también de la comunidad, o desde una carpeta.",
+      "from": {
+        "huggingface": "Hugging Face · {{origin}}",
+        "folder": "Carpeta · {{origin}}"
+      },
+      "addModel": "Añadir modelo",
+      "huggingFace": "Desde Hugging Face",
+      "repositoryExample": "HiTZ/whisper-small-es",
+      "add": "Añadir",
+      "format": "El repositorio o su enlace: un Whisper como los publica la comunidad (formato Transformers) o en formato sherpa-onnx.",
+      "fromFolder": "Desde una carpeta…",
+      "sharedFirst": "La primera vez se descargan también los modelos que detectan la voz y separan quién habla ({{size}}).",
+      "adding": "Añadiendo el modelo… {{percent}} %",
+      "preparing": "Preparando…",
+      "formats": {
+        "transformers": "Transformers",
+        "onnx": "sherpa-onnx"
+      }
+    },
+    "speaker": "Hablante {{n}}",
+    "fileName": "{{name}} (transcripción).md",
+    "empty": "No se oye a nadie hablar en {{name}}.",
+    "disabled": "La transcripción de audio está desactivada en Configuración → General → Funciones de Nyra.",
+    "providers": {
+      "list": "Proveedores de audio",
+      "local": "En este equipo",
+      "localDescription": "Whisper transcribe en tu equipo, sin enviar el audio a ningún servicio. Añade los modelos que quieras usar.",
+      "ready": "Usando {{model}}",
+      "missing": "Sin modelos",
+      "configure": "Elegir el modelo en Proveedores de audio"
+    },
+    "storing": "Preparando el audio…",
+    "type": "Audio",
+    "strip": {
+      "label": "Transcripción",
+      "needsModel": "Para transcribir {{name}}, añade un modelo de Whisper en Configuración → Proveedores de audio. Seguirá sola en cuanto lo añadas.",
+      "reading": "Leyendo {{name}}…",
+      "speakers": "Separando las voces de {{name}}…",
+      "transcribing": "Transcribiendo {{name}}… {{percent}} %",
+      "cancel": "Cancelar",
+      "adding": "Añadiendo el modelo… {{percent}} %"
+    },
+    "viewer": {
+      "pending": "Nyra lo transcribe cuando lo necesita: pídele «transcríbelo», «resúmelo» o «¿qué se decidió?».",
+      "done": "Su transcripción está en «{{name}}»."
+    },
+    "title": "Transcripción de {{name}}",
+    "aboutSpeakers_one": "{{duration}} · {{count, number}} hablante",
+    "aboutSpeakers_many": "{{duration}} · {{count, number}} hablantes",
+    "aboutSpeakers_other": "{{duration}} · {{count, number}} hablantes",
+    "fileWord": "transcripcion"
+  },
+  "mcp": {
+    "call": {
+      "label": "Herramienta {{tool}} de {{server}}",
+      "asking": "Quiere usarla",
+      "running": "Usándola…",
+      "done": "Hecho",
+      "failed": "Falló",
+      "denied": "No permitida",
+      "stopped": "Detenida",
+      "allow": "Permitir",
+      "allowAlways": "Permitir siempre",
+      "deny": "No permitir"
+    },
+    "settings": {
+      "list": "Servidores",
+      "add": "Añadir servidor",
+      "import_one": "Importar {{count, number}} de Claude Desktop",
+      "import_many": "Importar {{count, number}} de Claude Desktop",
+      "import_other": "Importar {{count, number}} de Claude Desktop",
+      "imported_one": "{{count, number}} servidor importado.",
+      "imported_many": "{{count, number}} servidores importados.",
+      "imported_other": "{{count, number}} servidores importados.",
+      "newServer": "Nuevo servidor",
+      "serverDescription": "Un programa de tu equipo que le da herramientas a Nyra. Nyra te pide permiso antes de usar cada una, salvo las que permitas siempre.",
+      "trustWarning": "Añade solo servidores de quien confíes, como el propio servicio o un proyecto conocido. Un servidor corre con los permisos de tu usuario, y lo que dice de sus herramientas llega a Nyra: uno malicioso podría intentar darle instrucciones.",
+      "enabled": "Usar este servidor",
+      "name": "Nombre",
+      "command": "Comando",
+      "commandHint": "Lo que lo inicia, como en su documentación: npx, uvx, docker o la ruta de un programa.",
+      "variables": "Variables",
+      "variablesHint": "Claves o datos que pide el servidor, como un token. Se guardan en el llavero del sistema. Deja un valor vacío para conservar el guardado.",
+      "variableName": "Nombre de la variable",
+      "variableValue": "Valor de {{name}}",
+      "saved": "Guardado",
+      "removeVariable": "Quitar {{name}}",
+      "addVariable": "Añadir variable",
+      "save": "Guardar",
+      "test": "Volver a conectar",
+      "delete": "Eliminar",
+      "deleteTitle": "¿Eliminar {{name}}?",
+      "deleteHint": "Se borran su configuración y sus variables guardadas. Las conversaciones no cambian.",
+      "tools": "Herramientas",
+      "connecting": "Conectando… La primera vez puede tardar mientras se instala.",
+      "noTools": "Este servidor no ofrece herramientas.",
+      "readOnly": "Solo lee",
+      "alwaysAllow": "Permitir siempre",
+      "alwaysAllowTool": "Permitir siempre {{tool}}",
+      "use": "Usar",
+      "useTool": "Usar {{tool}}",
+      "log": "Registro del servidor",
+      "logRefresh": "Actualizar el registro",
+      "logEmpty": "El servidor no ha escrito nada desde que arrancó.",
+      "inUse": "Nyra puede usar {{used, number}} de {{total, number}}. Las que apagues no se le ofrecen, y así cada mensaje gasta menos.",
+      "choice": {
+        "all": "Todas",
+        "readOnly": "Solo las que leen",
+        "none": "Ninguna"
+      },
+      "off": "Desactivado",
+      "failed": "No se pudo conectar",
+      "notStarted": "Sin iniciar",
+      "toolCount_one": "{{count, number}} herramienta",
+      "toolCount_many": "{{count, number}} herramientas",
+      "toolCount_other": "{{count, number}} herramientas",
+      "namePlaceholder": "GitHub",
+      "commandPlaceholder": "docker run -i --rm -e GITHUB_PERSONAL_ACCESS_TOKEN ghcr.io/github/github-mcp-server",
+      "variablePlaceholder": "GITHUB_PERSONAL_ACCESS_TOKEN"
+    }
+  },
+  "welcome": {
+    "label": "Bienvenida de Nyra",
+    "progress": "Progreso de la bienvenida",
+    "stepOf": "Paso {{step}} de {{total}}",
+    "skip": "Saltar bienvenida",
+    "back": "Atrás",
+    "continue": "Continuar",
+    "later": "Hacerlo después",
+    "hello": {
+      "title": "Te damos la bienvenida a Nyra",
+      "text": "Tu asistente de IA en el escritorio: usa modelos en tu equipo o en la nube, trabaja con tus archivos y te pide permiso antes de actuar.",
+      "language": "Idioma de la interfaz",
+      "fromSystem": "Según tu sistema",
+      "chosen": "Elegido por ti",
+      "start": "Empezar"
+    },
+    "appearance": {
+      "title": "Elige cómo se ve",
+      "lead": "Puedes cambiarlo cuando quieras en Configuración → Apariencia."
+    },
+    "where": {
+      "title": "¿Dónde quieres usar los modelos?",
+      "lead": "Elige una opción o las dos.",
+      "none": "Seguir sin modelos",
+      "later": "Puedes cambiarlo o añadir más en Configuración → Proveedores.",
+      "local": {
+        "title": "En tu equipo",
+        "with": "Ollama",
+        "private": "Privado: nada sale de tu equipo",
+        "free": "Gratis",
+        "offline": "Funciona sin conexión",
+        "needs": "Necesita unos 8 GB de memoria y descargar el modelo, de 2 a 8 GB."
+      },
+      "cloud": {
+        "title": "En la nube",
+        "with": "Claude, OpenAI, Gemini",
+        "capable": "Los modelos más capaces",
+        "noDownload": "Sin descargar nada",
+        "needs": "Necesita una API key del proveedor, que cobra por uso."
+      }
+    },
+    "ollama": {
+      "title": "Modelos en tu equipo",
+      "lead": "Nyra usa Ollama para ejecutar los modelos aquí mismo.",
+      "checking": "Buscando Ollama en este equipo…",
+      "checkingHint": "Solo tarda un momento.",
+      "address": "Dirección de Ollama",
+      "connect": "Conectar",
+      "addressHint": "En ese equipo, Ollama tiene que aceptar conexiones de la red (OLLAMA_HOST=0.0.0.0).",
+      "connecting": "Conectando…",
+      "noAnswer": "No responde: revisa la dirección y que Ollama esté abierto allí.",
+      "lookHere": "Volver a buscar en este equipo",
+      "haveModelsHint": "Ollama está abierto. Puedes empezar a chatear con cualquiera de ellos.",
+      "downloaded": "Listo: {{name}} está descargado",
+      "downloadedHint": "Será el modelo por defecto de tus conversaciones.",
+      "here": "este equipo",
+      "keepGoing": "Puedes seguir con los pasos siguientes: la descarga continúa aunque cierres la bienvenida, y la verás en la barra lateral.",
+      "forMemory": "Tu equipo tiene {{memory}} GB: te recomendamos {{name}}, {{why}}.",
+      "forUnknown": "Te recomendamos {{name}}, {{why}}.",
+      "recommended": "Recomendado",
+      "downloadModel": "Descargar",
+      "others": "Ver otros modelos",
+      "why": {
+        "light": "ligero, rápido y con buen español",
+        "balanced": "buen español y rápido",
+        "capable": "más capaz y entiende imágenes"
+      },
+      "haveModels_one": "Listo: tienes {{count}} modelo",
+      "haveModels_many": "Listo: tienes {{count}} modelos",
+      "haveModels_other": "Listo: tienes {{count}} modelos",
+      "addressExample": "http://192.168.1.20:11434"
+    },
+    "cloud": {
+      "title": "Modelos en la nube",
+      "lead": "Conecta tu cuenta con una API key. Cada proveedor cobra por lo que uses.",
+      "provider": "Proveedor",
+      "key": "API key de {{name}}",
+      "paste": "Pégala aquí",
+      "hideKey": "Ocultar la clave",
+      "showKey": "Mostrar la clave",
+      "check": "Comprobar",
+      "checking": "Comprobando la clave…",
+      "remember": "Recordar en este equipo",
+      "another": "Añadir otro proveedor",
+      "works_one": "{{name}} · {{count}} modelo",
+      "works_many": "{{name}} · {{count}} modelos",
+      "works_other": "{{name}} · {{count}} modelos"
+    },
+    "mcp": {
+      "title": "Conexiones MCP",
+      "optional": "Opcional",
+      "explain": "Las conexiones MCP unen Nyra con servicios como GitHub, una base de datos o Notion. Cada uno le da herramientas nuevas.",
+      "importedHint": "Los verás en Configuración → Conexiones MCP. Nyra te pedirá permiso antes de usar cada herramienta.",
+      "import": "Importarlos",
+      "notNow": "Ahora no",
+      "add": "Añadir un servidor",
+      "trust": "Añade solo servicios de quien confíes.",
+      "imported_one": "{{count}} servidor importado",
+      "imported_many": "{{count}} servidores importados",
+      "imported_other": "{{count}} servidores importados",
+      "found_one": "Encontramos {{count}} servidor de Claude Desktop",
+      "found_many": "Encontramos {{count}} servidores de Claude Desktop",
+      "found_other": "Encontramos {{count}} servidores de Claude Desktop"
+    },
+    "done": {
+      "title": "Todo listo",
+      "lead": "Esto es lo que has configurado. Todo se puede cambiar en Configuración.",
+      "almost": "Nyra está casi lista",
+      "almostLead": "Falta un modelo para poder chatear. Puedes configurarlo cuando quieras.",
+      "downloading": "{{name}} · descargando, puedes empezar a chatear mientras",
+      "ready": "Listo",
+      "setUpLater": "Lo configuras en Configuración → Proveedores",
+      "noKey": "Sin API key todavía",
+      "models": "Modelos",
+      "noneChosen": "No elegiste ninguno: configúralos en Configuración → Proveedores",
+      "noMcp": "Ninguna por ahora",
+      "notSet": "Sin configurar",
+      "more": "Nyra puede hacer mucho más: buscar en internet, recordar datos sobre ti, trabajar con carpetas, ejecutar código o usar el navegador. Todo se explica y se activa en Configuración → Funciones de Nyra.",
+      "showFeatures": "Ver lo que puede hacer Nyra",
+      "chat": "Empezar a chatear"
+    },
+    "noModels": {
+      "title": "Aún no hay modelos:",
+      "text": "configúralos para empezar a chatear.",
+      "setUp": "Configurar modelos",
+      "welcome": "Abrir la bienvenida"
+    },
+    "settings": {
+      "title": "Bienvenida",
+      "again": "Ver otra vez"
+    },
+    "escKey": "Esc",
+    "access": {
+      "title": "Permisos del sistema",
+      "lead": "Concédelos ahora para que todo funcione desde el principio. Nyra solo los usa cuando se lo pides.",
+      "microphone": {
+        "title": "Micrófono",
+        "why": "Para dictar mensajes. Lo que dices se transcribe en tu equipo."
+      },
+      "screen": {
+        "title": "Grabación de pantalla",
+        "why": "Para que Nyra mire tu pantalla cuando se lo pidas, y para las capturas."
+      },
+      "notifications": {
+        "title": "Notificaciones",
+        "why": "Para avisarte cuando termina una respuesta o un comando espera tu aprobación."
+      },
+      "allow": "Permitir",
+      "asking": "Esperando…",
+      "granted": "Concedido",
+      "openSettings": "Abrir Ajustes del Sistema",
+      "notificationsDenied": "Actívalas en los ajustes del sistema",
+      "screenReopen": "Después de permitir la grabación de pantalla o la accesibilidad, el sistema puede pedirte que vuelvas a abrir Nyra.",
+      "later": "Si dejas alguno para después, Nyra lo pedirá la primera vez que lo necesite.",
+      "accessibility": {
+        "title": "Accesibilidad",
+        "why": "Para que Nyra pueda usar tu ratón y teclado cuando le pidas que haga una tarea por ti."
+      }
+    }
+  },
+  "screen": {
+    "strip": {
+      "label": "Tu pantalla",
+      "asking": "Nyra quiere ver tu pantalla",
+      "askingHint": "Solo en esta conversación. Captura la pantalla donde tengas el ratón.",
+      "allow": "Permitir",
+      "deny": "No",
+      "marks_one": "{{count, number}} marca en tu pantalla",
+      "marks_many": "{{count, number}} marcas en tu pantalla",
+      "marks_other": "{{count, number}} marcas en tu pantalla",
+      "marksHint": "Haz clic en una nota para quitarla.",
+      "clear": "Quitar las marcas",
+      "askingAct": "Nyra quiere usar tu ratón y teclado",
+      "askingActHint": "Solo para esta tarea. Verás su puntero y podrás seguir usando tu ratón. «Detener» la para.",
+      "acting": "Nyra está usando tu ratón y teclado",
+      "actingHint": "Puedes seguir usando tu ratón. «Detener» la para cuando quieras.",
+      "stop": "Detener"
+    },
+    "card": {
+      "label": "Lo que Nyra hizo en tu pantalla"
+    },
+    "step": {
+      "look": "Miró tu pantalla",
+      "point": "Señaló «{{target}}»",
+      "unpoint": "Quitó las marcas",
+      "watch": "Esperó a que: {{target}}",
+      "click": "Hizo clic: {{target}}",
+      "type": "Escribió «{{target}}»",
+      "key": "Pulsó {{target}}",
+      "scroll": "Desplazó sobre «{{target}}»"
+    },
+    "outcome": {
+      "running": "En curso…",
+      "ok": "Hecho",
+      "missing": "No lo encontró",
+      "refused": "No lo permitiste",
+      "failed": "Falló",
+      "done": "Dijiste que ya estaba",
+      "ended": "Terminaste la guía",
+      "idle": "Sin cambios en 5 minutos",
+      "taken": "La detuviste"
+    },
+    "marks": {
+      "close": "Quitar esta marca"
+    },
+    "guide": {
+      "step": "Paso {{step}}",
+      "checking": "Mirando lo que hiciste…",
+      "done": "Ya lo hice",
+      "end": "Terminar"
+    },
+    "pointer": {
+      "typing": "Escribiendo…",
+      "keys": "Pulsando {{keys}}",
+      "scrolling": "Desplazando…",
+      "label": "Puntero de Nyra",
+      "thinking": "Pensando…",
+      "farewell": "Listo. Vuelve a Nyra para ver la respuesta"
+    }
+  },
+  "updates": {
+    "notice": {
+      "label": "Actualización",
+      "available": "Hay una versión nueva: {{version}}",
+      "youHave": "Tienes la {{version}}",
+      "skipped_one": "Tienes la {{version}} · {{count, number}} versión nueva",
+      "skipped_many": "Tienes la {{version}} · {{count, number}} versiones nuevas",
+      "skipped_other": "Tienes la {{version}} · {{count, number}} versiones nuevas",
+      "seeNotes": "Ver novedades",
+      "later": "Más tarde",
+      "update": "Actualizar",
+      "download": "Descargar",
+      "downloading": "Descargando la {{version}}",
+      "cancel": "Cancelar",
+      "ready": "Lista para instalar",
+      "readyText": "Nyra se reiniciará para terminar.",
+      "onQuit": "Al cerrar Nyra",
+      "onQuitDone": "Se instalará al cerrar Nyra",
+      "restart": "Reiniciar ahora",
+      "failed": "No se pudo descargar la actualización",
+      "failedAt": "La descarga se cortó al {{percent}} %.",
+      "byHand": "Descargarla a mano",
+      "retry": "Reintentar",
+      "updated": "Nyra se actualizó a la {{version}}",
+      "close": "Cerrar",
+      "progress": "{{percent}} % · {{done}} de {{total}}"
+    },
+    "notes": {
+      "title": "Nyra {{version}}",
+      "titleUpdated": "Novedades de la {{version}}",
+      "newVersions_one": "{{count, number}} versión nueva",
+      "newVersions_many": "{{count, number}} versiones nuevas",
+      "newVersions_other": "{{count, number}} versiones nuevas",
+      "version": "Versión {{version}}",
+      "label": "Notas de la versión",
+      "empty": "No se pudieron cargar las notas de esta versión.",
+      "groups": {
+        "new": "Novedades",
+        "improvements": "Mejoras",
+        "fixes": "Arreglos"
+      },
+      "updateNow": "Actualizar ahora",
+      "downloading": "Descargando la {{version}}…",
+      "keepsGoing": "Puedes cerrar esta ventana, la descarga sigue.",
+      "readyText": "Nyra se reiniciará para terminar. Tus conversaciones se quedan como están.",
+      "package": "Esta instalación (.deb o .rpm) se actualiza con tu gestor de paquetes.",
+      "upToDate": "Ya tienes la {{version}}",
+      "close": "Cerrar (Esc)"
+    },
+    "settings": {
+      "title": "Actualizaciones",
+      "description": "Cómo te enteras de las versiones nuevas de Nyra.",
+      "statusOn": "Al abrir",
+      "statusOff": "A mano",
+      "auto": "Buscar actualizaciones al abrir Nyra",
+      "autoHint": "Nyra comprobará si hay una versión nueva cada vez que se abra.",
+      "version": "Nyra Bot · v{{version}}",
+      "package": "Se actualiza con tu gestor de paquetes",
+      "checkNow": "Buscar ahora",
+      "checking": "Buscando…",
+      "latest": "Tienes la última versión.",
+      "available": "Hay una versión nueva: {{version}}",
+      "failed": "No se pudo comprobar.",
+      "failedHint": "Revisa tu conexión y vuelve a intentarlo.",
+      "dot": "Hay una actualización"
+    }
+  }
+}

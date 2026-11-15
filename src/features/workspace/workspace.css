@@ -1,0 +1,589 @@
+/* A folder connected to a conversation: the chip, the notices, the menu, the steps while writing and what a reply
+   consulted. Its color is the information cyan, with the open folder icon (nyra_design/nyra-carpeta.html). */
+
+.workspace-spinner {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  border: 2px solid var(--workspace-line);
+  border-top-color: var(--workspace);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workspace-spinner {
+    animation: none;
+    border-color: var(--workspace);
+  }
+}
+
+/* The chip in the composer bar, next to the model */
+
+.workspace-chip-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  height: 32px;
+  margin-left: 4px;
+  border: 1px solid var(--workspace-line);
+  border-radius: 999px;
+  background: var(--workspace-tint);
+}
+
+.workspace-chip-wrap.problem {
+  border-color: rgba(var(--warning-rgb), 0.5);
+  background: rgba(var(--warning-rgb), 0.08);
+}
+
+.workspace-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  max-width: 240px;
+  height: 100%;
+  padding: 0 4px 0 10px;
+  border: 0;
+  border-radius: 999px 0 0 999px;
+  background: none;
+  color: var(--text);
+  font-size: calc(12.5px * var(--font-scale));
+  font-weight: 700;
+}
+
+/* Without the button to disconnect after it (a project's folder), the name needs room before the edge */
+.workspace-chip.alone {
+  padding-right: 12px;
+  border-radius: 999px;
+}
+
+.workspace-chip > svg {
+  flex-shrink: 0;
+  color: var(--workspace);
+}
+
+.workspace-chip-wrap.problem .workspace-chip > svg {
+  color: var(--warning-text);
+}
+
+.workspace-chip-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workspace-chip-note {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.workspace-chip-remove {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  margin-right: 4px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--text-muted);
+}
+
+.workspace-chip-remove:hover {
+  background: var(--surface-raised);
+  color: var(--text);
+}
+
+.workspace-details {
+  position: absolute;
+  left: -1px;
+  z-index: 6;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: 0 18px 40px var(--shadow-strong);
+  font-size: calc(13px * var(--font-scale));
+}
+
+.workspace-details.up {
+  bottom: calc(100% + 8px);
+}
+
+.workspace-details.down {
+  top: calc(100% + 8px);
+}
+
+.workspace-details[data-align="end"] {
+  right: -1px;
+  left: auto;
+}
+
+.workspace-details-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.workspace-details-header > svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--workspace);
+}
+
+.workspace-details-header > span {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.workspace-details-header strong {
+  font-size: calc(14px * var(--font-scale));
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.workspace-details-header small {
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+}
+
+.workspace-details-path,
+.workspace-notice-path {
+  overflow-wrap: anywhere;
+}
+
+.workspace-details-path {
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-size: calc(12px * var(--font-scale));
+}
+
+.workspace-details-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.workspace-details-stats span {
+  display: flex;
+  flex-direction: column;
+  color: var(--text-muted);
+  font-size: calc(11.5px * var(--font-scale));
+  line-height: 1.3;
+}
+
+.workspace-details-stats strong {
+  color: var(--text);
+  font-size: calc(15px * var(--font-scale));
+  font-variant-numeric: tabular-nums;
+}
+
+.workspace-details-privacy {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  color: var(--text-soft);
+  line-height: 1.45;
+}
+
+.workspace-details-meaning {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+}
+
+.workspace-details-meaning svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--workspace);
+}
+
+.workspace-details-privacy svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--info);
+}
+
+.workspace-details-privacy.local svg {
+  color: var(--success);
+}
+
+.workspace-details-ignored {
+  color: var(--text-soft);
+}
+
+.workspace-details-ignored summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.workspace-details-ignored ul {
+  margin: 6px 0;
+  padding-left: 18px;
+  line-height: 1.5;
+}
+
+.workspace-details-ignored p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+}
+
+.workspace-details-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding-top: 10px;
+  border-top: 1px solid var(--surface-raised);
+}
+
+.workspace-details-actions .ghost-button {
+  margin-right: auto;
+  align-self: center;
+  font-size: calc(13px * var(--font-scale));
+}
+
+/* Notices above the composer */
+
+.workspace-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid var(--workspace-line);
+  border-radius: 12px;
+  background: var(--workspace-tint);
+  color: var(--text-soft);
+  font-size: calc(13px * var(--font-scale));
+  line-height: 1.5;
+}
+
+.workspace-notice > svg,
+.workspace-notice > .workspace-spinner {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--workspace);
+}
+
+.workspace-notice.warning {
+  border-color: rgba(var(--warning-rgb), 0.45);
+  background: rgba(var(--warning-rgb), 0.08);
+}
+
+.workspace-notice.warning > svg {
+  color: var(--warning-text);
+}
+
+.workspace-notice-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.workspace-notice-body p {
+  margin: 0;
+}
+
+.workspace-notice-body strong {
+  color: var(--text);
+}
+
+.workspace-notice-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.workspace-notice-actions .ghost-button {
+  align-self: center;
+  font-size: calc(13px * var(--font-scale));
+}
+
+
+/* The "+" menu */
+
+.menu-option.workspace > svg {
+  color: var(--workspace);
+}
+
+.menu-workspace {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 320px;
+  margin: 4px 0 2px;
+  padding: 8px 10px;
+  border: 1px solid var(--workspace-line);
+  border-radius: 10px;
+  background: var(--workspace-tint);
+  font-size: calc(14px * var(--font-scale));
+  font-weight: 600;
+}
+
+.menu-workspace > svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--workspace);
+}
+
+.menu-workspace .menu-option-text {
+  min-width: 0;
+}
+
+.menu-workspace-path {
+  overflow: hidden;
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-size: calc(11.5px * var(--font-scale));
+  font-weight: 400;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  direction: rtl;
+  text-align: left;
+}
+
+.menu-option.sub {
+  min-height: 36px;
+  padding-left: 36px;
+}
+
+.menu-option.danger {
+  color: var(--danger);
+}
+
+/* While writing: each step on its own line */
+
+.workspace-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 560px;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--surface-raised);
+  border-radius: 12px;
+  background: var(--surface);
+  list-style: none;
+  font-size: calc(12.5px * var(--font-scale));
+}
+
+.workspace-step {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  color: var(--text-soft);
+}
+
+.workspace-step > svg {
+  flex-shrink: 0;
+  color: var(--workspace);
+}
+
+.workspace-step.running {
+  color: var(--text);
+}
+
+.workspace-step.changed > svg,
+.workspace-step.changed .workspace-step-text {
+  color: var(--warning-text);
+}
+
+.workspace-step.skipped > svg {
+  color: var(--text-muted);
+}
+
+.workspace-step.failed > svg {
+  color: var(--warning-text);
+}
+
+.workspace-step.earlier {
+  padding-left: 21px;
+  color: var(--text-muted);
+}
+
+.workspace-step-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.workspace-step-text .mono,
+.workspace-file-path {
+  font-size: 0.95em;
+}
+
+.workspace-step-detail {
+  color: var(--text-muted);
+}
+
+/* What a reply consulted */
+
+.workspace-consult {
+  position: relative;
+  align-self: flex-start;
+  max-width: 100%;
+}
+
+.reply-summary-icon.workspace {
+  color: var(--workspace);
+}
+
+.workspace-maxed-tag {
+  color: var(--warning-text);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.workspace-consult-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 6;
+  width: 400px;
+  max-width: calc(100vw - 32px);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: 0 18px 40px var(--shadow-strong);
+}
+
+.workspace-consult-popover[data-align="end"] {
+  right: 0;
+  left: auto;
+}
+
+.workspace-consult-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 340px;
+  overflow-y: auto;
+  padding: 10px 8px;
+}
+
+.workspace-consult-body h4 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 6px 4px;
+  color: var(--text-muted);
+  font-size: calc(11.5px * var(--font-scale));
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.workspace-consult-body ul {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.workspace-file {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px;
+  border-radius: 8px;
+}
+
+.workspace-file:hover {
+  background: var(--surface-hover);
+}
+
+.workspace-file > svg {
+  flex-shrink: 0;
+  color: var(--workspace);
+}
+
+.workspace-file.skipped > svg {
+  color: var(--text-muted);
+}
+
+.workspace-file-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.workspace-file-path {
+  overflow: hidden;
+  color: var(--text);
+  font-family: var(--font-mono);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workspace-file-dir {
+  color: var(--text-muted);
+}
+
+.workspace-file-detail {
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+}
+
+.workspace-file-actions {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.workspace-file-actions .icon-button.small {
+  width: 30px;
+  height: 30px;
+}
+
+.workspace-consult-empty,
+.workspace-consult-folders {
+  margin: 0 6px;
+  color: var(--text-muted);
+  font-size: calc(12.5px * var(--font-scale));
+}
+
+.workspace-consult-folders {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  color: var(--text-soft);
+}
+
+/* The model's plan between its requests: its own words, so they read differently from the steps */
+.workspace-step.note {
+  color: var(--text);
+  font-style: italic;
+}
+
+.workspace-step.note > svg {
+  color: var(--accent);
+}
+
+.workspace-step.compacted > svg {
+  color: var(--text-muted);
+}

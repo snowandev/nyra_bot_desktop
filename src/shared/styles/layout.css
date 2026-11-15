@@ -1,0 +1,24 @@
+/* Layout */
+
+.app {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+  /* Same as html and body (base.css): never scrollable, even by code */
+  overflow: clip;
+}
+
+.main {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}

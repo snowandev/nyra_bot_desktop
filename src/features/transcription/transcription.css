@@ -1,0 +1,228 @@
+/* Settings → Proveedores de audio: the model, its download, and telling speakers apart */
+
+.transcription-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Under «Transcribir audio» in Funciones de Nyra: where its options are */
+.feature-settings-link {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 4px;
+  margin: 4px 0 0 -6px;
+  padding: 2px 6px;
+  border: 0;
+  border-radius: 7px;
+  background: none;
+  color: var(--accent);
+  font-size: calc(12.5px * var(--font-scale));
+  font-weight: 800;
+}
+
+.feature-settings-link:hover {
+  background: var(--accent-tint);
+  color: var(--text);
+}
+
+.transcription-models {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.transcription-model {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+}
+
+.transcription-model.selected {
+  border-color: var(--accent);
+  background: var(--accent-tint);
+}
+
+.transcription-model-pick {
+  flex: 1 1 220px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+  text-align: left;
+}
+
+.transcription-model-pick b {
+  color: var(--text);
+  font-size: calc(13.5px * var(--font-scale));
+}
+
+.transcription-model-state {
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.transcription-model.selected .transcription-model-state {
+  color: var(--accent);
+}
+
+/* The Whisper models: one added comes from a repository or a folder, shown in full on hover */
+.transcription-model-origin {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.transcription-empty {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: calc(13px * var(--font-scale));
+}
+
+.transcription-add-button {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.transcription-add {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+}
+
+.transcription-add-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.transcription-add-row label {
+  color: var(--text);
+  font-size: calc(13px * var(--font-scale));
+  font-weight: 700;
+}
+
+.transcription-add-field {
+  display: flex;
+  gap: 8px;
+}
+
+.transcription-add-field input {
+  flex: 1;
+  min-width: 0;
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--border-input);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: calc(12.5px * var(--font-scale));
+}
+
+.transcription-add-field input::placeholder {
+  font-family: var(--font-app);
+}
+
+.transcription-add-field input:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.transcription-add-hint {
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+}
+
+.transcription-add-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.transcription-add-actions .outline-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.transcription-adding {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+  font-weight: 700;
+}
+
+.transcription-adding .progress-bar {
+  flex: 1 1 160px;
+}
+
+.transcription-error {
+  margin: 0;
+  color: var(--danger);
+  font-size: calc(12.5px * var(--font-scale));
+}
+
+.transcription-speakers {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.transcription-speakers > span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+}
+
+.transcription-speakers b {
+  color: var(--text);
+  font-size: calc(13.5px * var(--font-scale));
+}
+
+/* Above the composer while a reply transcribes an audio */
+.transcription-strip {
+  margin-bottom: 8px;
+  border-color: var(--workspace-line);
+}
+
+.transcription-strip > svg {
+  flex-shrink: 0;
+  color: var(--workspace);
+}
+
+.transcription-strip-text {
+  flex: 1 1 200px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.transcription-strip-text b {
+  overflow-wrap: anywhere;
+  font-weight: 800;
+}
+

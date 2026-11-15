@@ -1,0 +1,96 @@
+# Builds Nyra for macOS, Windows and Linux when a version tag is pushed (git tag v0.9.1 && git push origin v0.9.1),
+# and leaves a draft release with the installers, the updater's latest.json and changelog.json. Publishing the
+# draft is what makes the new version reach the users.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  notes:
+    runs-on: ubuntu-22.04
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+      # Fails when the tag isn't the app's version or a changelog lacks it, before anything is built
+      - run: node tools/release/changelog.ts "${{ steps.version.outputs.version }}" release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-notes
+          path: release/
+
+  build:
+    needs: notes
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest
+            args: --target aarch64-apple-darwin
+          - platform: macos-latest
+            args: --target x86_64-apple-darwin
+          - platform: ubuntu-22.04
+            args: ""
+          - platform: windows-latest
+            args: ""
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-notes
+          path: release
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+      - name: Linux libraries
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf libasound2-dev xdg-utils
+      - run: npm ci
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # The key that signs the updates; its public half is in tauri.conf.json
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          tagName: v__VERSION__
+          releaseName: Nyra Bot v__VERSION__
+          releaseDraft: true
+          prerelease: false
+          args: ${{ matrix.args }} --config src-tauri/tauri.release.conf.json
+
+  publish-notes:
+    needs: [notes, build]
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-notes
+          path: release
+      # The notes go on the release page, and changelog.json beside the installers for Nyra to read
+      - env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: v${{ needs.notes.outputs.version }}
+        run: |
+          gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --notes-file release/release-notes.md
+          gh release upload "$TAG" release/changelog.json --repo "$GITHUB_REPOSITORY" --clobber

@@ -1,0 +1,490 @@
+/* Context usage */
+
+.context-indicator {
+  position: relative;
+  display: flex;
+  --level: var(--accent);
+}
+
+.context-indicator.high {
+  --level: var(--highlight);
+}
+
+.context-indicator.critical {
+  --level: var(--danger);
+}
+
+.context-ring-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  cursor: default;
+}
+
+.context-ring-button:hover {
+  background: var(--surface-hover);
+}
+
+.context-ring {
+  transform: rotate(-90deg);
+}
+
+.context-ring circle {
+  fill: none;
+  stroke-width: 3;
+}
+
+.context-track {
+  stroke: var(--border-strong);
+}
+
+.context-track.empty {
+  stroke: var(--border-control);
+  stroke-dasharray: 2.4 3.2;
+}
+
+.context-arc {
+  stroke: var(--level);
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.4s ease;
+}
+
+.context-percent {
+  font-size: calc(12px * var(--font-scale));
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--level);
+}
+
+/* The breakdown, in a read-only tooltip on hover or focus */
+.context-tooltip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  z-index: 5;
+  width: 330px;
+  max-width: calc(100vw - 32px);
+  display: flex;
+  flex-direction: column;
+  padding: 12px 12px 10px;
+  border-radius: 12px;
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border-strong);
+  box-shadow: 0 12px 30px var(--shadow-strong);
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+  line-height: 1.4;
+  text-align: left;
+  transform: translateX(-50%);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.context-tooltip::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  transform: rotate(45deg);
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border-strong);
+  border-bottom: 1px solid var(--border-strong);
+}
+
+.context-indicator:hover .context-tooltip,
+.context-indicator:focus-within .context-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.context-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 0 2px;
+}
+
+.context-head-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.context-head-text b {
+  color: var(--text);
+  font-size: calc(13.5px * var(--font-scale));
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.context-head-text small {
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+  font-variant-numeric: tabular-nums;
+}
+
+.context-level-tag {
+  height: 20px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-size: calc(11px * var(--font-scale));
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.context-level-tag.high {
+  border: 1px solid rgba(var(--highlight-rgb), 0.38);
+  background: rgba(var(--highlight-rgb), 0.08);
+  color: var(--highlight);
+}
+
+.context-level-tag.critical {
+  border: 1px solid rgba(var(--danger-rgb), 0.4);
+  background: rgba(var(--danger-rgb), 0.09);
+  color: var(--danger);
+}
+
+/* Each part has its color, the same as elsewhere in Nyra (skills violet, memories pink, the folder cyan) */
+.context-indicator {
+  --part-conversation: var(--text-soft);
+  --part-files: var(--success);
+  --part-folder: var(--workspace);
+  --part-skills: var(--accent);
+  --part-memories: var(--memory);
+  --part-instructions: var(--text-muted);
+}
+
+.context-stack {
+  height: 10px;
+  display: flex;
+  gap: 2px;
+  margin: 10px 2px 4px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--surface-raised);
+}
+
+.context-stack i {
+  display: block;
+  height: 100%;
+  min-width: 3px;
+}
+
+.context-stack .conversation { background: var(--part-conversation); }
+.context-stack .files { background: var(--part-files); }
+.context-stack .folder { background: var(--part-folder); }
+.context-stack .skills { background: var(--part-skills); }
+.context-stack .memories { background: var(--part-memories); }
+.context-stack .instructions { background: var(--part-instructions); }
+
+/* No known end: the bar trails off */
+.context-stack.open-ended {
+  position: relative;
+  background: transparent;
+}
+
+.context-stack.open-ended::after {
+  content: "";
+  flex: 1;
+  min-width: 18px;
+  align-self: center;
+  border-top: 2px dashed var(--border-strong);
+}
+
+.context-stack.empty {
+  background: transparent;
+  border: 1.5px dashed var(--border-strong);
+}
+
+.context-marks {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 2px 8px;
+  color: var(--text-muted);
+  font-size: calc(10.5px * var(--font-scale));
+  font-variant-numeric: tabular-nums;
+}
+
+.context-parts-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 4px 3px;
+  color: var(--text-muted);
+  font-size: calc(11px * var(--font-scale));
+  font-weight: 800;
+}
+
+.context-parts {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.context-part {
+  width: 100%;
+  min-height: 28px;
+  display: grid;
+  grid-template-columns: 14px 1fr auto 46px;
+  align-items: center;
+  column-gap: 8px;
+  padding: 3px 6px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-soft);
+  font-family: var(--font-app);
+  font-size: calc(12.5px * var(--font-scale));
+  font-variant-numeric: tabular-nums;
+  text-align: left;
+}
+
+.context-part-name {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.context-part-name small {
+  display: block;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: calc(11px * var(--font-scale));
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.context-part-tokens,
+.context-part-share {
+  text-align: right;
+}
+
+.context-part-share {
+  color: var(--text-muted);
+}
+
+.context-part.dominant {
+  background: var(--surface);
+}
+
+.context-part.dominant .context-part-name,
+.context-part.dominant .context-part-tokens {
+  font-weight: 800;
+}
+
+.context-part.free {
+  margin-top: 3px;
+  padding-top: 6px;
+  border-top: 1px solid var(--surface-raised);
+  border-radius: 0 0 8px 8px;
+}
+
+.context-part.free .context-part-name {
+  color: var(--text-soft);
+}
+
+/* Color is never the only clue: each part also has its own shape */
+.context-swatch {
+  width: 12px;
+  height: 12px;
+  display: block;
+}
+
+.context-swatch.conversation { background: var(--part-conversation); border-radius: 3px; }
+.context-swatch.files { background: var(--part-files); border-radius: 2px; transform: scale(0.9); }
+.context-swatch.folder { background: var(--part-folder); border-radius: 50%; }
+.context-swatch.skills { background: var(--part-skills); border-radius: 2px; transform: rotate(45deg) scale(0.78); }
+.context-swatch.memories {
+  background: var(--part-memories);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 72%, 0 100%);
+}
+.context-swatch.instructions { height: 6px; margin: 3px 0; background: var(--part-instructions); border-radius: 3px; }
+.context-swatch.free { border: 1.5px dashed var(--text-muted); border-radius: 3px; }
+
+.context-suggestion {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 8px 2px 2px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  color: var(--text-soft);
+  font-size: calc(12px * var(--font-scale));
+  line-height: 1.45;
+}
+
+.context-suggestion > svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.context-suggestion b {
+  color: var(--text);
+}
+
+.context-suggestion.info {
+  border: 1px dashed var(--border-strong);
+}
+
+.context-suggestion.info > svg {
+  color: var(--text-muted);
+}
+
+.context-suggestion.high {
+  border: 1px solid rgba(var(--highlight-rgb), 0.38);
+  background: rgba(var(--highlight-rgb), 0.08);
+}
+
+.context-suggestion.high > svg {
+  color: var(--highlight);
+}
+
+.context-suggestion.critical {
+  border: 1px solid rgba(var(--danger-rgb), 0.4);
+  background: rgba(var(--danger-rgb), 0.09);
+}
+
+.context-suggestion.critical > svg {
+  color: var(--danger);
+}
+
+.context-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 8px 2px 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--surface-raised);
+  color: var(--text-muted);
+  font-size: calc(11.5px * var(--font-scale));
+}
+
+.context-foot > span {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.context-foot svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.context-coming {
+  margin: 6px 2px 0;
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .context-tooltip {
+    transition: none;
+  }
+}
+
+.summary-status {
+  --level: var(--accent);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(var(--accent-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-rgb), 0.35);
+}
+
+.summary-status.error {
+  --level: var(--danger);
+  background: rgba(var(--danger-rgb), 0.08);
+  border-color: rgba(var(--danger-rgb), 0.4);
+}
+
+.summary-status-icon {
+  flex-shrink: 0;
+  color: var(--level);
+}
+
+.summary-status-text {
+  /* The retry button wraps below the text instead of squeezing it */
+  flex: 1 1 240px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.summary-status-title {
+  font-size: calc(14px * var(--font-scale));
+  font-weight: 800;
+  color: var(--level);
+}
+
+.summary-status-detail {
+  font-size: calc(13px * var(--font-scale));
+  color: var(--text-soft);
+}
+
+.primary-button.summary-status-action,
+.ghost-button.summary-status-action {
+  min-height: 40px;
+  padding: 0 14px;
+  font-size: calc(13px * var(--font-scale));
+  white-space: nowrap;
+}
+
+.summary-divider summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  list-style: none;
+}
+
+.summary-divider summary::-webkit-details-marker {
+  display: none;
+}
+
+.summary-divider summary:hover {
+  color: var(--text-soft);
+}
+
+.summary-divider .line {
+  flex: 1;
+  height: 1px;
+  background: var(--divider);
+}
+
+.summary-text {
+  margin: 12px 0 0;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text-soft);
+  font-family: var(--font-chat);
+  font-size: calc(14px * var(--font-scale));
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

@@ -1,0 +1,94 @@
+/* Sharing a reply as an image */
+
+.share-menu {
+  position: relative;
+}
+
+.share-menu .icon-button.share-done {
+  color: var(--success);
+}
+
+/* Off screen but laid out, so the capture can read it; it only exists while capturing */
+.share-stage {
+  position: fixed;
+  top: 0;
+  left: -10000px;
+  pointer-events: none;
+}
+
+.share-card {
+  width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 28px 32px 22px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-app);
+}
+
+.share-card-files {
+  max-width: 78%;
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+  text-align: right;
+}
+
+/* An image can't scroll, and WebKit paints a scrolling box unscaled inside the capture (out of place and tiny):
+   wide code and tables wrap instead */
+.share-card .markdown pre {
+  overflow: visible;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.share-card .table-wrapper,
+.share-card .diagram-picture {
+  overflow: visible;
+}
+
+/* The same goes for a document's card, which clips only to round its corners: its parts round them instead */
+.share-card .document-card {
+  overflow: visible;
+}
+
+/* WebKit also paints a positioned box on its own layer, unscaled: the document's preview (relative only for the fade
+   of a folded one, which an image never is) and the citation numbers stay in the flow */
+.share-card .document-card-preview,
+.share-card .markdown a.citation {
+  position: static;
+}
+
+.share-card .document-card-header {
+  border-radius: 13px 13px 0 0;
+}
+
+.share-card .document-card-preview {
+  border-radius: 0 0 13px 13px;
+}
+
+.share-card .markdown th,
+.share-card .markdown td code {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* The diagram's Diagrama · Código tabs and a block's views are buttons, and nothing can be chosen in an image; nor
+   are the notes by them for it */
+.share-card .code-block-tabs,
+.share-card .code-format-note {
+  display: none;
+}
+
+/* Nothing can be clicked in an image */
+.share-card .table-actions,
+.share-card .table-sort svg {
+  display: none;
+}
+
+/* Hidden but still taking its place: the code header slides under this row, so removing it would shift the header
+   up over the text before the block */
+.share-card .code-block-copy {
+  position: static;
+  visibility: hidden;
+}

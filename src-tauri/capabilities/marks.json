@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "marks",
+  "description": "The window over the screen where Nyra draws its marks: it only hears which marks to draw",
+  "windows": ["marks"],
+  "permissions": ["core:event:allow-listen", "core:event:allow-unlisten"]
+}

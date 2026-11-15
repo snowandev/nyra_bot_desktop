@@ -1,0 +1,31 @@
+/* Links and images written by the model */
+
+.markdown a.link-failed {
+  color: var(--danger);
+}
+
+.unsafe-link {
+  text-decoration: underline dotted;
+}
+
+/* An image of the conversation that a document shows: whole, as wide as the text */
+.conversation-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 8px 0;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+}
+
+.external-image {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-size: calc(13px * var(--font-scale));
+}

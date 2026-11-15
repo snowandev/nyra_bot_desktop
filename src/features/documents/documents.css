@@ -1,0 +1,119 @@
+/* Markdown documents written by the model, shown as files inside the reply */
+
+.document-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--surface-raised);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.document-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px 10px 12px;
+  border-bottom: 1px solid var(--surface-raised);
+}
+
+.document-card-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent);
+}
+
+.document-card-heading {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.document-card-title {
+  overflow: hidden;
+  font-size: calc(14px * var(--font-scale));
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.document-card-meta {
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.document-card-actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* "Guardar…" with its formats; the menu opens toward the inside of the card */
+.save-document {
+  position: relative;
+}
+
+.save-document-menu {
+  left: auto;
+  right: 0;
+}
+
+.document-card-actions .copy-button.with-label {
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.document-card-actions .copy-button.with-label:hover:not(:disabled) {
+  background: var(--surface-raised);
+}
+
+.document-card-writing {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-right: 6px;
+  color: var(--info);
+  font-size: calc(12px * var(--font-scale));
+  font-weight: 700;
+}
+
+.document-card-preview {
+  position: relative;
+  padding: 16px 18px;
+  background: var(--bg);
+}
+
+/* About fourteen lines visible, fading out, until the user expands it */
+.document-card-preview.collapsed {
+  max-height: 340px;
+  overflow: hidden;
+}
+
+.document-card-preview.collapsed::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 72px;
+  background: linear-gradient(to bottom, transparent, var(--bg));
+  pointer-events: none;
+}
+
+.document-card-toggle {
+  align-self: flex-start;
+  padding: 10px 18px;
+}

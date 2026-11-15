@@ -1,0 +1,348 @@
+/* General settings */
+
+.theme-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
+}
+
+.theme-option {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  background: var(--bg);
+  color: var(--text);
+  text-align: left;
+}
+
+.theme-option:hover {
+  border-color: var(--border-control);
+}
+
+.theme-option.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.theme-preview-frame {
+  display: flex;
+  height: 96px;
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+}
+
+.theme-preview {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  background: var(--bg);
+}
+
+.theme-preview-sidebar {
+  width: 28%;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+}
+
+.theme-preview-chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+}
+
+.theme-preview-bubble {
+  align-self: flex-end;
+  width: 45%;
+  height: 12px;
+  border-radius: 6px;
+  background: var(--surface-raised);
+}
+
+.theme-preview-line {
+  width: 80%;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--text-muted);
+  opacity: 0.6;
+}
+
+.theme-preview-line.short {
+  width: 55%;
+}
+
+.theme-preview-composer {
+  margin-top: auto;
+  height: 16px;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  background: var(--surface-raised);
+  box-shadow: inset -14px 0 0 var(--accent);
+}
+
+.theme-option-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4px;
+  font-size: calc(14px * var(--font-scale));
+  font-weight: 700;
+}
+
+.theme-option-check {
+  margin-left: auto;
+  color: var(--accent);
+}
+
+.accent-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.accent-option {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 50%;
+  color: var(--text-on-accent);
+  cursor: pointer;
+}
+
+.accent-option:hover {
+  transform: scale(1.06);
+}
+
+/* A ring with a gap, so it reads on any of the colors */
+.accent-option.selected {
+  box-shadow:
+    0 0 0 3px var(--bg),
+    0 0 0 5px var(--text-soft);
+}
+
+.settings-subsection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.settings-subsection-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.settings-subsection-title {
+  margin: 0;
+  font-size: calc(15px * var(--font-scale));
+  font-weight: 700;
+}
+
+.font-size-setting {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1px solid var(--divider);
+  border-radius: 12px;
+  background: var(--bg);
+}
+
+.font-size-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.font-size-value {
+  color: var(--accent);
+  font-size: calc(13px * var(--font-scale));
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.font-size-reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.font-size-control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.font-size-control input {
+  flex: 1;
+  min-width: 0;
+  accent-color: var(--accent);
+}
+
+/* Fixed sizes on purpose: the two letters show the range, so they must not scale themselves */
+.font-size-glyph {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-soft);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.font-size-glyph:hover:not(:disabled) {
+  background: var(--surface-raised);
+  color: var(--text);
+}
+
+.font-size-glyph:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.font-size-glyph.small {
+  font-size: 12px;
+}
+
+.font-size-glyph.large {
+  font-size: 20px;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--bg);
+  border: 1px solid var(--divider);
+}
+
+.setting-row-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.setting-row-title {
+  font-size: calc(14px * var(--font-scale));
+  font-weight: 700;
+}
+
+.setting-row-description {
+  font-size: calc(13px * var(--font-scale));
+  color: var(--text-placeholder);
+}
+
+/* Features of Nyra that need the chosen model, and so spend its tokens */
+.setting-row-title .uses-model {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+  padding: 1px 8px;
+  border: 1px solid var(--accent-line);
+  border-radius: 999px;
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent);
+  font-size: calc(11px * var(--font-scale));
+  font-weight: 800;
+  vertical-align: 1px;
+}
+
+.setting-row-model-use {
+  margin-top: 2px;
+  font-size: calc(12px * var(--font-scale));
+  color: var(--text-muted);
+}
+
+.setting-row-error {
+  margin-top: 4px;
+  font-size: calc(13px * var(--font-scale));
+  color: var(--danger);
+}
+
+.switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+  padding: 0;
+  border: 1px solid var(--border-control);
+  border-radius: 999px;
+  background: var(--surface-hover);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.switch.on {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.switch:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.switch-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--text);
+  transition: transform 0.15s ease;
+}
+
+.switch.on .switch-thumb {
+  transform: translateX(20px);
+  background: var(--text-on-accent);
+}
+
+.notice-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+/* Settings → General → Chat rápido: the quick chat bar's shortcut, or the command a Wayland desktop shortcut runs */
+.shortcut-recorder {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.shortcut-command {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.shortcut-command code {
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: var(--surface-raised);
+  font-family: var(--font-mono);
+  font-size: calc(12px * var(--font-scale));
+  overflow-wrap: anywhere;
+}
+

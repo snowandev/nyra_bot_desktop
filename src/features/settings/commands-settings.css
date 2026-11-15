@@ -1,0 +1,139 @@
+/* Settings → Comandos y atajos: read-only lists of the "/" commands and the keyboard shortcuts */
+
+.command-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.command-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  border: 1px solid var(--surface-raised);
+  border-radius: 14px;
+  background: var(--bg);
+}
+
+.command-card p {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: calc(13.5px * var(--font-scale));
+  line-height: 1.55;
+}
+
+.command-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font-size: calc(14px * var(--font-scale));
+  font-weight: 700;
+}
+
+.command-card-name {
+  padding: 2px 8px;
+  border: 1px solid var(--info);
+  border-radius: 7px;
+  color: var(--info);
+  font-family: var(--font-mono);
+  font-size: calc(13px * var(--font-scale));
+}
+
+.command-card-examples {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+}
+
+.command-card-examples > span {
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+  font-weight: 700;
+}
+
+.command-card-examples code {
+  max-width: 100%;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--surface-raised);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: calc(12.5px * var(--font-scale));
+  overflow-wrap: anywhere;
+}
+
+.command-card .command-card-unavailable {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: calc(12.5px * var(--font-scale));
+}
+
+.command-card-unavailable svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.shortcut-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.shortcut-table td {
+  padding: 10px 4px;
+  border-top: 1px solid var(--divider);
+  vertical-align: top;
+}
+
+.shortcut-table tr:first-child td {
+  border-top: none;
+}
+
+.shortcut-table td:first-child {
+  width: 1%;
+  padding-right: 18px;
+  white-space: nowrap;
+}
+
+.shortcut-keys {
+  display: inline-block;
+  min-width: 34px;
+  padding: 2px 8px;
+  border: 1px solid var(--border-strong);
+  border-bottom-width: 2px;
+  border-radius: 7px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-app);
+  font-size: calc(12.5px * var(--font-scale));
+  font-weight: 700;
+  text-align: center;
+}
+
+.shortcut-action {
+  display: block;
+  font-size: calc(14px * var(--font-scale));
+  font-weight: 600;
+}
+
+.shortcut-detail {
+  display: block;
+  color: var(--text-placeholder);
+  font-size: calc(12.5px * var(--font-scale));
+}
+
+.shortcut-group {
+  margin: 4px 0 -8px;
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}

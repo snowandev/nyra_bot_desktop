@@ -1,0 +1,91 @@
+/* Folders in the sidebar */
+
+/* Always visible, unlike the "⋯" menus: creating folders is what the section is for */
+.section-action {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.section-action:hover {
+  background: var(--border-strong);
+  color: var(--text);
+}
+
+.conversation-row.dragging {
+  opacity: 0.45;
+  outline: 1.5px dashed var(--border-strong);
+  outline-offset: -2px;
+}
+
+/* The image under the pointer while dragging a conversation; placed off screen, the browser only copies it */
+.conversation-drag-ghost {
+  position: fixed;
+  top: -1000px;
+  left: 0;
+  max-width: 220px;
+  height: 36px;
+  padding: 0 14px;
+  overflow: hidden;
+  border: 1px solid rgba(var(--accent-rgb), 0.5);
+  border-radius: 10px;
+  background: var(--surface-raised);
+  color: var(--text);
+  font-family: var(--font-app);
+  font-size: calc(13.5px * var(--font-scale));
+  font-weight: 700;
+  line-height: 36px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.conversation-folder-hint {
+  flex-shrink: 0;
+  max-width: 92px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-muted);
+  font-size: calc(11.5px * var(--font-scale));
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.conversation-folder-hint span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* It gives way to the "⋯" */
+.conversation-row:hover .conversation-folder-hint,
+.conversation-row:focus-within .conversation-folder-hint {
+  display: none;
+}
+
+.folder-empty {
+  margin: 2px 0 4px 16px;
+  padding: 8px 10px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 9px;
+  color: var(--text-muted);
+  font-size: calc(12.5px * var(--font-scale));
+  line-height: 1.45;
+}
+
+.folder-empty strong {
+  color: var(--text-soft);
+}
+
+/* The "Carpetas" section: the button, then each folder, one level in from the section's title */
+.folders-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-left: 10px;
+}

@@ -1,0 +1,72 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  /* Unlike hidden, clip can't be scrolled even by code, so nothing can shift the window's layout.
+     WebViews without it (old WebKitGTK) keep the line above. */
+  overflow: clip;
+  overscroll-behavior: none;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-app);
+  font-size: calc(15px * var(--font-scale));
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+textarea::placeholder,
+input::placeholder {
+  color: var(--text-placeholder);
+}
+
+*:focus-visible {
+  outline: 2px solid var(--accent-secondary);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.accent {
+  color: var(--accent);
+}
+
+/* Nyra's logo, in its own colors whatever the accent */
+.brand-mark {
+  color: var(--brand);
+}
+
+/* The plate the large logo sits on, as in the app's icon */
+.brand-plate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-strong);
+  background: linear-gradient(var(--glyph-plate-from), var(--glyph-plate-to));
+}

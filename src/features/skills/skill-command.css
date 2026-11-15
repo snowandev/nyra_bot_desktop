@@ -1,0 +1,516 @@
+/* Choosing a skill by hand: the "/" list, the pill in the composer and the mark on the sent message */
+
+.skill-command-menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 6;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: 0 18px 40px var(--shadow-strong);
+  /* Never taller than the room on its side (useFitPlacement); the list scrolls inside */
+  max-height: var(--fit-height, 360px);
+  overflow: hidden;
+}
+
+.skill-command-menu[data-placement="up"] {
+  bottom: calc(100% + 6px);
+}
+
+.skill-command-menu[data-placement="down"] {
+  top: calc(100% + 6px);
+}
+
+.skill-command-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px 6px 14px;
+  color: var(--text-muted);
+  font-size: calc(11px * var(--font-scale));
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.skill-command-header .mono {
+  color: var(--text-soft);
+  font-size: calc(11.5px * var(--font-scale));
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.skill-command-list {
+  min-height: 0;
+  max-height: 268px;
+  margin: 0;
+  padding: 0 6px 6px;
+  overflow: auto;
+  list-style: none;
+}
+
+.skill-command-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.skill-command-option[aria-selected="true"] {
+  background: var(--surface-raised);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+/* A command that can't run now (nothing to compact yet) says why instead of its description */
+.skill-command-option[aria-disabled="true"] {
+  cursor: default;
+}
+
+.skill-command-option[aria-disabled="true"] .skill-command-icon,
+.skill-command-option[aria-disabled="true"] .skill-command-text .mono {
+  opacity: 0.55;
+}
+
+.skill-command-group {
+  padding: 8px 10px 4px;
+  color: var(--text-muted);
+  font-size: calc(11px * var(--font-scale));
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.skill-command-icon.command {
+  color: var(--info);
+}
+
+.skill-command-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+
+.skill-command-text .mono {
+  color: var(--text);
+  font-size: calc(13px * var(--font-scale));
+  font-weight: 600;
+}
+
+.skill-command-text mark {
+  border-radius: 3px;
+  background: rgba(var(--accent-rgb), 0.28);
+  color: inherit;
+}
+
+.skill-command-text > span:last-child {
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.skill-command-marked {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 20px;
+  padding: 0 7px;
+  border: 1px solid var(--surface-raised);
+  border-radius: 999px;
+  color: var(--text-soft);
+  font-size: calc(11px * var(--font-scale));
+  font-weight: 800;
+}
+
+.skill-command-marked svg {
+  color: var(--success);
+}
+
+.skill-command-enter {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  opacity: 0;
+}
+
+.skill-command-option[aria-selected="true"] .skill-command-enter {
+  opacity: 1;
+}
+
+/* The key hints push the links to the right */
+.skill-command-footer > span:first-child {
+  flex: 1;
+}
+
+.skill-command-footer {
+  flex-shrink: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 14px 10px;
+  border-top: 1px solid var(--surface-raised);
+  color: var(--text-muted);
+  font-size: calc(11.5px * var(--font-scale));
+}
+
+.skill-command-manage {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--accent-line);
+  border-radius: 9px;
+  background: var(--accent-tint);
+  color: var(--accent);
+  font-size: calc(12.5px * var(--font-scale));
+  font-weight: 800;
+}
+
+.skill-command-manage.link {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: calc(11.5px * var(--font-scale));
+}
+
+.skill-command-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 18px 16px 16px;
+  text-align: center;
+}
+
+.skill-command-empty strong {
+  font-size: calc(14px * var(--font-scale));
+}
+
+.skill-command-empty p {
+  max-width: 340px;
+  margin: 0;
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+}
+
+/* Lower than a file chip and with a solid border, so it reads as "goes with the message" but isn't a file */
+.invoked-skill {
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 4px 0 10px;
+  border: 1.5px solid var(--accent);
+  border-radius: 999px;
+  background: var(--accent-tint-strong);
+  color: var(--text);
+}
+
+.invoked-skill svg {
+  color: var(--accent);
+}
+
+.invoked-skill .mono {
+  font-size: calc(12.5px * var(--font-scale));
+  font-weight: 600;
+}
+
+.invoked-skill button {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-soft);
+}
+
+.invoked-skill button:hover {
+  background: var(--accent-tint);
+  color: var(--text);
+}
+
+.invoked-skill button svg {
+  color: inherit;
+}
+
+.invoked-skill-note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0 6px;
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+}
+
+.invoked-skill-note svg {
+  color: var(--accent);
+}
+
+/* Under a sent message: the skill it was sent with */
+.skill-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 22px;
+  padding: 0 8px;
+  border: 1px solid var(--accent-line);
+  border-radius: 999px;
+  background: var(--accent-tint);
+  color: var(--accent);
+  font-size: calc(11px * var(--font-scale));
+  font-weight: 600;
+}
+
+/* In a reply: one ✦ button for the skills it followed, last on the "Pensó…" / "Buscó…" line or next to the model */
+.skills-used {
+  position: relative;
+  display: inline-flex;
+}
+
+.skills-used-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 30px;
+  min-width: 30px;
+  padding: 0 8px;
+  border: 1px solid var(--accent-line);
+  border-radius: 999px;
+  background: var(--accent-tint);
+  color: var(--accent);
+  font-size: calc(12px * var(--font-scale));
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.skills-used-trigger:hover,
+.skills-used-trigger[aria-expanded="true"] {
+  border-color: var(--accent);
+  background: var(--accent-tint-strong);
+}
+
+.skills-used.compact .skills-used-trigger {
+  height: 24px;
+  min-width: 24px;
+  padding: 0 6px;
+}
+
+.skills-used-tip {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 5;
+  width: max-content;
+  max-width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: 0 18px 40px var(--shadow-strong);
+  color: var(--text);
+  font-size: calc(12px * var(--font-scale));
+  font-weight: 600;
+  line-height: 1.4;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.12s;
+  pointer-events: none;
+}
+
+.skills-used-tip .mono {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--accent);
+}
+
+.skills-used-tip small {
+  color: var(--text-muted);
+  font-size: calc(11px * var(--font-scale));
+}
+
+.skills-used:hover .skills-used-tip,
+.skills-used-trigger:focus-visible + .skills-used-tip {
+  opacity: 1;
+  visibility: visible;
+}
+
+.skills-used-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 6;
+  width: 340px;
+  max-width: calc(100vw - 32px);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: 0 18px 40px var(--shadow-strong);
+}
+
+.skills-used-popover[data-align="end"] {
+  right: 0;
+  left: auto;
+}
+
+.skills-used-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 8px 10px 14px;
+  border-bottom: 1px solid var(--surface-raised);
+}
+
+.skills-used-header strong {
+  display: block;
+  font-size: calc(14px * var(--font-scale));
+  font-weight: 800;
+}
+
+.skills-used-header small {
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+}
+
+.skills-used-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+}
+
+.skills-used-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 10px;
+}
+
+.skill-command-icon,
+.skills-used-icon {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--surface-raised);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--accent);
+}
+
+.skills-used-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  color: var(--text-soft);
+  font-size: calc(12px * var(--font-scale));
+  line-height: 1.4;
+}
+
+.skills-used-name {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  color: var(--text);
+  font-size: calc(13px * var(--font-scale));
+  font-weight: 600;
+}
+
+.skills-used-chosen {
+  height: 18px;
+  padding: 0 7px;
+  border: 1px solid var(--accent-line);
+  border-radius: 999px;
+  color: var(--accent);
+  font-size: calc(10.5px * var(--font-scale));
+  font-weight: 800;
+  line-height: 16px;
+}
+
+.skills-used-text .link-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: calc(12px * var(--font-scale));
+}
+
+.skills-used-footer {
+  margin: 0;
+  padding: 8px 14px 12px;
+  border-top: 1px solid var(--surface-raised);
+  color: var(--text-muted);
+  font-size: calc(12px * var(--font-scale));
+}
+
+/* While writing: a live pill where the ✦ will be */
+.typing-skill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--accent-line);
+  border-radius: 999px;
+  background: var(--accent-tint);
+  color: var(--text-soft);
+  font-size: calc(12.5px * var(--font-scale));
+}
+
+.typing-skill .mono {
+  color: var(--accent);
+}
+
+/* A ring with a violet arc, as in the design */
+.typing-skill-spinner {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  border: 2px solid var(--accent-tint-strong);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typing-skill-spinner {
+    animation: none;
+    border-color: var(--accent);
+  }
+}

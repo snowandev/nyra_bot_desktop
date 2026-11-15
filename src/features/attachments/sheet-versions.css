@@ -1,0 +1,137 @@
+/* Versions of an attached spreadsheet: the card in the reply and the timeline in the Files panel
+   (design: nyra_design/nyra-hojas.html) */
+
+/* Nothing waits for approval, so the border is solid from the start */
+.change-card.sheet-version {
+  border-style: solid;
+  border-color: var(--surface-raised);
+}
+
+.change-card.sheet-version .change-card-icon {
+  color: var(--accent);
+}
+
+.change-tag.copy {
+  border-color: var(--accent-line);
+  background: var(--accent-tint);
+  color: var(--accent);
+}
+
+.sheet-versions {
+  overflow: hidden;
+  border: 1px solid var(--surface-raised);
+  border-radius: 12px;
+  background: var(--surface);
+  list-style: none;
+}
+
+.sheet-versions-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 10px 8px 12px;
+  border-bottom: 1px solid var(--surface-raised);
+}
+
+.sheet-versions-head strong {
+  font-size: calc(12.5px * var(--font-scale));
+}
+
+.sheet-versions-head small,
+.sheet-versions-text small {
+  display: block;
+  color: var(--text-muted);
+  font-size: calc(11.5px * var(--font-scale));
+}
+
+.sheet-versions-icon {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--diff-added-bg);
+  color: var(--diff-added);
+}
+
+.sheet-versions ol {
+  margin: 0;
+  padding: 6px 6px 6px 0;
+  list-style: none;
+}
+
+/* A line of diamonds, Nyra's ornament, from the newest version down to the original */
+.sheet-versions ol li {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 2px 4px 2px 26px;
+  border-radius: 9px;
+}
+
+.sheet-versions ol li::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 12px;
+  border-left: 1.5px solid var(--border-strong);
+}
+
+.sheet-versions ol li:first-child::before {
+  top: 14px;
+}
+
+.sheet-versions ol li:last-child::before {
+  bottom: calc(100% - 14px);
+}
+
+.sheet-versions ol li:only-child::before {
+  display: none;
+}
+
+.sheet-versions-point {
+  position: absolute;
+  top: 10px;
+  left: 8px;
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 2px;
+  background: var(--surface);
+  transform: rotate(45deg);
+}
+
+.sheet-versions ol li.latest {
+  background: var(--accent-tint);
+}
+
+.sheet-versions ol li.latest .sheet-versions-point {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.sheet-versions-text {
+  flex: 1;
+  min-width: 0;
+  padding: 4px 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: calc(12.5px * var(--font-scale));
+  text-align: left;
+  cursor: pointer;
+}
+
+.sheet-versions-latest {
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.sheet-versions-actions {
+  display: flex;
+  flex-shrink: 0;
+}

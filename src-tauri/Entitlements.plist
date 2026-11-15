@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- A signed app runs with the hardened runtime, which keeps the microphone closed (only silence comes in) unless
+	     the app says it uses it, for dictation -->
+	<key>com.apple.security.device.audio-input</key>
+	<true/>
+</dict>
+</plist>

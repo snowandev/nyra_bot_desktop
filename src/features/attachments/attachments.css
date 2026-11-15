@@ -1,0 +1,267 @@
+/* Attachments */
+
+.attachment-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.user-message .attachment-list {
+  justify-content: flex-end;
+  max-width: 78%;
+}
+
+.attachment-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  max-width: 260px;
+  padding: 7px 4px 7px 7px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--surface-raised);
+}
+
+.attachment-chip.loading {
+  width: 320px;
+  max-width: 100%;
+  border-color: var(--border-strong);
+}
+
+.attachment-chip-thumb {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  border: 1px solid var(--surface-raised);
+  object-fit: cover;
+}
+
+.attachment-chip-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  line-height: 1.25;
+}
+
+/* What the user has to do before the file goes on, under its progress */
+.attachment-chip-action {
+  align-self: flex-start;
+  min-height: 28px;
+  margin-top: 4px;
+  padding: 0 10px;
+  border-radius: 8px;
+  font-size: calc(12px * var(--font-scale));
+}
+
+.attachment-chip-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: calc(13px * var(--font-scale));
+  font-weight: 700;
+}
+
+.attachment-chip-meta {
+  font-size: calc(12px * var(--font-scale));
+  color: var(--text-placeholder);
+  white-space: nowrap;
+}
+
+.attachment-chip-spinner {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid var(--surface-raised);
+  background: var(--bg);
+}
+
+.spinner-track {
+  stroke: var(--border-strong);
+}
+
+.spinner-arc {
+  stroke: var(--accent);
+}
+
+.attachment-chip-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.attachment-chip-progress-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: calc(12px * var(--font-scale));
+  white-space: nowrap;
+  color: var(--text-placeholder);
+  font-variant-numeric: tabular-nums;
+}
+
+.attachment-chip-progress-label b {
+  color: var(--text-soft);
+}
+
+.progress-bar {
+  display: block;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--bg);
+}
+
+.progress-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+.remove-button {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-placeholder);
+}
+
+.remove-button:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.composer-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 0 0 6px;
+  font-size: calc(13px * var(--font-scale));
+  color: var(--danger);
+}
+
+.composer-error > svg {
+  flex-shrink: 0;
+}
+
+.composer-error-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.composer-error-help {
+  color: var(--text-muted);
+}
+
+/* Drop overlay: covers the whole chat area, not the sidebar */
+
+.drop-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  padding: 14px;
+  background: var(--overlay);
+  animation: fade-in 0.15s ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.drop-target {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 24px;
+  border: 2px dashed var(--accent);
+  border-radius: 20px;
+  background: rgba(var(--accent-rgb), 0.06);
+  text-align: center;
+}
+
+.drop-emblem {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drop-emblem-ring {
+  position: absolute;
+}
+
+.drop-emblem-ring.outer {
+  inset: 4px;
+  border: 1px solid var(--accent);
+  border-radius: 28px;
+  opacity: 0.55;
+}
+
+.drop-emblem-ring.inner {
+  inset: 16px;
+  border: 1px solid var(--border-strong);
+  border-radius: 20px;
+  background: var(--surface);
+}
+
+.drop-emblem-icon {
+  position: relative;
+  color: var(--accent);
+}
+
+.drop-title {
+  font-size: calc(24px * var(--font-scale));
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.drop-subtitle {
+  font-size: calc(14px * var(--font-scale));
+  color: var(--text-placeholder);
+}
+
+.drop-count {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--accent-tint);
+  border: 1px solid rgba(var(--accent-rgb), 0.4);
+  color: var(--accent);
+  font-size: calc(13px * var(--font-scale));
+  font-weight: 800;
+}
+
+.composer .attachment-list {
+  padding: 4px 0 6px;
+}
+
+.composer-warning {
+  margin: 0;
+  font-size: calc(13px * var(--font-scale));
+  color: var(--danger);
+}
+
+.composer-warning.caution {
+  color: var(--orange);
+}

@@ -1,0 +1,164 @@
+:root {
+  --font-app: "Nunito", system-ui, sans-serif;
+  --font-chat: "Inter", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  /* Set from Settings → Appearance; 1 keeps the original sizes */
+  --font-scale: 1;
+}
+
+/* Dark is the default; [data-theme] also lets a preview show the other theme inside the app */
+:root,
+[data-theme="dark"] {
+  --bg: #24212f;
+  --bg-sidebar: #1d1a27;
+  --surface: #2c2839;
+  --surface-hover: #332e46;
+  --surface-raised: #3a3550;
+  --border: #2e2a3e;
+  --border-strong: #4a4466;
+  --border-input: #4d4768;
+  --border-control: #565075;
+  --divider: #332e46;
+
+  --text: #f4f1fa;
+  --text-soft: #cfc9e6;
+  --text-muted: #8c85ba;
+  --text-placeholder: #a49dcf;
+  --text-quote: #e4dff2;
+  --text-on-accent: #1d1a27;
+
+  /* Nyra's own violet and pink: the logo keeps them whatever accent the user picks */
+  --brand: #b48cf5;
+  --brand-secondary: #f27bc4;
+  /* The glyph's gradient and the plate it sits on, as in the app's icon on a dark background */
+  --glyph-from: #eadfff;
+  --glyph-to: #a47df5;
+  --glyph-plate-from: #2c2739;
+  --glyph-plate-to: #14111b;
+  --accent: #b48cf5;
+  --accent-secondary: #f27bc4;
+  --accent-blend: #d383dc;
+  --info: #7edcf2;
+  --success: #5ee89a;
+  --highlight: #ede58f;
+  --danger: #f2626b;
+  --orange: #f5b070;
+  /* Warnings that aren't errors, like the sensitive data indicator; red stays for errors and deleting */
+  --warning-text: #f5b070;
+
+  /* RGB triplets for translucent tints: rgba(var(--accent-rgb), 0.08) works in every WebView */
+  --accent-rgb: 180, 140, 245;
+  /* The translucent violet of skills, pills and highlighted options: border, background and a stronger background.
+     In each theme block, so a preview of the other theme inside the app gets its own accent */
+  --accent-line: rgba(var(--accent-rgb), 0.45);
+  --accent-tint: rgba(var(--accent-rgb), 0.14);
+  --accent-tint-strong: rgba(var(--accent-rgb), 0.24);
+  /* Saved memories: the secondary pink, so they never read as skills */
+  --memory: #f27bc4;
+  --memory-line: rgba(242, 123, 196, 0.38);
+  --memory-tint: rgba(242, 123, 196, 0.1);
+  /* A connected folder: the information cyan, with the open folder icon */
+  --workspace: #7edcf2;
+  --workspace-line: rgba(126, 220, 242, 0.38);
+  --workspace-tint: rgba(126, 220, 242, 0.1);
+  /* Proposed changes: added and removed lines. The code keeps the text color; only signs and counts use these */
+  --diff-added: #5ee89a;
+  --diff-added-bg: rgba(94, 232, 154, 0.09);
+  --diff-added-strong: rgba(94, 232, 154, 0.2);
+  --diff-removed: #f2626b;
+  --diff-removed-bg: rgba(242, 98, 107, 0.1);
+  --diff-removed-strong: rgba(242, 98, 107, 0.22);
+  --success-rgb: 94, 232, 154;
+  --danger-rgb: 242, 98, 107;
+  --highlight-rgb: 237, 229, 143;
+  --info-rgb: 126, 220, 242;
+  --warning-rgb: 245, 176, 112;
+
+  --row-stripe: rgba(255, 255, 255, 0.02);
+  --overlay: rgba(20, 17, 29, 0.86);
+  --backdrop: rgba(14, 12, 21, 0.82);
+  --viewer-bg: #15121e;
+  /* A command's output: a little sunken under the card, never a black terminal inside a light app */
+  --terminal-bg: #1b1925;
+  /* PDF pages are paper in both themes */
+  --paper: #ffffff;
+  --shadow: rgba(0, 0, 0, 0.4);
+  --shadow-strong: rgba(0, 0, 0, 0.45);
+  --shadow-dialog: rgba(0, 0, 0, 0.55);
+
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --bg: #fbfaff;
+  --bg-sidebar: #f2f0f8;
+  --surface: #ffffff;
+  --surface-hover: #f0edf8;
+  --surface-raised: #ece8f6;
+  --border: #e9e5f2;
+  --border-strong: #d6d0e6;
+  --border-input: #cfc8e2;
+  --border-control: #bdb5d6;
+  --divider: #e6e2f0;
+
+  --text: #1f1b2e;
+  --text-soft: #4a4560;
+  --text-muted: #736c90;
+  --text-placeholder: #7d76a0;
+  --text-quote: #2d2840;
+  --text-on-accent: #ffffff;
+
+  /* Darker hues than in dark mode so text and icons keep at least 4.5:1 contrast on white */
+  --brand: #7c4dd8;
+  --brand-secondary: #c2338a;
+  --glyph-from: #b08af7;
+  --glyph-to: #5b2fc4;
+  --glyph-plate-from: #ffffff;
+  --glyph-plate-to: #ebe3fa;
+  --accent: #7c4dd8;
+  --accent-secondary: #c2338a;
+  --accent-blend: #a13fb3;
+  --info: #0e7490;
+  --success: #15803d;
+  --highlight: #a16207;
+  --danger: #d4343f;
+  --orange: #c2570c;
+  --warning-text: #9a4e06;
+
+  --accent-rgb: 124, 77, 216;
+  /* The translucent violet of skills, pills and highlighted options: border, background and a stronger background.
+     In each theme block, so a preview of the other theme inside the app gets its own accent */
+  --accent-line: rgba(var(--accent-rgb), 0.45);
+  --accent-tint: rgba(var(--accent-rgb), 0.14);
+  --accent-tint-strong: rgba(var(--accent-rgb), 0.24);
+  --memory: #a8306f;
+  --memory-line: #ebb3d1;
+  --memory-tint: #fcf0f6;
+  --workspace: #0f6880;
+  --workspace-line: #a9d9e6;
+  --workspace-tint: #ebf7fa;
+  --diff-added: #1a7044;
+  --diff-added-bg: #e9f7ef;
+  --diff-added-strong: #c9ecd7;
+  --diff-removed: #b4232f;
+  --diff-removed-bg: #fdeef0;
+  --diff-removed-strong: #f8d0d5;
+  --success-rgb: 21, 128, 61;
+  --danger-rgb: 212, 52, 63;
+  --highlight-rgb: 161, 98, 7;
+  --info-rgb: 14, 116, 144;
+  --warning-rgb: 217, 130, 43;
+
+  --row-stripe: rgba(40, 30, 80, 0.03);
+  --overlay: rgba(248, 246, 253, 0.9);
+  --backdrop: rgba(30, 24, 48, 0.45);
+  --viewer-bg: #f1eef8;
+  --terminal-bg: #f4f0fc;
+  /* PDF pages are paper in both themes */
+  --paper: #ffffff;
+  --shadow: rgba(60, 45, 110, 0.14);
+  --shadow-strong: rgba(60, 45, 110, 0.18);
+  --shadow-dialog: rgba(30, 20, 60, 0.3);
+
+  color-scheme: light;
+}

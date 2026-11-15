@@ -1,0 +1,7 @@
+/* Settings cover the chat, which stays mounted underneath to keep its state */
+.settings-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: var(--bg);
+}

@@ -1,0 +1,48 @@
+/* Private conversations */
+
+.privacy-toggles {
+  align-self: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.private-toggle {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-soft);
+  font-size: calc(13px * var(--font-scale));
+  font-weight: 700;
+}
+
+.private-toggle:hover {
+  border-color: var(--border-control);
+  color: var(--text);
+}
+
+.private-toggle.on {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent);
+}
+
+.private-badge {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 8px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  color: var(--accent);
+  font-size: calc(12px * var(--font-scale));
+  font-weight: 700;
+}
