@@ -1,121 +1,93 @@
 <p align="center">
-  <img src="src-tauri/icons/128x128@2x.png" alt="Icono de Nyra Bot" width="128" height="128">
+  <img src="src-tauri/icons/128x128@2x.png" alt="Nyra Bot icon" width="128" height="128">
 </p>
 
 <h1 align="center">Nyra Bot</h1>
 
-Nyra Bot es una app de escritorio para hablar con modelos de IA. Funciona en macOS, Windows y Linux, con modelos que corren en tu equipo (Ollama y LM Studio) o en la nube (Claude, OpenAI y Gemini). Puedes cambiar de modelo en mitad de una conversación sin perder el historial.
+<p align="center"><b>English</b> · <a href="README.es.md">Español</a></p>
 
-Las conversaciones se guardan en tu equipo, y las API Keys en el llavero del sistema.
+Nyra Bot is a desktop app for talking with AI models. It works on macOS, Windows and Linux, with models that run on your computer or in the cloud. You can switch models in the middle of a conversation without losing the history.
 
-> Nyra está en una versión temprana (0.9.0).
+> Nyra is in an early version (0.9.0).
 
-## Poner Nyra en marcha
+## Download Nyra
 
-### 1. Descarga Nyra
+Download the installer for your system from the [latest release](https://github.com/snowandev/nyra_bot_desktop/releases/latest):
 
-Descarga el instalador de tu sistema en la [última versión publicada](https://github.com/snowandev/nyra_bot_desktop/releases/latest):
-
-| Sistema | Archivo |
+| System | File |
 |---|---|
-| macOS con Apple Silicon (M1 o posterior) | `Nyra.Bot_…_aarch64.dmg` |
-| macOS con Intel | `Nyra.Bot_…_x64.dmg` |
+| macOS with Apple Silicon (M1 or later) | `Nyra.Bot_…_aarch64.dmg` |
+| macOS with Intel | `Nyra.Bot_…_x64.dmg` |
 | Windows | `Nyra.Bot_…_x64-setup.exe` |
-| Linux | `.AppImage`, `.deb` o `.rpm` |
+| Linux | `.AppImage`, `.deb` or `.rpm` |
 
-Nyra te avisa cuando sale una versión nueva y se actualiza sola. En Linux, eso funciona con el `.AppImage`. Con el `.deb` o el `.rpm`, el aviso te lleva a descargar la versión nueva.
-
-### 2. Ábrela la primera vez
-
-Nyra todavía no está firmada por Apple ni por Microsoft, así que la primera vez el sistema te pedirá confirmar que quieres abrirla. Solo hace falta una vez.
-
-- **macOS:** arrastra Nyra a Aplicaciones y ábrela. Cuando macOS diga que no puede comprobarla, ve a Ajustes del Sistema → Privacidad y seguridad, baja hasta el aviso sobre Nyra Bot y pulsa «Abrir igualmente».
-- **Windows:** si aparece «Windows protegió tu PC», pulsa «Más información» y luego «Ejecutar de todas formas».
-- **Linux:** al `.AppImage` dale permiso para ejecutarse (`chmod +x Nyra*.AppImage`) y ábrelo. El `.deb` y el `.rpm` se instalan con el gestor de paquetes de tu sistema.
-
-### 3. Elige un modelo
-
-La primera vez, Nyra te acompaña en una bienvenida para elegir con qué modelos trabajar. Hay dos caminos:
-
-**En tu equipo, sin internet y sin coste.** Instala [Ollama](https://ollama.com) o [LM Studio](https://lmstudio.ai) y descarga un modelo. Por ejemplo, con Ollama:
-
-```bash
-ollama pull qwen3
-```
-
-Nyra encuentra Ollama y LM Studio solos. Desde Configuración también puedes descargar y quitar modelos de Ollama sin usar la terminal.
-
-**En la nube.** Pega tu API Key de Claude, OpenAI o Gemini en Configuración.
-
-Puedes tener los dos a la vez y elegir el modelo en cada conversación.
-
-## Qué puede hacer
+## What it can do
 
 ### Chat
 
-- Respuestas en tiempo real. Puedes detenerlas, regenerarlas (cada versión se guarda), editar tus mensajes y abrir una rama desde cualquier punto.
-- Adjunta imágenes, PDF, archivos de texto, hojas de cálculo, audio o un enlace.
-- Tablas, bloques de código con formato, fórmulas y diagramas en las respuestas.
-- Búsqueda en internet, con las fuentes citadas en la respuesta.
-- Con los modelos que razonan, puedes ver lo que pensaron antes de responder.
-- Cuando una conversación es tan larga que no cabe en el modelo, Nyra la resume sola y sigue.
-- Comparte una respuesta como imagen, PDF o Markdown.
+- Replies as they're written. You can stop them, regenerate them (each version is kept), edit your messages and branch off from any point.
+- Attach images, PDFs, text files, spreadsheets, audio or a link.
+- Tables, formatted code blocks, formulas and diagrams in the replies.
+- Web search, with the sources cited in the reply.
+- With models that reason, you can see what they thought before answering.
+- When a conversation gets too long for the model, Nyra summarizes it and carries on.
+- Share a reply as an image, a PDF or Markdown.
 
-### Organización
+### Organization
 
-- Carpetas en la barra lateral y conversaciones fijadas arriba.
-- Conversaciones privadas, que no se guardan, y aisladas, que además no usan recuerdos ni skills.
-- Búsqueda dentro de una conversación y en todas, también en el texto de los archivos adjuntos.
-- **Recuerdos:** datos que le pides a Nyra que tenga presentes en otras conversaciones. Los ves y editas en Configuración.
-- **Skills:** instrucciones reutilizables, por ejemplo para escribir con un estilo o seguir un proceso. El modelo las usa cuando hacen falta, o las eliges tú con `/`. Puedes crear las tuyas o importarlas.
-- **Importar desde Claude Code:** tus sesiones, con sus archivos, entran en el proyecto de su carpeta.
+- Folders in the sidebar and pinned conversations at the top.
+- Private conversations, which aren't saved, and isolated ones, which also don't use memories or skills.
+- Search within a conversation and across all of them, including the text of attached files.
+- **Memories:** facts you ask Nyra to keep in mind in other conversations. You see and edit them in Settings.
+- **Skills:** reusable instructions, for example to write in a certain style or follow a process. The model uses them when they're needed, or you pick them with `/`. You can create your own or import them.
+- **Import from Claude Code:** your sessions, with their files, go into the project for their folder.
 
-### Trabajar con tus archivos
+### Working with your files
 
-- **Conecta una carpeta** y el modelo podrá leer sus archivos y proponer cambios. Nada se escribe hasta que revisas cada cambio y lo aplicas, y lo que aplica Nyra se puede deshacer.
-- **El espacio Código:** cada proyecto es una carpeta con sus conversaciones, los cambios pendientes, el estado de Git y los commits.
-- **Comandos y código:** el modelo puede pedir ejecutar un comando o un script en la carpeta. Siempre lo ves antes y decides si se ejecuta.
-- **Servidores MCP:** dale al modelo herramientas de otras apps. Cada uso te pide permiso, salvo las herramientas que marques como permitidas siempre.
+- **Connect a folder** and the model can read its files and propose changes. Nothing is written until you review each change and apply it, and what Nyra applies can be undone.
+- **The Code space:** each project is a folder with its conversations, pending changes, Git status and commits.
+- **Commands and code:** the model can ask to run a command or a script in the folder. You always see it first and decide whether it runs.
+- **MCP servers:** give the model tools from other apps. Each use asks for your permission, except the tools you mark as always allowed.
 
-### En tu escritorio
+### On your desktop
 
-- **Chat rápido:** una barra que se abre con un atajo desde cualquier app, para preguntar algo sin cambiar de ventana.
-- **Voz:** dicta tus mensajes o transcribe archivos de audio. Todo ocurre en tu equipo, con Whisper.
-- **El navegador de Nyra:** el modelo puede abrir páginas, leerlas y usarlas en tu Chrome, Edge u otro navegador basado en Chromium, con tu permiso.
-- **Tu pantalla:** Nyra puede mirarla para explicarte lo que ves, guiarte paso a paso señalando dónde hacer clic, o usar el ratón y el teclado si se lo permites.
+- **Quick chat:** a bar that opens with a shortcut from any app, to ask something without switching windows.
+- **Voice:** dictate your messages or transcribe audio files. It all happens on your computer, with Whisper.
+- **Nyra's browser:** the model can open pages, read them and use them in your Chrome, Edge or another Chromium-based browser, with your permission.
+- **Your screen:** Nyra can look at it to explain what you see, guide you step by step by pointing where to click, or use the mouse and keyboard if you allow it.
 
-### A tu gusto
+### Your way
 
-- Tema claro, oscuro o el del sistema, color de acento y tamaño del texto.
-- Interfaz en español e inglés. El modelo te responde en el idioma en que le escribas.
-- Notificación cuando termina una respuesta y icono en la barra del sistema.
+- Light, dark or system theme, accent color and text size.
+- Interface in English and Spanish. The model answers in the language you write in.
+- A notification when a reply finishes, and an icon in the system bar.
 
-## Privacidad
+## Privacy
 
-- Con un modelo local, nada sale de tu equipo.
-- Con un modelo en la nube, lo que envías va al proveedor que elegiste, con tu propia API Key. Nyra te avisa si un mensaje parece llevar datos sensibles.
-- Las conversaciones, los recuerdos y los proyectos se guardan en tu equipo.
-- Las conversaciones privadas y las aisladas no se guardan nunca.
+- With a local model, nothing leaves your computer.
+- With a cloud model, what you send goes to the provider you chose, with your own API key. Nyra warns you if a message seems to contain sensitive data.
+- Conversations, memories and projects are saved on your computer.
+- Private and isolated conversations are never saved.
 
-## Diferencias entre sistemas
+## Differences between systems
 
-Nyra funciona igual en macOS, Windows y Linux, con estas excepciones:
+Nyra works the same on macOS, Windows and Linux, with these exceptions:
 
-| Función | macOS | Windows | Linux |
+| Feature | macOS | Windows | Linux |
 |---|---|---|---|
-| Mirar la pantalla y guiarte | Sí | Sí | Todavía no |
-| Usar el ratón y el teclado | Sí | Sí | Todavía no |
-| Icono en la barra del sistema | Sí | Sí | Necesita `libayatana-appindicator`, y en GNOME la extensión AppIndicator |
+| Looking at the screen and guiding you | Yes | Yes | Not yet |
+| Using the mouse and keyboard | Yes | Yes | Not yet |
+| Icon in the system bar | Yes | Yes | Needs `libayatana-appindicator`, and on GNOME the AppIndicator extension |
 
-En macOS, Nyra te pide los permisos de micrófono, grabación de pantalla y accesibilidad solo para las funciones que los usan.
+On macOS, Nyra asks for microphone, screen recording and accessibility permissions only for the features that use them.
 
-## Compilar Nyra desde el código
+## Build Nyra from source
 
-Si prefieres compilarla tú, necesitas [Node.js](https://nodejs.org) 24 o posterior, [Rust](https://www.rust-lang.org/tools/install) y las herramientas de tu sistema:
+If you'd rather build it yourself, you need [Node.js](https://nodejs.org) 24 or later, [Rust](https://www.rust-lang.org/tools/install) and your system's tools:
 
 - **macOS:** Xcode Command Line Tools (`xcode-select --install`)
-- **Windows:** Microsoft C++ Build Tools y WebView2 (ya viene con Windows 11)
-- **Linux:** `webkit2gtk-4.1` y los paquetes que indica la [guía de requisitos de Tauri](https://tauri.app/start/prerequisites/)
+- **Windows:** Microsoft C++ Build Tools and WebView2 (included with Windows 11)
+- **Linux:** `webkit2gtk-4.1` and the packages listed in [Tauri's prerequisites guide](https://tauri.app/start/prerequisites/)
 
 ```bash
 git clone https://github.com/snowandev/nyra_bot_desktop.git
@@ -124,8 +96,8 @@ npm install
 npm run tauri build
 ```
 
-El instalador queda en `src-tauri/target/release/bundle/`. Si solo quieres probarla, `npm run tauri dev` la abre directamente.
+The installer ends up in `src-tauri/target/release/bundle/`. If you just want to try it, `npm run tauri dev` opens it directly.
 
-## Licencia
+## License
 
-Nyra se publica con la [licencia MIT](LICENSE). Puedes usarla gratis, también con fines comerciales, modificarla y crear tus propias versiones, siempre que mantengas el aviso de copyright y la licencia.
+Nyra is released under the [MIT license](LICENSE). You can use it for free, including for commercial purposes, modify it and make your own versions, as long as you keep the copyright notice and the license.
