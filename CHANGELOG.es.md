@@ -2,6 +2,11 @@
 
 Lo que cambia en cada versión de Nyra Bot. Las mismas notas en inglés están en [CHANGELOG.md](CHANGELOG.md).
 
+## 0.9.3 · 2026-11-15
+
+### Mejoras
+- En macOS, Nyra ahora conserva sus permisos de pantalla, Accesibilidad y micrófono al actualizarse. Después de esta actualización te los pedirá una última vez.
+
 ## 0.9.2 · 2026-11-15
 
 ### Novedades

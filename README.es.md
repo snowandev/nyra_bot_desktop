@@ -8,7 +8,7 @@
 
 Nyra Bot es una app de escritorio para hablar con modelos de IA. Funciona en macOS, Windows y Linux, con modelos que corren en tu equipo o en la nube. Puedes cambiar de modelo en mitad de una conversación sin perder el historial.
 
-> Nyra está en una versión temprana (0.9.2).
+> Nyra está en una versión temprana.
 
 ## Descargar Nyra
 
