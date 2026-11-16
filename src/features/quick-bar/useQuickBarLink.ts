@@ -1,5 +1,5 @@
-import { useEffect } from "react";
 import { onQuickContinue, onQuickSaved } from "./quickWindow";
+import { useAppEvent } from "@/shared/hooks/useAppEvent";
 import { useStableCallback } from "@/shared/hooks/useStableCallback";
 
 type Options = {
@@ -20,11 +20,6 @@ export function useQuickBarLink({ refreshConversations, openConversation, onShow
     onShowChat();
   });
 
-  useEffect(() => {
-    const listening = [onQuickSaved(onSaved), onQuickContinue((id) => void onContinue(id))];
-    return () => {
-      // If listening never started (no window, as in tests), there is nothing to stop
-      for (const stop of listening) void stop.then((unlisten) => unlisten()).catch(() => {});
-    };
-  }, [onSaved, onContinue]);
+  useAppEvent(onQuickSaved, onSaved);
+  useAppEvent(onQuickContinue, (id) => void onContinue(id));
 }

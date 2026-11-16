@@ -61,6 +61,10 @@ export function useProviderSettings() {
       const stored = loadModels();
       latestModels.current = stored;
       setModels(stored);
+      // A window opened before there were models (the quick bar on the first day) takes one once they arrive
+      setSelectedModelId((current) =>
+        stored.some((m) => m.id === current) ? current : (installedDefault(stored, loadDefaultModel()) ?? stored[0]?.id ?? ""),
+      );
       setDefaultModelId(loadDefaultModel());
       setDemandingModelId(loadDemandingModel());
       setIsAuto(loadAutoModel());
@@ -167,9 +171,12 @@ export function useProviderSettings() {
       latestModels.current = next;
       setModels(next);
       saveModels(next);
-      if (!next.some((m) => m.id === selectedModelId) && next[0]) applySelection(next[0].id);
+      // Without a model chosen yet (the first day) the default one, as a new conversation would take
+      if (!next.some((m) => m.id === selectedModelId) && next[0]) {
+        applySelection(installedDefault(next, defaultModelId) ?? next[0].id);
+      }
     },
-    [selectedModelId, applySelection],
+    [selectedModelId, defaultModelId, applySelection],
   );
 
   // After the installed models changed outside the provider panel, e.g. a download finished in the background

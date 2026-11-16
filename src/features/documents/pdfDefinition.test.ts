@@ -69,6 +69,15 @@ describe("pdfDefinition", () => {
     expect(definition.info?.title).toBe("Informe de ventas");
   });
 
+  it("numbers footnotes as they are cited and gathers them at the end", () => {
+    const text = "Llegó tarde[^b] y caro[^a].\n\n[^a]: Subió el precio.\n\n[^b]: Por la huelga.\n\nFin.";
+    const notes = flat(pdfDefinition(text, "").content);
+    expect(notes).toContain('{"sup":true,"color"');
+    expect(notes.indexOf('"text":"1."')).toBeLessThan(notes.indexOf('"text":"2."'));
+    expect(notes.indexOf("Fin.")).toBeLessThan(notes.indexOf("Por la huelga."));
+    expect(notes.indexOf("Por la huelga.")).toBeLessThan(notes.indexOf("Subió el precio."));
+  });
+
   it("gives every run of text its whole style, which pdfmake doesn't pass on to nested runs", () => {
     expect(content).toContain('{"bold":true,"text":"año"}');
     expect(content).toContain('{"italics":true,"text":"cursiva"}');

@@ -1,8 +1,10 @@
 import { CircleAlert, LoaderCircle } from "lucide-react";
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, Suspense, useEffect, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { useDocumentTheme } from "./useDocumentTheme";
 import { useStableCallback } from "@/shared/hooks/useStableCallback";
+import { retryingLazy } from "@/shared/lib/loadOnDemand";
+import { LoadErrorBoundary } from "@/shared/ui/LoadErrorBoundary";
 import { renderChart } from "@/features/charts/chartImage";
 import { drawnDiagram, keepDrawn } from "./diagramCache";
 import { renderMermaid } from "./mermaid";
@@ -10,6 +12,9 @@ import type { DiagramImage } from "./svgImage";
 
 // What a code block can draw: a Mermaid diagram or a chart of data
 export type DiagramKind = "mermaid" | "chart";
+
+// Loaded the first time a diagram is enlarged, with its zoom
+const DiagramViewer = retryingLazy(() => import("./DiagramViewer").then((m) => m.DiagramViewer));
 
 const DRAW = { mermaid: renderMermaid, chart: renderChart };
 
@@ -39,6 +44,7 @@ export function DrawnDiagram({ kind, code, fallback, onDrawn }: Props) {
   const [result, setResult] = useState<Result | null>(null);
   // Kept on screen while a newer version is being drawn, so the diagram doesn't flicker
   const [lastImage, setLastImage] = useState<DiagramImage | null>(null);
+  const [isEnlarged, setIsEnlarged] = useState(false);
   const drawn = useStableCallback(onDrawn);
   // A diagram drawn before (the conversation opened again) is shown at once
   const cached = drawnDiagram(key);
@@ -102,9 +108,25 @@ export function DrawnDiagram({ kind, code, fallback, onDrawn }: Props) {
     );
   }
 
+  const alt = t(TEXTS[kind].alt);
+  const close = () => setIsEnlarged(false);
   return (
     <div className={`diagram-picture ${current ? "" : "updating"}`}>
-      <img src={image.src} width={image.width} height={image.height} alt={t(TEXTS[kind].alt)} />
+      <button
+        type="button"
+        className="diagram-enlarge"
+        title={t("markdown.viewer.open")}
+        onClick={() => setIsEnlarged(true)}
+      >
+        <img src={image.src} width={image.width} height={image.height} alt={alt} />
+      </button>
+      {isEnlarged && (
+        <LoadErrorBoundary leave={{ label: t("markdown.viewer.close"), onLeave: close }}>
+          <Suspense fallback={null}>
+            <DiagramViewer image={image} alt={alt} onClose={close} />
+          </Suspense>
+        </LoadErrorBoundary>
+      )}
     </div>
   );
 }

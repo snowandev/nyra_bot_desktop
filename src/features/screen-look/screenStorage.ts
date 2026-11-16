@@ -18,6 +18,10 @@ export const screenLookAvailable = () => invoke<boolean>("screen_look_available"
 // Takes the marks away first, so the capture is of the screen alone
 export const screenLook = (conversationId: string, fit?: ScreenFit) =>
   invoke<ScreenView>("screen_look", { conversationId, fit: fit ?? null });
+// The latest capture with more detail, to find something on a screen of many points (a 4K one at scale 1×); null when
+// the view already has it
+export const screenOverview = (conversationId: string, fit?: ScreenFit) =>
+  invoke<ScreenView | null>("screen_overview", { conversationId, fit: fit ?? null });
 // The latest capture, bigger around a point
 export const screenZoom = (conversationId: string, x: number, y: number, fit?: ScreenFit) =>
   invoke<ScreenZoom>("screen_zoom", { conversationId, x, y, fit: fit ?? null });

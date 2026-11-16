@@ -1,4 +1,5 @@
 import { memo, useContext, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import type { Components, Options } from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
@@ -15,18 +16,25 @@ import { normalizeMath } from "./math";
 import { QuoteBlock } from "./QuoteBlock";
 import { TableBlock } from "./TableBlock";
 import { ExternalImage } from "./ExternalImage";
+import { FootnoteLink } from "./FootnoteLink";
+import { TaskBox } from "./TaskBox";
 import { ExternalLink } from "@/shared/ui/ExternalLink";
 
 const MARKDOWN_COMPONENTS: Components = {
   pre: CodeBlock,
-  a: ({ href, children }) =>
+  a: ({ href, id, "aria-label": label, children }) =>
     href?.startsWith(CITATION_LINK_PREFIX) ? (
       <Citation href={href} />
+    ) : href?.startsWith("#") ? (
+      <FootnoteLink href={href} id={id} label={label}>
+        {children}
+      </FootnoteLink>
     ) : (
       <ExternalLink href={href}>{children}</ExternalLink>
     ),
   blockquote: QuoteBlock,
   img: ({ src, alt }) => <ExternalImage src={typeof src === "string" ? src : undefined} alt={alt} />,
+  input: ({ type, checked }) => (type === "checkbox" ? <TaskBox checked={checked === true} /> : null),
   // Wide tables scroll horizontally instead of stretching the chat column
   table: TableBlock,
 };
@@ -44,6 +52,7 @@ const HIGHLIGHT_ONLY = [rehypeHighlight];
 // The text in blocks inside one container, so the page is the same as one parse of the whole text, and only a block
 // that changed is parsed again; while a reply streams, that is its last one
 export const Markdown = memo(function Markdown({ children }: Props) {
+  const { t } = useTranslation();
   const order = useContext(CitationsContext)?.citations.order;
   // The citations are worked out again as the reply grows: the same numbering mustn't parse every block again
   const orderKey = order ? [...order].join(";") : null;
@@ -57,6 +66,16 @@ export const Markdown = memo(function Markdown({ children }: Props) {
   const katex = useKatexPlugin(blocks.some((block) => block.includes("$$")));
   // Formulas before highlighting: a formula is not code
   const rehypePlugins = useMemo(() => (katex ? [katex, rehypeHighlight] : HIGHLIGHT_ONLY), [katex]);
+  // Names for screen readers only: shown, the footnotes' title would be in the app's language inside a reply that may
+  // be in another one, so a line sets them apart instead
+  const rehypeOptions = useMemo(
+    () => ({
+      footnoteLabel: t("markdown.footnotes"),
+      footnoteLabelProperties: { className: ["visually-hidden"] },
+      footnoteBackLabel: (index: number) => t("markdown.footnoteBack", { number: index + 1 }),
+    }),
+    [t],
+  );
   return (
     <div className="markdown">
       {blocks.map((block, i) => (
@@ -66,6 +85,7 @@ export const Markdown = memo(function Markdown({ children }: Props) {
           text={block}
           remarkPlugins={remarkPlugins}
           rehypePlugins={rehypePlugins}
+          rehypeOptions={rehypeOptions}
           components={MARKDOWN_COMPONENTS}
         />
       ))}

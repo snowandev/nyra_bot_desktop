@@ -73,6 +73,23 @@
   color: var(--danger);
 }
 
+/* In a diff, a line added or removed is shaded from edge to edge, so the change reads at a glance */
+:is(.language-diff, .language-patch) :is(.hljs-addition, .hljs-deletion) {
+  display: inline-block;
+  vertical-align: top;
+  min-width: calc(100% + 32px);
+  margin: 0 -16px;
+  padding: 0 16px;
+}
+
+:is(.language-diff, .language-patch) .hljs-addition {
+  background: rgba(var(--success-rgb), 0.12);
+}
+
+:is(.language-diff, .language-patch) .hljs-deletion {
+  background: rgba(var(--danger-rgb), 0.12);
+}
+
 .hljs-emphasis {
   font-style: italic;
 }

@@ -25,7 +25,7 @@ const ITEM = /^[-*]\s+(.+?)\s*$/;
 const emptyNotes = (): Notes => ({ new: [], improvements: [], fixes: [] });
 
 // One file's versions, newest first as written; a line it doesn't know (the title, an intro) is left out
-export function parseChangelog(markdown: string, language: NoteLanguage) {
+function parseChangelog(markdown: string, language: NoteLanguage) {
   const versions: { version: string; date: string; notes: Notes }[] = [];
   let group: NoteGroup | null = null;
   for (const line of markdown.split(/\r?\n/)) {

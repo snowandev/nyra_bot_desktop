@@ -23,6 +23,7 @@ import "@/features/markdown/math.css";
 import "@/shared/styles/feedback.css";
 import "@/features/attachments/attachments.css";
 import "@/features/attachments/files-panel.css";
+import "@/features/attachments/viewer.css";
 import "@/features/skills/skill-command.css";
 import "@/features/quick-bar/quick.css";
 import "@/features/dictation/dictation.css";

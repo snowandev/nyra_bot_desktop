@@ -6,6 +6,7 @@ import { actionOf, pointOf, screenTools } from "./screenTools";
 const storage = vi.hoisted(() => ({
   screenLook: vi.fn(),
   screenZoom: vi.fn(),
+  screenOverview: vi.fn(),
   screenCloseUp: vi.fn(),
   screenMark: vi.fn(),
   screenClear: vi.fn(),
@@ -46,6 +47,7 @@ beforeEach(() => {
     height: 450,
   });
   storage.screenCloseUp.mockResolvedValue("closeup");
+  storage.screenOverview.mockResolvedValue(null);
   storage.screenMark.mockResolvedValue(undefined);
   storage.screenClear.mockResolvedValue(undefined);
   storage.onScreenMarks.mockResolvedValue(() => {});

@@ -12,6 +12,7 @@ import { useChat } from "@/features/chat/reply/useChat";
 import { useComposerAttachments } from "@/features/attachments/useComposerAttachments";
 import { ACCEPTED_FILES } from "@/features/attachments/attachments";
 import { useFileDrop } from "@/features/attachments/useFileDrop";
+import { useAppEvent } from "@/shared/hooks/useAppEvent";
 import { useStableCallback } from "@/shared/hooks/useStableCallback";
 import { useMemories } from "@/features/memory/useMemories";
 import { usePreferences } from "@/features/settings/usePreferences";
@@ -162,6 +163,8 @@ export default function QuickApp() {
       setResumedMinutes(Math.max(1, Math.round((Date.now() - last.leftAt) / 60_000)));
     } else {
       if (chat.active) chat.openConversation(null);
+      // A new conversation starts with the default model, as in the main window
+      settings.selectDefaultModel();
       setResumedMinutes(null);
     }
     // On another screen it may have more or less room
@@ -169,13 +172,8 @@ export default function QuickApp() {
     input.current?.focus();
   });
 
-  useEffect(() => {
-    const listening = [onQuickShown(onShown), onQuickHidden(onHidden)];
-    return () => {
-      // If listening never started (no window, as in tests), there is nothing to stop
-      for (const stop of listening) void stop.then((unlisten) => unlisten()).catch(ignore);
-    };
-  }, [onShown, onHidden]);
+  useAppEvent(onQuickShown, onShown);
+  useAppEvent(onQuickHidden, onHidden);
 
   // Esc hides the bar, also while Nyra answers: the reply goes on and is there when it comes back. The model picker
   // handles its own Esc, which only closes it.
@@ -247,6 +245,7 @@ export default function QuickApp() {
 
   function startOver() {
     chat.openConversation(null);
+    settings.selectDefaultModel();
     quickSkills.reset();
     setText("");
     files.clearAttachments();

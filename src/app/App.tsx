@@ -201,6 +201,8 @@ function App() {
   const [isWelcomeOpen, setIsWelcomeOpen] = useState(() => !preferences.welcomeDone);
   function closeWelcome() {
     setIsWelcomeOpen(false);
+    // The model chosen in it is the one the new conversation that follows it uses; one already going keeps its own
+    if (!chat.activeId) settings.selectDefaultModel();
     if (!preferences.welcomeDone) preferencesState.updatePreferences({ welcomeDone: true });
   }
   // Without any model the composer can't send: the notice says why and where to set one up

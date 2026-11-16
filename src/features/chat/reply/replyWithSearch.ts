@@ -148,7 +148,7 @@ export const CONTINUE_AFTER_COMMANDS =
 const TAG_START = "<nyra-";
 
 // For a model that wrote a tag's closing without its opening: nothing was done, and it writes its answer again
-export const wrongTag = (kind: RequestKind): Message => ({
+const wrongTag = (kind: RequestKind): Message => ({
   role: "user",
   content:
     `<app-instructions>\nYou wrote ${closingTag(kind)} without its opening tag, so nothing ` +

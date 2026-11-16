@@ -30,6 +30,7 @@ import {
   screenCloseUp,
   screenLook,
   screenMark,
+  screenOverview,
   screenWatch,
   screenWatchStop,
   screenZoom,
@@ -188,6 +189,8 @@ export function screenTools({ conversationId, signal, see, boxFormat, offset, on
   let actions = 0;
   // The reply's latest capture, as the model reads it: marks are found on it
   let view: Picture | null = null;
+  // Its more detailed version for finding things, asked once per capture
+  let overview: Promise<Picture | null> | null = null;
   // The marks this reply put; its first one takes away those of earlier replies
   let marks: ScreenMark[] = [];
   let refused = false;
@@ -223,6 +226,7 @@ export function screenTools({ conversationId, signal, see, boxFormat, offset, on
   async function capture() {
     const taken = await screenLook(conversationId, fit);
     view = taken;
+    overview = null;
     marks = [];
     showMarks(conversationId, 0);
     return taken;
@@ -247,7 +251,13 @@ export function screenTools({ conversationId, signal, see, boxFormat, offset, on
 
   async function find(what: string): Promise<ScreenArea | null> {
     if (!view) return null;
-    return locate(what, { see, view, format: boxFormat, zoom: (x, y) => screenZoom(conversationId, x, y, fit) });
+    return locate(what, {
+      see,
+      view,
+      overview: () => (overview ??= screenOverview(conversationId, fit)),
+      format: boxFormat,
+      zoom: (x, y) => screenZoom(conversationId, x, y, fit),
+    });
   }
 
   async function point(value: string): Promise<Message> {
@@ -367,6 +377,7 @@ export function screenTools({ conversationId, signal, see, boxFormat, offset, on
     if ("watched" in first && first.watched.kind === "changed") {
       now = first.watched.view;
       view = now;
+      overview = null;
       how = "The screen changed: this is it now.";
       end({ outcome: "ok" });
     } else {

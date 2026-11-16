@@ -80,7 +80,21 @@
   display: none;
 }
 
+/* Only for screen readers, which an image has none of; WebKit would paint the positioned title in the capture */
+.share-card .footnotes .visually-hidden {
+  display: none;
+}
+
+/* An image shows a long block whole; nothing can be clicked in it */
+.share-card .code-block.folded pre {
+  max-height: none;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
 /* Nothing can be clicked in an image */
+.share-card .code-block-fold,
+.share-card .code-block-wrap,
 .share-card .table-actions,
 .share-card .table-sort svg {
   display: none;

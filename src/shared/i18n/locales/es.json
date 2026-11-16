@@ -539,6 +539,19 @@
       "invalidJson": "JSON no válido · línea {{line}}, columna {{column}}",
       "formatting": "Formateando…",
       "failed": "No se pudo formatear"
+    },
+    "footnotes": "Notas",
+    "footnoteBack": "Volver a la nota {{number}} en el texto",
+    "wrapLines": "Ajustar las líneas largas",
+    "unfoldCode": "Mostrar las {{count}} líneas",
+    "foldCode": "Mostrar menos",
+    "viewer": {
+      "open": "Ampliar",
+      "hint": "Rueda o pellizco para acercar · arrastra para moverte · doble clic para encajar",
+      "zoomIn": "Acercar",
+      "zoomOut": "Alejar",
+      "fit": "Encajar en la ventana",
+      "close": "Cerrar"
     }
   },
   "ui": {

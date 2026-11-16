@@ -1,6 +1,7 @@
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { type CSSProperties, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { stopListening } from "@/shared/hooks/useAppEvent";
 import { NyraPointer } from "./NyraPointer";
 import {
   onScreenMarks,
@@ -103,8 +104,8 @@ export function MarksOverlay() {
     };
     window.addEventListener("resize", resized);
     return () => {
-      void unlisten.then((stop) => stop());
-      void moved.then((stop) => stop());
+      stopListening(unlisten);
+      stopListening(moved);
       window.removeEventListener("resize", resized);
     };
   }, []);

@@ -72,6 +72,21 @@ describe("locate", () => {
     expectArea(area, { x: 0.45, y: 0.45, width: 0.1, height: 0.1 });
   });
 
+  it("looks first at the detailed screen when there is one, and at the view when there isn't", async () => {
+    const asked: string[] = [];
+    const see = async (image: string) => {
+      asked.push(image);
+      return "[400, 400, 600, 600]";
+    };
+    const zoom = async () => ({ image: "zoomed", width: 800, height: 450, area: { x: 0.4, y: 0.4, width: 0.2, height: 0.2 } });
+    const detailed = { image: "detailed", width: 2400, height: 1350 };
+    await locate("x", { view: whole, overview: async () => detailed, format: "thousandths", see, zoom });
+    expect(asked).toEqual(["detailed", "zoomed"]);
+    asked.length = 0;
+    await locate("x", { view: whole, overview: async () => null, format: "thousandths", see, zoom });
+    expect(asked).toEqual(["whole", "zoomed"]);
+  });
+
   it("keeps the first answer when the zoom gives none, and gives none without a first", async () => {
     const zoom = async () => ({ image: "zoomed", width: 800, height: 450, area: { x: 0, y: 0, width: 0.5, height: 0.5 } });
     const format = "thousandths" as const;

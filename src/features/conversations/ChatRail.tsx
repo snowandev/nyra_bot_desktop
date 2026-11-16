@@ -1,7 +1,8 @@
-import { PanelLeftOpen, Plus, Settings } from "lucide-react";
+import { Plus } from "lucide-react";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { SHORTCUTS, shortcutLabelOf } from "@/shared/lib/shortcuts";
+import { RailFoot } from "./RailFoot";
 
 type Props = {
   onUnfold: () => void;
@@ -29,24 +30,7 @@ export function ChatRail({ onUnfold, onNew, onOpenSettings, spaceSwitch }: Props
         <Plus size={18} strokeWidth={2} />
       </button>
       <span className="sidebar-rail-spacer" />
-      <button
-        type="button"
-        className="icon-button"
-        aria-label={t("settings.title")}
-        title={t("conversations.settingsWithShortcut", { shortcut: shortcutLabelOf(SHORTCUTS.settings) })}
-        onClick={onOpenSettings}
-      >
-        <Settings size={18} strokeWidth={1.8} />
-      </button>
-      <button
-        type="button"
-        className="icon-button sidebar-unfold"
-        aria-label={t("conversations.sidebar.unfold")}
-        title={t("conversations.sidebar.unfoldWithShortcut", { shortcut: shortcutLabelOf(SHORTCUTS.sidebar) })}
-        onClick={onUnfold}
-      >
-        <PanelLeftOpen size={18} strokeWidth={2} />
-      </button>
+      <RailFoot onOpenSettings={onOpenSettings} onUnfold={onUnfold} />
     </nav>
   );
 }

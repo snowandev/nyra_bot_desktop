@@ -72,15 +72,17 @@ type Tools = {
   see: (image: string, prompt: string) => Promise<string>;
   // The latest capture, as the model reads it
   view: Picture;
+  // The same with more detail where the screen has many points, for the first look; null to use the view
+  overview?: () => Promise<Picture | null>;
   zoom: (x: number, y: number) => Promise<Picture & { area: ScreenArea }>;
   format: BoxFormat;
 };
 
 // Two looks: the whole screen, then a zoom around the first answer, which the second corrects; null when the model
 // gives no box
-export async function locate(what: string, { see, view, zoom, format }: Tools): Promise<ScreenArea | null> {
+export async function locate(what: string, { see, view, overview, zoom, format }: Tools): Promise<ScreenArea | null> {
   const ask = async (picture: Picture) => boxOf(await see(picture.image, groundingPrompt(what, format, picture)), format, picture);
-  const first = await ask(view);
+  const first = await ask((await overview?.().catch(() => null)) ?? view);
   if (!first) return null;
   const zoomed = await zoom(first.x + first.width / 2, first.y + first.height / 2);
   const second = await ask(zoomed);

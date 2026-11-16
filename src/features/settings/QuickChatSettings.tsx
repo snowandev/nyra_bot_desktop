@@ -7,6 +7,7 @@ import { CopyButton } from "@/shared/ui/CopyButton";
 import { SettingsPanel } from "@/shared/ui/SettingsPanel";
 import { ShortcutRecorder } from "@/features/quick-bar/ShortcutRecorder";
 import { Switch } from "@/shared/ui/Switch";
+import { useAppEvent } from "@/shared/hooks/useAppEvent";
 import { QUICK_SIZES, type QuickSize } from "@/shared/storage/settings";
 
 type Props = {
@@ -33,13 +34,11 @@ export function QuickChatSettings(props: Props) {
     quickShortcutStatus()
       .then((current) => !cancelled && setStatus(current))
       .catch(() => {});
-    const stop = onQuickShortcutStatus(setStatus);
     return () => {
       cancelled = true;
-      // If listening never started, there is nothing to stop
-      void stop.then((unlisten) => unlisten()).catch(() => {});
     };
   }, []);
+  useAppEvent(onQuickShortcutStatus, setStatus);
 
   const label = acceleratorLabel(quickShortcut, platformName);
 

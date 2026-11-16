@@ -1,4 +1,5 @@
 import { type RefObject, useEffect, useRef, useState } from "react";
+import { useAppEvent } from "@/shared/hooks/useAppEvent";
 import { activeModel, refreshSpeechModels } from "@/features/transcription/speechModels";
 import { useStableCallback } from "@/shared/hooks/useStableCallback";
 import { errorMessage } from "@/shared/lib/errors";
@@ -112,10 +113,11 @@ export function useDictation({ inputRef, onChange }: Options) {
     if (phase.current === "recording") drop();
   });
 
+  const isRecording = state === "recording";
+  useAppEvent(onDictationLevel, setLevel, isRecording);
+  useAppEvent(onDictationEnded, () => void stop(), isRecording);
   useEffect(() => {
-    if (state !== "recording") return;
-    const levels = onDictationLevel(setLevel);
-    const ended = onDictationEnded(() => void stop());
+    if (!isRecording) return;
     // Esc drops it before anything else hears the key (closing the quick bar, a menu)
     const onKey = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
@@ -124,12 +126,8 @@ export function useDictation({ inputRef, onChange }: Options) {
       cancel();
     };
     window.addEventListener("keydown", onKey, true);
-    return () => {
-      void levels.then((unlisten) => unlisten());
-      void ended.then((unlisten) => unlisten());
-      window.removeEventListener("keydown", onKey, true);
-    };
-  }, [state, stop, cancel]);
+    return () => window.removeEventListener("keydown", onKey, true);
+  }, [isRecording, cancel]);
 
   // The box moves to another draft, or goes away: what was being said there isn't written in another place, and the
   // microphone doesn't stay open

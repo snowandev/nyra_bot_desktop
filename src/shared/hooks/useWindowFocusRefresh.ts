@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { onWindowFocused } from "@/shared/lib/windowFocus";
+import { stopListening } from "./useAppEvent";
 import { useStableCallback } from "./useStableCallback";
 
 // Coming back to the window often (switching between apps) refreshes at most this often
@@ -17,7 +18,6 @@ export function useWindowFocusRefresh(onRefresh: () => void, enabled = true) {
       last = Date.now();
       refresh();
     });
-    // If listening never started (no window, as in tests), there is nothing to stop
-    return () => void listening.then((stop) => stop()).catch(() => {});
+    return () => stopListening(listening);
   }, [enabled, refresh]);
 }

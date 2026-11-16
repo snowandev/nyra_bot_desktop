@@ -2,6 +2,21 @@
 
 Lo que cambia en cada versión de Nyra Bot. Las mismas notas en inglés están en [CHANGELOG.md](CHANGELOG.md).
 
+## 0.9.2 · 2026-11-15
+
+### Novedades
+- Pulsa un diagrama o un gráfico de una respuesta para verlo en grande. Acerca con la rueda o pellizcando, arrastra para moverte y haz doble clic para encajarlo.
+- Los bloques de código largos muestran solo sus primeras líneas hasta que los abres, y las líneas demasiado largas para el chat se pueden ajustar.
+
+### Mejoras
+- Las respuestas se leen mejor, con títulos más claros, separadores, tachado, listas de tareas con casillas en tu color de acento y diffs que sombrean las líneas añadidas y quitadas.
+- Nyra encuentra las cosas con más precisión en pantallas grandes, como las 4K, cuando usa tu ratón y tu teclado.
+- El icono de macOS ahora tiene el mismo tamaño que el de las demás apps del Dock.
+
+### Arreglos
+- Los números de las notas al pie te llevan a la nota y de vuelta, y ya no aparece encima un título en otro idioma. En un PDF se numeran y van al final.
+- El modelo por defecto que eliges en la bienvenida se usa al momento, también en la barra rápida, sin reiniciar Nyra.
+
 ## 0.9.1 · 2026-11-15
 
 ### Mejoras

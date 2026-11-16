@@ -221,6 +221,7 @@ pub fn run() {
             screen_look::screen_look_available,
             screen_look::screen_look,
             screen_look::screen_zoom,
+            screen_look::screen_overview,
             screen_look::screen_close_up,
             screen_look::screen_mark,
             screen_look::screen_marks_now,

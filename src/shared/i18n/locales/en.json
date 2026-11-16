@@ -520,6 +520,19 @@
       "invalidJson": "Invalid JSON · line {{line}}, column {{column}}",
       "formatting": "Formatting…",
       "failed": "Couldn't format it"
+    },
+    "footnotes": "Notes",
+    "footnoteBack": "Back to note {{number}} in the text",
+    "wrapLines": "Wrap long lines",
+    "unfoldCode": "Show all {{count}} lines",
+    "foldCode": "Show less",
+    "viewer": {
+      "open": "Enlarge",
+      "hint": "Scroll or pinch to zoom · drag to move · double-click to fit",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "fit": "Fit to window",
+      "close": "Close"
     }
   },
   "ui": {

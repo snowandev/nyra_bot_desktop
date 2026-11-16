@@ -1,7 +1,7 @@
-import { PanelLeftOpen, Plus, Settings } from "lucide-react";
+import { Plus } from "lucide-react";
 import type { ReactNode, RefObject } from "react";
 import { useTranslation } from "react-i18next";
-import { SHORTCUTS, shortcutLabelOf } from "@/shared/lib/shortcuts";
+import { RailFoot } from "@/features/conversations/RailFoot";
 import type { Project, ProjectStatus } from "./projectStorage";
 
 type Props = {
@@ -73,39 +73,12 @@ export function ProjectRail(props: Props) {
           <Plus size={18} strokeWidth={2} />
         </button>
       </div>
-      <button
-        type="button"
-        className="icon-button"
-        aria-label={t("settings.title")}
-        title={t("conversations.settingsWithShortcut", { shortcut: shortcutLabelOf(SHORTCUTS.settings) })}
-        onClick={onOpenSettings}
-      >
-        <Settings size={18} strokeWidth={1.8} />
-      </button>
-      {/* At the bottom corner, as in the Chat space: it unfolds the sidebar, or in a narrow window opens it as a drawer */}
-      {onUnfold ? (
-        <button
-          type="button"
-          className="icon-button sidebar-unfold"
-          aria-label={t("conversations.sidebar.unfold")}
-          title={t("conversations.sidebar.unfoldWithShortcut", { shortcut: shortcutLabelOf(SHORTCUTS.sidebar) })}
-          onClick={onUnfold}
-        >
-          <PanelLeftOpen size={18} strokeWidth={2} />
-        </button>
-      ) : (
-        <button
-          ref={drawerButtonRef}
-          type="button"
-          className="icon-button sidebar-unfold"
-          aria-label={t("projects.rail.showSidebar")}
-          aria-expanded={isDrawerOpen}
-          title={t("projects.rail.showSidebar")}
-          onClick={onOpenDrawer}
-        >
-          <PanelLeftOpen size={18} strokeWidth={2} />
-        </button>
-      )}
+      <RailFoot
+        onOpenSettings={onOpenSettings}
+        onUnfold={onUnfold}
+        drawer={{ isOpen: isDrawerOpen, onOpen: onOpenDrawer }}
+        drawerButtonRef={drawerButtonRef}
+      />
     </nav>
   );
 }

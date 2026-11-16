@@ -1,18 +1,19 @@
-import { Check, ChevronLeft, Layers, Lock, RefreshCw, TriangleAlert, Undo2, X } from "lucide-react";
+import { Lock, RefreshCw, TriangleAlert } from "lucide-react";
 import { type KeyboardEvent, useMemo, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { useEscapeKey } from "@/shared/hooks/useEscapeKey";
 import { isShortcut } from "@/shared/lib/platform";
-import { SHORTCUTS, shortcutLabelOf } from "@/shared/lib/shortcuts";
+import { SHORTCUTS } from "@/shared/lib/shortcuts";
 import type { ProposedChange } from "@/shared/types";
 import { cellChanges, fileExtension, orderedBySheet } from "./cellGrid";
 import { CellsReview } from "./CellsReview";
+import { ChangeReviewFooter } from "./ChangeReviewFooter";
+import { ChangeReviewHeader } from "./ChangeReviewHeader";
 import { ChangeReviewTabs } from "./ChangeReviewTabs";
 import type { ChangeAction, SheetReview } from "./useWorkspaceChanges";
 import { cellKey } from "./workspaceChanges";
 import { SKIP_REASON_LABEL } from "./workspace";
 import { fileName } from "@/shared/lib/paths";
-import { PathLabel } from "./PathLabel";
 
 type Props = {
   changes: ProposedChange[];
@@ -61,16 +62,11 @@ export function CellsReviewPanel({ changes, change, review, onSelect, onAction, 
       aria-label={t("cells.panel.label", { path: change.path })}
       onKeyDown={handleKey}
     >
-      <div className="change-review-header">
-        <button type="button" className="ghost-button change-review-back" onClick={onClose}>
-          <ChevronLeft size={15} strokeWidth={2} />
-          {t("changes.review.back")}
-        </button>
-        <span className="change-review-title">
-          <span className="change-review-path" title={`${change.root}/${change.path}`}>
-            <PathLabel path={change.path} dirClassName="change-card-dir" />
-          </span>
-          <span className="change-review-meta">
+      <ChangeReviewHeader
+        change={change}
+        onClose={onClose}
+        meta={
+          <>
             <span className="change-tag">{t("cells.panel.tag", { extension: fileExtension(change.path) })}</span>
             <span>
               {t("cells.panel.cellsInSheets", {
@@ -78,12 +74,9 @@ export function CellsReviewPanel({ changes, change, review, onSelect, onAction, 
                 sheets: t("cells.sheetCount", { count: sheetCount }),
               })}
             </span>
-          </span>
-        </span>
-        <button type="button" className="icon-button small" aria-label={t("changes.review.close")} onClick={onClose}>
-          <X size={16} strokeWidth={2} />
-        </button>
-      </div>
+          </>
+        }
+      />
 
       <ChangeReviewTabs changes={changes} openId={change.id} onSelect={onSelect} />
 
@@ -135,63 +128,19 @@ export function CellsReviewPanel({ changes, change, review, onSelect, onAction, 
         />
       )}
 
-      <div className="change-review-footer">
-        {change.status === "applied" ? (
-          <>
-            <span>
-              <Check size={14} strokeWidth={2.6} className="change-review-ok" />{" "}
-              {change.copiedTo
-                ? t("cells.panel.savedIn", { path: change.copiedTo })
-                : t("cells.panel.appliedBackup")}
-            </span>
-            <button type="button" className="outline-button small" disabled={isBusy} onClick={() => onAction("undo")}>
-              <Undo2 size={14} strokeWidth={2} />
-              {t("changes.action.undo")}
-            </button>
-          </>
-        ) : change.status === "noMatch" || change.status === "conflict" ? (
-          <>
-            <span>{t("changes.review.cantApply")}</span>
-            <button type="button" className="ghost-button" onClick={() => onAction("discard")}>
-              {t("changes.action.discard")}
-            </button>
-            <button type="button" className="primary-button small" onClick={() => onAction("retry")}>
-              <RefreshCw size={14} strokeWidth={2} />
-              {t("changes.action.askNyraRedo")}
-            </button>
-          </>
-        ) : change.status === "protected" && change.reason === "readOnly" ? (
-          <>
-            <span>{t("cells.panel.copyNote")}</span>
-            <button type="button" className="ghost-button" onClick={() => onAction("discard")}>
-              {t("changes.action.discard")}
-            </button>
-            <button type="button" className="primary-button small" disabled={isBusy} onClick={() => onAction("convert")}>
-              <Layers size={14} strokeWidth={2} />
-              {t("changes.action.convert")}
-            </button>
-          </>
-        ) : change.status === "protected" || change.status === "discarded" ? (
-          <span>{change.status === "protected" ? t("changes.review.noWrite") : t("changes.review.discarded")}</span>
-        ) : (
-          <>
-            <span>{t("cells.panel.backupNote")}</span>
-            <button type="button" className="ghost-button" onClick={() => onAction("discard")}>
-              {t("changes.action.discard")}
-            </button>
-            <button
-              type="button"
-              className="primary-button small"
-              disabled={!isReadyToApply}
-              onClick={() => onAction("apply")}
-            >
-              <Check size={14} strokeWidth={2.4} />
-              {change.status === "undone" ? t("changes.action.reapply") : t("changes.action.apply")}
-              <kbd>{shortcutLabelOf(SHORTCUTS.applyChange)}</kbd>
-            </button>
-          </>
-        )}
-      </div>
+      <ChangeReviewFooter
+        change={change}
+        isBusy={isBusy}
+        isReadyToApply={isReadyToApply}
+        onAction={onAction}
+        appliedNote={
+          change.copiedTo ? t("cells.panel.savedIn", { path: change.copiedTo }) : t("cells.panel.appliedBackup")
+        }
+        pendingNote={t("cells.panel.backupNote")}
+        applyLabel={change.status === "undone" ? t("changes.action.reapply") : t("changes.action.apply")}
+        retryLabel={t("changes.action.askNyraRedo")}
+        copyNote={t("cells.panel.copyNote")}
+      />
     </aside>
   );
 }

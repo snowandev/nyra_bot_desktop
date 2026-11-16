@@ -22,6 +22,11 @@ pub const MARKS_LABEL: &str = "marks";
 const MARKS_EVENT: &str = "screen-marks";
 // What the model gets of a screen: enough to read a settings window, measured on a 6K screen
 const VIEW_WIDTH: u32 = 1600;
+// Finding something on a screen of many points (a 4K one at scale 1×) needs more detail than VIEW_WIDTH gives: the
+// first look to find it keeps as many pixels per point as a 1080p screen gets, up to this width. Measured with
+// qwen3.8 on a 4K screen at scale 1×: 5 of 8 buttons found at 1600 px, 7 of 8 at 2400, for half a second more.
+const DETAIL_PER_POINT: f64 = 1600.0 / 1920.0;
+const MAX_OVERVIEW_WIDTH: u32 = 2400;
 // Small text stays sharp at this JPEG quality
 const VIEW_QUALITY: u8 = 85;
 // A zoom shows this part of the screen's width and height, but never fewer pixels than this: a small screen would
@@ -229,9 +234,13 @@ fn as_base64(image: &RgbaImage) -> Result<String, String> {
 
 /// The image at most VIEW_WIDTH wide, or within what the model takes when it says so
 fn scaled_to_view(image: &RgbaImage, fit: Option<Fit>) -> RgbaImage {
+    scaled_to(image, VIEW_WIDTH, fit)
+}
+
+fn scaled_to(image: &RgbaImage, widest: u32, fit: Option<Fit>) -> RgbaImage {
     let (width, height) = image.dimensions();
-    let (max_width, max_pixels) = fit.map_or((VIEW_WIDTH, u64::MAX), |fit| {
-        (fit.width.min(VIEW_WIDTH), fit.pixels)
+    let (max_width, max_pixels) = fit.map_or((widest, u64::MAX), |fit| {
+        (fit.width.min(widest), fit.pixels)
     });
     let (w, h) = (f64::from(width), f64::from(height));
     let by_pixels = (max_pixels as f64 / (w * h)).sqrt();
@@ -280,6 +289,35 @@ pub async fn screen_look(
             width,
             height,
         })
+    })
+    .await?
+}
+
+/// How wide the first look to find something is: as many pixels per point as a 1080p screen gets in VIEW_WIDTH
+fn overview_width(shot: &Shot) -> u32 {
+    let points = f64::from(shot.size.width) / shot.scale;
+    ((points * DETAIL_PER_POINT).round() as u32).clamp(VIEW_WIDTH, MAX_OVERVIEW_WIDTH)
+}
+
+/// The latest capture with more detail, for finding something on a screen of many points; None when the view the
+/// model already has is as detailed (a 1080p screen, a 4K one at scale 2×) or the model takes nothing bigger
+#[tauri::command]
+pub async fn screen_overview(
+    app: AppHandle,
+    conversation_id: String,
+    fit: Option<Fit>,
+) -> Result<Option<ScreenView>, String> {
+    crate::workspace::blocking(move || {
+        let shot = shot_of(&app.state::<ScreenLooks>(), &conversation_id)?;
+        let overview = scaled_to(&shot.image, overview_width(&shot), fit);
+        if overview.width() <= scaled_to_view(&shot.image, fit).width() {
+            return Ok(None);
+        }
+        Ok(Some(ScreenView {
+            image: as_base64(&overview)?,
+            width: overview.width(),
+            height: overview.height(),
+        }))
     })
     .await?
 }
@@ -837,6 +875,16 @@ mod tests {
                 height: 960.0
             }
         );
+    }
+
+    #[test]
+    fn finds_with_more_detail_only_on_screens_of_many_points() {
+        let screen = |width, height, scale| shot_at(0, 0, width, height, scale);
+        assert_eq!(overview_width(&screen(1920, 1080, 1.0)), 1600);
+        assert_eq!(overview_width(&screen(3840, 2160, 2.0)), 1600);
+        assert_eq!(overview_width(&screen(3840, 2160, 1.5)), 2133);
+        assert_eq!(overview_width(&screen(3840, 2160, 1.0)), 2400);
+        assert_eq!(overview_width(&screen(6016, 3384, 2.0)), 2400);
     }
 
     #[test]

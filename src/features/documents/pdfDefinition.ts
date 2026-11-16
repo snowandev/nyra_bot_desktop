@@ -1,5 +1,5 @@
 import { openableUrl } from "@/shared/lib/links";
-import type { List, ListItem, PhrasingContent, Root, RootContent, Table } from "mdast";
+import type { FootnoteDefinition, List, ListItem, PhrasingContent, Root, RootContent, Table } from "mdast";
 import type { Content, ContentText, Margins, Node, NodeQueries, TDocumentDefinitions } from "pdfmake/interfaces";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
@@ -145,7 +145,7 @@ function inline(nodes: PhrasingContent[], style: InlineStyle = {}): ContentText[
       case "image":
         return run(`[Imagen${node.alt ? `: ${cleanText(node.alt)}` : ""}]`, { color: MUTED_COLOR, italics: true });
       case "footnoteReference":
-        return run(`[${node.label ?? node.identifier}]`, { fontSize: 8, color: MUTED_COLOR });
+        return run(node.label ?? node.identifier, { sup: true, color: MUTED_COLOR });
       case "html":
         return run(cleanText(node.value));
       default:
@@ -356,11 +356,13 @@ function block(node: RootContent, pictures: Pictures): Content[] {
     case "footnoteDefinition":
       return [
         {
-          stack: [
-            { text: `[${node.label ?? node.identifier}]`, fontSize: 8, color: MUTED_COLOR },
-            ...node.children.flatMap((child) => block(child, pictures)),
+          columns: [
+            { text: `${node.label ?? node.identifier}.`, width: 14 },
+            { stack: node.children.flatMap((child) => block(child, pictures)), width: "*" },
           ],
+          columnGap: 2,
           fontSize: 9,
+          color: MUTED_COLOR,
         },
       ];
     default:
@@ -418,6 +420,25 @@ export const keepHeadingWithNext = (node: Node, nodes: NodeQueries) =>
   nodes.getNodesOnNextPage().length > 0;
 
 // A4, as most documents are printed outside the US; the page number goes at the foot of each page
+// Footnotes numbered in the order the text cites them and gathered at its end, after a line, as the chat shows them
+function withFootnotesAtEnd(root: Root): RootContent[] {
+  const numbers = new Map<string, number>();
+  const visit = (node: Root | RootContent) => {
+    if (node.type === "footnoteReference") {
+      if (!numbers.has(node.identifier)) numbers.set(node.identifier, numbers.size + 1);
+      node.label = String(numbers.get(node.identifier));
+    }
+    if ("children" in node) (node.children as RootContent[]).forEach(visit);
+  };
+  visit(root);
+  const notes = root.children
+    .filter((node): node is FootnoteDefinition => node.type === "footnoteDefinition" && numbers.has(node.identifier))
+    .sort((a, b) => (numbers.get(a.identifier) ?? 0) - (numbers.get(b.identifier) ?? 0));
+  notes.forEach((note) => (note.label = String(numbers.get(note.identifier))));
+  const text = root.children.filter((node) => node.type !== "footnoteDefinition");
+  return notes.length > 0 ? [...text, { type: "thematicBreak" }, ...notes] : text;
+}
+
 export function pdfDefinition(
   markdown: string,
   title: string,
@@ -430,7 +451,7 @@ export function pdfDefinition(
     pageSize: "A4",
     pageMargins: MARGINS,
     pageBreakBefore: keepHeadingWithNext,
-    content: parseMarkdown(markdown).children.flatMap((node) => block(node, { diagrams, formulas, images })),
+    content: withFootnotesAtEnd(parseMarkdown(markdown)).flatMap((node) => block(node, { diagrams, formulas, images })),
     footer: (page, pages) => ({ text: `${page} / ${pages}`, style: PAGE_NUMBER_STYLE }),
     defaultStyle: { font: TEXT_FONT, fontSize: BODY_FONT_SIZE, lineHeight: 1.3, color: TEXT_COLOR },
     styles: {

@@ -1,7 +1,5 @@
 import {
-  Check,
   ChevronDown,
-  ChevronLeft,
   ChevronUp,
   Columns2,
   FolderOpen,
@@ -9,8 +7,6 @@ import {
   Rows3,
   Table2,
   TriangleAlert,
-  Undo2,
-  X,
 } from "lucide-react";
 import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -18,14 +14,15 @@ import { useEscapeKey } from "@/shared/hooks/useEscapeKey";
 import type { ChangeAction, TextReview } from "./useWorkspaceChanges";
 import { blockRows, changeStats, createdRows, diffRows } from "./fileChanges";
 import { isShortcut } from "@/shared/lib/platform";
-import { SHORTCUTS, shortcutLabelOf } from "@/shared/lib/shortcuts";
+import { SHORTCUTS } from "@/shared/lib/shortcuts";
 import type { ProposedChange } from "@/shared/types";
+import { ChangeReviewFooter } from "./ChangeReviewFooter";
+import { ChangeReviewHeader } from "./ChangeReviewHeader";
 import { ChangeReviewTabs } from "./ChangeReviewTabs";
 import { csvDiffRows, isCsvPath, looksLikeHeader, separatorLabel, separatorOf } from "./csvDiff";
 import { CsvDiffTable } from "./CsvDiffTable";
 import { DiffTable } from "./DiffTable";
 import { folderPrefix } from "@/shared/lib/paths";
-import { PathLabel } from "./PathLabel";
 import type { TextEncoding } from "./workspaceStorage";
 
 type Props = {
@@ -133,16 +130,11 @@ export function ChangeReviewPanel({ changes, change, review, onSelect, onAction,
 
   return (
     <aside ref={panelRef} className="change-review" aria-label={t("changes.review.label")} onKeyDown={handleKey}>
-      <div className="change-review-header">
-        <button type="button" className="ghost-button change-review-back" onClick={onClose}>
-          <ChevronLeft size={15} strokeWidth={2} />
-          {t("changes.review.back")}
-        </button>
-        <span className="change-review-title">
-          <span className="change-review-path" title={`${change.root}/${change.path}`}>
-            <PathLabel path={change.path} dirClassName="change-card-dir" />
-          </span>
-          <span className="change-review-meta">
+      <ChangeReviewHeader
+        change={change}
+        onClose={onClose}
+        meta={
+          <>
             <span className={`change-tag ${isNew ? "new" : ""}`}>
               {isNew ? t("changes.tag.newFile") : t("changes.tag.edit")}
             </span>
@@ -162,12 +154,9 @@ export function ChangeReviewPanel({ changes, change, review, onSelect, onAction,
                 {t("changes.totalLines", { count: totalLines })} · {encodingLabel} · {review?.crlf ? "CRLF" : "LF"}
               </span>
             )}
-          </span>
-        </span>
-        <button type="button" className="icon-button small" aria-label={t("changes.review.close")} onClick={onClose}>
-          <X size={16} strokeWidth={2} />
-        </button>
-      </div>
+          </>
+        }
+      />
 
       <ChangeReviewTabs changes={changes} openId={change.id} onSelect={onSelect} />
 
@@ -318,67 +307,34 @@ export function ChangeReviewPanel({ changes, change, review, onSelect, onAction,
         )}
       </div>
 
-      <div className="change-review-footer">
-        {change.status === "applied" && !change.applied ? (
-          <span>
-            <Check size={14} strokeWidth={2.6} className="change-review-ok" /> {t("changes.review.appliedByClaudeCode")}
-          </span>
-        ) : change.status === "applied" ? (
+      <ChangeReviewFooter
+        change={change}
+        isBusy={isBusy}
+        isReadyToApply={isReadyToApply}
+        onAction={onAction}
+        appliedNote={t("changes.review.appliedBackup")}
+        pendingNote={
           <>
-            <span>
-              <Check size={14} strokeWidth={2.6} className="change-review-ok" /> {t("changes.review.appliedBackup")}
-            </span>
-            <button type="button" className="outline-button small" disabled={isBusy} onClick={() => onAction("undo")}>
-              <Undo2 size={14} strokeWidth={2} />
-              {t("changes.action.undo")}
-            </button>
+            {isNew ? `${t("changes.review.willCreate")} ` : `${t("changes.review.backupFirst")} `}
+            {!isNew &&
+              (csv
+                ? t("changes.review.keepsCsv", {
+                    separator: separatorLabel(csv.separator),
+                    encoding: encodingLabel,
+                    eol: review?.crlf ? "CRLF" : "LF",
+                  })
+                : t("changes.review.keepsText", { encoding: encodingLabel, eol: review?.crlf ? "CRLF" : "LF" }))}
           </>
-        ) : change.status === "noMatch" || change.status === "conflict" ? (
-          <>
-            <span>{t("changes.review.cantApply")}</span>
-            <button type="button" className="ghost-button" onClick={() => onAction("discard")}>
-              {t("changes.action.discard")}
-            </button>
-            <button type="button" className="primary-button small" onClick={() => onAction("retry")}>
-              <RefreshCw size={14} strokeWidth={2} />
-              {t("changes.action.askNyraFix")}
-            </button>
-          </>
-        ) : change.status === "protected" || change.status === "discarded" ? (
-          <span>{change.status === "protected" ? t("changes.review.noWrite") : t("changes.review.discarded")}</span>
-        ) : (
-          <>
-            <span>
-              {isNew ? `${t("changes.review.willCreate")} ` : `${t("changes.review.backupFirst")} `}
-              {!isNew &&
-                (csv
-                  ? t("changes.review.keepsCsv", {
-                      separator: separatorLabel(csv.separator),
-                      encoding: encodingLabel,
-                      eol: review?.crlf ? "CRLF" : "LF",
-                    })
-                  : t("changes.review.keepsText", { encoding: encodingLabel, eol: review?.crlf ? "CRLF" : "LF" }))}
-            </span>
-            <button type="button" className="ghost-button" onClick={() => onAction("discard")}>
-              {t("changes.action.discard")}
-            </button>
-            <button
-              type="button"
-              className="primary-button small"
-              disabled={!isReadyToApply}
-              onClick={() => onAction("apply")}
-            >
-              <Check size={14} strokeWidth={2.4} />
-              {isNew
-                ? t("changes.action.createFile")
-                : change.status === "undone"
-                  ? t("changes.action.reapply")
-                  : t("changes.action.apply")}
-              <kbd>{shortcutLabelOf(SHORTCUTS.applyChange)}</kbd>
-            </button>
-          </>
-        )}
-      </div>
+        }
+        applyLabel={
+          isNew
+            ? t("changes.action.createFile")
+            : change.status === "undone"
+              ? t("changes.action.reapply")
+              : t("changes.action.apply")
+        }
+        retryLabel={t("changes.action.askNyraFix")}
+      />
     </aside>
   );
 }

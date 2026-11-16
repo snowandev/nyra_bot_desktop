@@ -30,6 +30,13 @@ línea \`cuadernos\` y la [web nueva](https://ejemplo.com/tienda). El precio med
 
 > Las cifras son aproximadas y no incluyen devoluciones.
 
+Los envíos de junio se retrasaron[^envios] y el precio antiguo ~~de 12 €~~ ya no se aplica[^precio].
+
+[^envios]: Por la huelga de transporte de la segunda semana.
+[^precio]: Desde el 1 de junio.
+
+---
+
 > [!WARNING]
 > Revisa el stock de agendas antes de junio: en mayo se agotaron **dos semanas**.
 
@@ -86,6 +93,50 @@ pie title Ventas por línea
 \`\`\`ts
 // Margen de un producto
 const margin = (price: number, cost: number) => (price - cost) / price;
+\`\`\`
+
+\`\`\`diff
+- const shipping = 4.5;
++ const shipping = order.total > 50 ? 0 : 4.5;
+  const total = order.total + shipping;
+\`\`\`
+
+\`\`\`ts
+const catalog = [
+  { "producto": "Cuaderno 1", "precio": 11, "stock": 3 },
+  { "producto": "Cuaderno 2", "precio": 12, "stock": 6 },
+  { "producto": "Cuaderno 3", "precio": 13, "stock": 9 },
+  { "producto": "Cuaderno 4", "precio": 14, "stock": 12 },
+  { "producto": "Cuaderno 5", "precio": 15, "stock": 15 },
+  { "producto": "Cuaderno 6", "precio": 16, "stock": 18 },
+  { "producto": "Cuaderno 7", "precio": 10, "stock": 21 },
+  { "producto": "Cuaderno 8", "precio": 11, "stock": 24 },
+  { "producto": "Cuaderno 9", "precio": 12, "stock": 27 },
+  { "producto": "Cuaderno 10", "precio": 13, "stock": 30 },
+  { "producto": "Cuaderno 11", "precio": 14, "stock": 33 },
+  { "producto": "Cuaderno 12", "precio": 15, "stock": 36 },
+  { "producto": "Cuaderno 13", "precio": 16, "stock": 39 },
+  { "producto": "Cuaderno 14", "precio": 10, "stock": 42 },
+  { "producto": "Cuaderno 15", "precio": 11, "stock": 45 },
+  { "producto": "Cuaderno 16", "precio": 12, "stock": 48 },
+  { "producto": "Cuaderno 17", "precio": 13, "stock": 51 },
+  { "producto": "Cuaderno 18", "precio": 14, "stock": 54 },
+  { "producto": "Cuaderno 19", "precio": 15, "stock": 57 },
+  { "producto": "Cuaderno 20", "precio": 16, "stock": 60 },
+  { "producto": "Cuaderno 21", "precio": 10, "stock": 63 },
+  { "producto": "Cuaderno 22", "precio": 11, "stock": 66 },
+  { "producto": "Cuaderno 23", "precio": 12, "stock": 69 },
+  { "producto": "Cuaderno 24", "precio": 13, "stock": 72 },
+  { "producto": "Cuaderno 25", "precio": 14, "stock": 75 },
+  { "producto": "Cuaderno 26", "precio": 15, "stock": 78 },
+  { "producto": "Cuaderno 27", "precio": 16, "stock": 81 },
+  { "producto": "Cuaderno 28", "precio": 10, "stock": 84 },
+  { "producto": "Cuaderno 29", "precio": 11, "stock": 87 },
+  { "producto": "Cuaderno 30", "precio": 12, "stock": 90 },
+  { "producto": "Cuaderno 31", "precio": 13, "stock": 93 },
+  { "producto": "Cuaderno 32", "precio": 14, "stock": 96 },
+  { "producto": "Cuaderno 33", "precio": 15, "stock": 99 },
+];
 \`\`\`
 
 \`\`\`
