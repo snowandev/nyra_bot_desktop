@@ -66,9 +66,34 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf libasound2-dev xdg-utils
       - run: npm ci
+      # macOS keeps the permissions given to an app (screen, Accessibility, microphone) only while its signature names
+      # the same certificate, so every version is signed with Nyra's own one and an update keeps them. Imported here by
+      # its name: Tauri only picks a certificate up by itself when it comes from Apple.
+      - name: Signing certificate
+        if: matrix.platform == 'macos-latest'
+        env:
+          MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+        run: |
+          if [ -z "$MACOS_CERTIFICATE" ]; then
+            echo "::error::The MACOS_CERTIFICATE secret is missing: without it every update would lose its permissions"
+            exit 1
+          fi
+          keychain="$RUNNER_TEMP/signing.keychain-db"
+          keychain_password="$(openssl rand -hex 16)"
+          echo "$MACOS_CERTIFICATE" | base64 --decode > "$RUNNER_TEMP/certificate.p12"
+          security create-keychain -p "$keychain_password" "$keychain"
+          security set-keychain-settings -t 3600 -u "$keychain"
+          security unlock-keychain -p "$keychain_password" "$keychain"
+          security import "$RUNNER_TEMP/certificate.p12" -k "$keychain" -P "$MACOS_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$keychain_password" "$keychain" > /dev/null
+          security list-keychains -d user -s "$keychain" $(security list-keychains -d user | tr -d '"')
+          rm "$RUNNER_TEMP/certificate.p12"
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # The certificate imported above, by its name. Windows and Linux don't read it.
+          APPLE_SIGNING_IDENTITY: Nyra Bot
           # The key that signs the updates; its public half is in tauri.conf.json
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
@@ -78,6 +103,13 @@ jobs:
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }} --config src-tauri/tauri.release.conf.json
+      # The draft is only published by hand: a version signed any other way must not get there
+      - name: Check the signature
+        if: matrix.platform == 'macos-latest'
+        run: |
+          app="$(ls -d src-tauri/target/*/release/bundle/macos/*.app | head -1)"
+          codesign --verify --deep --strict "$app"
+          codesign -dr - "$app" 2>&1 | tee /dev/stderr | grep -q 'certificate leaf'
 
   publish-notes:
     needs: [notes, build]
