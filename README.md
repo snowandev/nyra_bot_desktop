@@ -8,6 +8,8 @@
 
 Nyra Bot is a desktop app for talking with AI models. It works on macOS, Windows and Linux, with models that run on your computer or in the cloud. You can switch models in the middle of a conversation without losing the history.
 
+<p align="center"><img src="docs/screenshots/chat-table.png" alt="Nyra comparing three programming languages in a table"></p>
+
 > Nyra is in an early version.
 
 ## Download Nyra
@@ -22,6 +24,13 @@ Download the installer for your system from the [latest release](https://github.
 | Linux | `.AppImage`, `.deb` or `.rpm` |
 
 ## What it can do
+
+<p align="center">
+  <img src="docs/screenshots/chat-diagram.png" alt="A diagram of a web request drawn in a reply" width="49%">
+  <img src="docs/screenshots/chat-code.png" alt="Python code to count words, in English" width="49%">
+  <img src="docs/screenshots/chat-code.es.png" alt="The same Python code, asked in Spanish" width="49%">
+  <img src="docs/screenshots/chat-document.es.png" alt="A shopping list written as a document" width="49%">
+</p>
 
 ### Chat
 
