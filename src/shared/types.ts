@@ -120,8 +120,9 @@ export type ScreenStep = {
   kind: "look" | "point" | "unpoint" | "watch" | "click" | "type" | "key" | "scroll";
   // What it pointed at, as its note says, the step the user had to do, or what it clicked, typed or pressed
   target: string;
-  // taken: the user stopped Nyra while it was using their mouse and keyboard
-  outcome?: "ok" | "missing" | "refused" | "failed" | "done" | "ended" | "idle" | "taken";
+  // taken: the user stopped Nyra while it was using their mouse and keyboard; inNyra: it didn't type or press keys
+  // because the keyboard was in Nyra's own window
+  outcome?: "ok" | "missing" | "refused" | "failed" | "done" | "ended" | "idle" | "taken" | "inNyra";
   error?: string;
 };
 

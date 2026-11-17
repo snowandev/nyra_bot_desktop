@@ -5,7 +5,8 @@ import { DiffTable } from "@/features/workspace/DiffTable";
 import type { DiffRow } from "@/features/workspace/fileChanges";
 import { Dialog } from "@/shared/ui/Dialog";
 import { errorMessage } from "@/shared/lib/errors";
-import { gitDiffRows, newFileRows } from "./gitDiff";
+import { createdRows } from "@/features/workspace/fileChanges";
+import { gitDiffRows } from "./gitDiff";
 import { shownPath } from "./projects";
 import { type GitChange, projectGitDiff } from "./projectStorage";
 
@@ -32,7 +33,7 @@ export function GitDiffViewer({ root, change, onClose }: Props) {
         if (cancelled) return;
         if (diff.unavailable) setLoaded({ unavailable: true });
         else
-          setLoaded({ rows: diff.wholeFile ? newFileRows(diff.text) : gitDiffRows(diff.text), isNew: diff.wholeFile });
+          setLoaded({ rows: diff.wholeFile ? createdRows(diff.text) : gitDiffRows(diff.text), isNew: diff.wholeFile });
       })
       .catch((e) => {
         if (!cancelled) setLoaded({ error: errorMessage(e) });

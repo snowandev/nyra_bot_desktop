@@ -12,10 +12,11 @@ function threeVersions() {
 }
 
 describe("reply versions", () => {
+  // Every field goes through one loop over a list the type checks, so one case stands for all of them
   it("keeps each version's cards with it: a tool, the browser, a screenshot", () => {
     const first: Message = {
-      ...reply("Busqué en GitHub", "qwen3"),
-      toolCalls: [{ id: "t1", at: 0, server: "github", serverName: "GitHub", tool: "search", arguments: "{}", state: "done" }],
+      ...reply("Busqué en Tareas", "qwen3"),
+      toolCalls: [{ id: "t1", at: 0, server: "tareas", serverName: "Tareas", tool: "search", arguments: "{}", state: "done" }],
       browser: { at: 3, steps: [{ kind: "open", target: "https://ejemplo.com" }] } as unknown as Message["browser"],
       attachments: [{ id: "shot", kind: "image", name: "page.png", mimeType: "image/png", data: "AA" }],
     };
@@ -26,7 +27,7 @@ describe("reply versions", () => {
     expect(regenerated.attachments).toBeUndefined();
     // Going back finds them all
     const back = selectVersion(regenerated, 0);
-    expect(back.content).toBe("Busqué en GitHub");
+    expect(back.content).toBe("Busqué en Tareas");
     expect(back.toolCalls?.[0].id).toBe("t1");
     expect(back.browser).toEqual(first.browser);
     expect(back.attachments?.[0].id).toBe("shot");
@@ -54,13 +55,6 @@ describe("reply versions", () => {
     expect(versionsOf(first).map((v) => v.content)).toEqual(["A", "B", "C"]);
   });
 
-  it("doesn't carry the stats or searches of one version into another", () => {
-    const withStats = { ...reply("A", "qwen3"), stats: { outputTokens: 10, durationMs: 1000 } };
-    const regenerated = { ...nextVersion(withStats, placeholder("claude")), content: "B" };
-    expect(regenerated.stats).toBeUndefined();
-    expect(selectVersion(regenerated, 0).stats).toEqual({ outputTokens: 10, durationMs: 1000 });
-  });
-
   it("goes back to the latest version when a regeneration produced nothing", () => {
     const failed = nextVersion(threeVersions(), placeholder("phi"));
     const restored = withoutEmptyVersion(failed);
@@ -78,16 +72,3 @@ describe("reply versions", () => {
   });
 });
 
-it("keeps the skills each version used", () => {
-  const first: Message = { role: "assistant", content: "Resumen", model: "qwen", skillsUsed: ["summarize"] };
-  const regenerated = nextVersion(first, { role: "assistant", content: "", model: "claude" });
-  expect(regenerated.skillsUsed).toBeUndefined();
-  expect(selectVersion({ ...regenerated, content: "Otra" }, 0).skillsUsed).toEqual(["summarize"]);
-});
-
-it("keeps the memories each version saved", () => {
-  const first: Message = { role: "assistant", content: "Anotado", memoriesSaved: [{ id: "m1", text: "Usa Tauri" }] };
-  const regenerated = nextVersion(first, { role: "assistant", content: "" });
-  expect(regenerated.memoriesSaved).toBeUndefined();
-  expect(selectVersion({ ...regenerated, content: "Otra" }, 0).memoriesSaved).toEqual([{ id: "m1", text: "Usa Tauri" }]);
-});

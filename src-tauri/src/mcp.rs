@@ -1043,6 +1043,7 @@ mod tests {
     }
 
     #[test]
+    // Settings reads these in camelCase, and they're stored that way between sessions
     fn known_tools_survive_a_round_trip() {
         let tool = McpTool {
             name: "search".into(),
@@ -1053,6 +1054,7 @@ mod tests {
         };
         let known = HashMap::from([("tareas".to_string(), vec![tool])]);
         let text = serde_json::to_string(&known).unwrap();
+        assert!(text.contains(r#""inputSchema""#) && text.contains(r#""readOnly":true"#));
         let back: HashMap<String, Vec<McpTool>> = serde_json::from_str(&text).unwrap();
         assert_eq!(back["tareas"][0].name, "search");
         assert!(back["tareas"][0].read_only);

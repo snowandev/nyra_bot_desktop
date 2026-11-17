@@ -73,14 +73,15 @@ pub enum Action {
     },
 }
 
-/// How it went: done; stopped by the user while Nyra's pointer was on its way; or the place is one of Nyra's own
-/// windows, where it never clicks
+/// How it went: done; stopped by the user while Nyra's pointer was on its way; the place is one of Nyra's own
+/// windows, where it never clicks; or the keyboard is in one of them, where it never types
 #[derive(Serialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
 pub enum Acted {
     Done,
     Stopped,
     OwnWindow,
+    OwnKeyboard,
 }
 
 #[tauri::command]
@@ -275,6 +276,9 @@ fn act(app: &AppHandle, conversation: &str, action: Action) -> Result<Acted, Str
                     with_input(app, type_it)?;
                 }
                 None => {
+                    if own_keyboard(app) {
+                        return Ok(Acted::OwnKeyboard);
+                    }
                     relabel(app, conversation, note)?;
                     with_input(app, type_it)?;
                 }
@@ -282,6 +286,9 @@ fn act(app: &AppHandle, conversation: &str, action: Action) -> Result<Acted, Str
         }
         Action::Key { keys, note } => {
             let (held, key) = input::keys_of(&keys)?;
+            if own_keyboard(app) {
+                return Ok(Acted::OwnKeyboard);
+            }
             relabel(app, conversation, note)?;
             with_input(app, move |input| input.keys(&held, key))?;
         }
@@ -444,12 +451,26 @@ fn glide_for(from: (f64, f64), to: (f64, f64), shot: &Shot) -> Duration {
     Duration::from_millis(ms as u64)
 }
 
+/// Nyra's own windows, where it never clicks or types: all but the one it draws its marks and pointer in, which only
+/// shows over the user's screen
+fn own_windows(app: &AppHandle) -> impl Iterator<Item = tauri::WebviewWindow> {
+    app.webview_windows()
+        .into_values()
+        .filter(|window| window.label() != MARKS_LABEL)
+}
+
+/// Whether one of Nyra's windows has the keyboard: it does right after the user wrote to Nyra, and typing or a
+/// shortcut there would go into Nyra itself (its message box, or Cmd+Q on it)
+fn own_keyboard(app: &AppHandle) -> bool {
+    own_windows(app).any(|window| window.is_focused().unwrap_or(false))
+}
+
 fn over_own_window(app: &AppHandle) -> bool {
     let Ok(cursor) = app.cursor_position() else {
         return false;
     };
-    app.webview_windows().values().any(|window| {
-        if window.label() == MARKS_LABEL || !window.is_visible().unwrap_or(false) {
+    own_windows(app).any(|window| {
+        if !window.is_visible().unwrap_or(false) {
             return false;
         }
         let (Ok(at), Ok(size)) = (window.outer_position(), window.outer_size()) else {

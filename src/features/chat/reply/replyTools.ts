@@ -16,6 +16,7 @@ import type { CommandNeed } from "@/features/terminal/commandTools";
 import type { WorkspaceSnapshot } from "@/features/workspace/useWorkspaces";
 import { configForModel } from "./modelRequest";
 import { untilStopped } from "./stopped";
+import { toolChoicePrompt } from "./toolChoice";
 
 type Setup = {
   conversationId: string;
@@ -27,6 +28,7 @@ type Setup = {
   isIsolated: boolean;
   runCode: boolean;
   browser: boolean;
+  webSearch: boolean;
   canEscalate: boolean;
   workspace?: WorkspaceFolder;
   prepareWorkspace: (conversationId: string, folder: WorkspaceFolder) => Promise<WorkspaceSnapshot | null>;
@@ -119,6 +121,7 @@ export async function prepareReplyTools(setup: Setup) {
       : undefined;
   // Their instructions; the folder's own, and the code's (which depends on the folder), are added by the reply
   const prompts = [
+    toolChoicePrompt({ search: setup.webSearch, browser: !!browsing, screen: !!looking }),
     browsing && browserPrompt(!!openPage, !!looking),
     catalog && catalog.servers.length + catalog.failed.length > 0 && mcpPrompt(catalog),
     looking && screenPrompt(),

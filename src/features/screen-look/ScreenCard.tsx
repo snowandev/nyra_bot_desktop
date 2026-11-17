@@ -36,6 +36,7 @@ const OUTCOME_ICONS = {
   missing: CircleMinus,
   refused: CircleMinus,
   idle: CircleMinus,
+  inNyra: CircleMinus,
   ended: CircleStop,
   taken: CircleStop,
   failed: CircleX,

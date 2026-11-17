@@ -95,8 +95,13 @@ describe("diffRows", () => {
     expect(diffRows(original, result.ranges, new Set(["before-0", "after"])).some((r) => r.kind === "fold")).toBe(false);
   });
 
-  it("shows a new file as added lines", () => {
-    expect(createdRows("a\nb\n").filter((r) => r.kind === "change")).toHaveLength(2);
+  // Also how the Git tab of Código shows a new file
+  it("shows a new file as all added, without a line for its last line end", () => {
+    expect(createdRows("uno\ndos\n")).toEqual([
+      { kind: "header", block: 0, total: 1, line: 1 },
+      { kind: "change", block: 0, added: { n: 1, text: "uno" } },
+      { kind: "change", block: 0, added: { n: 2, text: "dos" } },
+    ]);
   });
 });
 

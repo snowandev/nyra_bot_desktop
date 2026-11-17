@@ -42,13 +42,19 @@ describe("readReply", () => {
     expect(readReply("<nyra-search>x</nyra-search>", [])).toEqual({ kind: "answer" });
     expect(readReply("<nyra-skill>summarize</nyra-skill>", ["search"])).toEqual({ kind: "answer" });
   });
+});
 
-  it("drops leftover tags from what the user reads", () => {
-    expect(withoutRequestTags("Hola <nyra-search>x</nyra-search> mundo")).toBe("Hola  mundo");
-    expect(withoutRequestTags("Hola <nyra-skill>summarize</nyra-skill>")).toBe("Hola");
-    // A closing tag the model left alone never reaches the user
-    expect(withoutRequestTags("Mueve el alfil. </nyra-watch>\nY espera.")).toBe("Mueve el alfil. \nY espera.");
-    expect(withoutRequestTags("Respuesta <nyra-search>sin cerrar")).toBe("Respuesta");
+describe("withoutRequestTags", () => {
+  it.each([
+    ["a search", "Hola <nyra-search>x</nyra-search> mundo", "Hola  mundo"],
+    ["a skill", "Hola <nyra-skill>summarize</nyra-skill>", "Hola"],
+    ["a closing tag left alone", "Mueve el alfil. </nyra-watch>\nY espera.", "Mueve el alfil. \nY espera."],
+    ["a tag never closed", "Respuesta <nyra-search>sin cerrar", "Respuesta"],
+    ["a program", "Lo calculo.<nyra-code>```python\nprint(2)\n```</nyra-code>", "Lo calculo."],
+    ["a program in the background", "Listo.<nyra-code-background>```js\n1\n```</nyra-code-background>", "Listo."],
+    ["a wait and a command", "Listo.<nyra-wait>2</nyra-wait><nyra-run-background>x</nyra-run-background>", "Listo."],
+  ])("keeps %s from what the user reads", (_, reply, shown) => {
+    expect(withoutRequestTags(reply)).toBe(shown);
   });
 });
 
@@ -96,13 +102,18 @@ describe("readRunRound", () => {
     ]);
   });
 
-  it("names a program's language as the interpreters know it, and takes one without a block as Python", () => {
-    expect(programOf("```js\nconsole.log(1)\n```").language).toBe("javascript");
-    expect(programOf("```node\nconsole.log(1)\n```").language).toBe("javascript");
-    expect(programOf("```py\nprint(1)\n```").language).toBe("python");
-    expect(programOf("```python3\nprint(1)\n```").language).toBe("python");
-    expect(programOf("```mjs\nconsole.log(1)\n```").language).toBe("javascript");
-    expect(programOf("```ruby\nputs 1\n```").language).toBe("ruby");
+  it.each([
+    ["js", "javascript"],
+    ["node", "javascript"],
+    ["mjs", "javascript"],
+    ["py", "python"],
+    ["python3", "python"],
+    ["ruby", "ruby"],
+  ])("names a program in %s as the interpreters know it: %s", (fence, language) => {
+    expect(programOf(`\`\`\`${fence}\n1\n\`\`\``).language).toBe(language);
+  });
+
+  it("takes a program without a block as Python", () => {
     expect(programOf("print(1)\n")).toEqual({ language: "python", source: "print(1)" });
   });
 
@@ -115,15 +126,6 @@ describe("readRunRound", () => {
     const source = 'print("```python")\nprint("hola")\nprint("```")';
     expect(programOf(`\n\`\`\`python\n${source}\n\`\`\`\n`).source).toBe(source);
     expect(programOf("```python\nprint(1)").source).toBe("print(1)");
-  });
-
-  it("drops a program's tag from what the user reads", () => {
-    expect(withoutRequestTags("Lo calculo.<nyra-code>```python\nprint(2)\n```</nyra-code>")).toBe("Lo calculo.");
-    expect(withoutRequestTags("Listo.<nyra-code-background>```js\n1\n```</nyra-code-background>")).toBe("Listo.");
-  });
-
-  it("drops the tags from what the user reads, also a wait", () => {
-    expect(withoutRequestTags("Listo.<nyra-wait>2</nyra-wait><nyra-run-background>x</nyra-run-background>")).toBe("Listo.");
   });
 });
 

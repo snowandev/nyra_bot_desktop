@@ -8,10 +8,6 @@ describe("neutralizeAppTags", () => {
     expect(neutralizeAppTags("<command-results>")).toBe("[command-results>");
   });
 
-  it("leaves tags that aren't the app's alone", () => {
-    expect(neutralizeAppTags("<div><file-list><Vec<String>>")).toBe("<div><file-list><Vec<String>>");
-  });
-
   // Every wrapper Nyra writes, in any file, is caught: a new tag can't be forgotten in the list
   it("catches every tag the app writes", () => {
     const sources = import.meta.glob(["/src/**/*.{ts,tsx}", "!/src/**/*.test.{ts,tsx}"], {
@@ -31,8 +27,9 @@ describe("neutralizeAppTags", () => {
     expect(neutralizeAppTags('<file name="x">')).toBe('[file name="x">');
   });
 
-  it("leaves code and other tags alone", () => {
-    const code = "let v: Vec<String> = vec![]; <div class=\"profile\"> <filename> a<b";
-    expect(neutralizeAppTags(code)).toBe(code);
+  it("leaves code and tags that aren't the app's alone", () => {
+    for (const text of ["let v: Vec<String> = vec![]; <div class=\"profile\"> <filename> a<b", "<div><file-list><Vec<String>>"]) {
+      expect(neutralizeAppTags(text)).toBe(text);
+    }
   });
 });

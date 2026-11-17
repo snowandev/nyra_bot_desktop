@@ -334,13 +334,23 @@ describe("browserTools", () => {
     showPage(id, { url: "http://localhost:5173/login", title: "Tienda" });
     // The earlier reply was allowed to use it
     void answerWhenAsked(id, true).catch(() => {});
-    const signal = new AbortController().signal;
-    const browser = browserTools({ conversationId: id, seesImages: true, signal, onScreenshot: () => {}, request: "", ...NO_CARD });
+    let record: BrowserRecord | null = null;
+    const browser = browserTools({
+      conversationId: id,
+      seesImages: true,
+      signal: new AbortController().signal,
+      onScreenshot: () => {},
+      request: "",
+      offset: () => 0,
+      onRecord: (next) => (record = next),
+    });
     storage.browserSnapshot.mockResolvedValue(loginPage);
     storage.browserClick.mockResolvedValue(loginPage);
     const first = await browser.run("click", "3", "");
     expect(storage.browserClick).not.toHaveBeenCalled();
     expect(first.content).toContain('[3] button "Entrar"');
+    // The click that waited isn't listed on the card as a step
+    expect(record).toMatchObject({ steps: [] });
     await browser.run("click", "3", "");
     expect(storage.browserClick).toHaveBeenCalledWith(id, 3);
   });
@@ -498,24 +508,6 @@ describe("quotedFrom", () => {
     expect(JSON.stringify(card())).not.toContain("papel2025");
   });
 
-  it("doesn't list a step that wasn't done", async () => {
-    const id = `c${++conversation}`;
-    showPage(id, { url: "http://localhost:5173/login", title: "Tienda" });
-    let record: BrowserRecord | null = null;
-    const browser = browserTools({
-      conversationId: id,
-      seesImages: true,
-      signal: new AbortController().signal,
-      onScreenshot: () => {},
-      request: "",
-      offset: () => 0,
-      onRecord: (next) => (record = next),
-    });
-    storage.browserSnapshot.mockResolvedValue(loginPage);
-    // Not seen yet in this reply: the click waits for the model to look at the page first
-    await browser.run("click", "3", "");
-    expect(record).toMatchObject({ steps: [] });
-  });
   it("tells the model to stop and say so after several actions in a row that didn't work", async () => {
     const { browser } = tools();
     await browser.run("browse", "localhost:5173/login", "");

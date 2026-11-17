@@ -3498,7 +3498,8 @@
       "done": "Dijiste que ya estaba",
       "ended": "Terminaste la guía",
       "idle": "Sin cambios en 5 minutos",
-      "taken": "La detuviste"
+      "taken": "La detuviste",
+      "inNyra": "No escribió: el teclado estaba en Nyra"
     },
     "marks": {
       "close": "Quitar esta marca"

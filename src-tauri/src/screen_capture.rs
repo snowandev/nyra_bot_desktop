@@ -341,21 +341,19 @@ mod tests {
     }
 
     #[test]
-    fn a_scaled_screen_crops_in_its_real_pixels() {
-        // A screen at 200 %: the window measures 1000 × 500 CSS pixels over 2000 × 1000 real ones
-        let png = crop(&shot(2000, 1000), selection(100.0, 50.0, 300.0, 200.0)).unwrap();
-        assert_eq!(size_of(&png), (600, 400));
-    }
-
-    #[test]
-    fn an_area_past_the_edge_stays_inside_the_screen() {
-        let png = crop(&shot(1000, 500), selection(900.0, 400.0, 400.0, 400.0)).unwrap();
-        assert_eq!(size_of(&png), (100, 100));
-    }
-
-    #[test]
-    fn an_empty_area_still_gives_an_image() {
-        let png = crop(&shot(1000, 500), selection(10.0, 10.0, 0.0, 0.0)).unwrap();
-        assert_eq!(size_of(&png), (1, 1));
+    fn crops_in_real_pixels_and_inside_the_screen() {
+        // (screen, area in the window's 1000 × 500 CSS pixels, image it gives)
+        let cases = [
+            // A screen at 200 %: real pixels are twice the window's
+            ((2000, 1000), (100.0, 50.0, 300.0, 200.0), (600, 400)),
+            // An area past the edge stays inside the screen
+            ((1000, 500), (900.0, 400.0, 400.0, 400.0), (100, 100)),
+            // An empty area still gives an image
+            ((1000, 500), (10.0, 10.0, 0.0, 0.0), (1, 1)),
+        ];
+        for ((width, height), (x, y, w, h), expected) in cases {
+            let png = crop(&shot(width, height), selection(x, y, w, h)).unwrap();
+            assert_eq!(size_of(&png), expected, "area {x},{y} {w}×{h}");
+        }
     }
 }

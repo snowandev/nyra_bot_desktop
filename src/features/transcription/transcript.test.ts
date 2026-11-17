@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import "@/shared/i18n/i18n";
 import { applyLanguage } from "@/shared/i18n/i18n";
-import { clock, isAudio, transcriptAttachment, transcriptFileName, transcriptText } from "./transcript";
+import { isAudio, transcriptAttachment, transcriptFileName, transcriptText } from "./transcript";
 
 applyLanguage("es");
 
@@ -36,6 +36,5 @@ describe("transcripts", () => {
     expect(isAudio(file("Reunión.M4A"))).toBe(true);
     expect(isAudio(file("nota.opus"))).toBe(false);
     expect(isAudio(file("informe.pdf"))).toBe(false);
-    expect(clock(3723)).toBe("1:02:03");
   });
 });

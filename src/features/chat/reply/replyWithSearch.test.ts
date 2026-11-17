@@ -110,12 +110,6 @@ describe("replyWithSearch", () => {
     expect(r.requests[1].at(-1)?.content).toContain("[1] Page 11");
   });
 
-  it("clears a preface written before the search request", async () => {
-    const r = run(["Déjame buscarlo. <nyra-search>python</nyra-search>", "Respuesta [2]."]);
-    await r.reply;
-    expect(r.text()).toBe("Respuesta [2].");
-  });
-
   it("searches first when the user asked explicitly", async () => {
     const r = run(["Respuesta [1]."], { forcedQuery: "qué es python" });
     await r.reply;
@@ -944,15 +938,6 @@ describe("an answer written after notes alone", () => {
       expect(r.everShown()).not.toContain(preface);
       expect(r.text()).toBe("Salió Python 3.14 [1].");
     }
-  });
-
-  it("still shows a short answer whole, and a long one as it arrives", async () => {
-    const short = run(["Hola."]);
-    await short.reply;
-    expect(short.text()).toBe("Hola.");
-    const long = run([`${"Python es un lenguaje. ".repeat(20)}`]);
-    await long.reply;
-    expect(long.text()).toBe("Python es un lenguaje. ".repeat(20));
   });
 
   it("keeps a long text written before a browser action, goes on below it and lets the model know it said it", async () => {

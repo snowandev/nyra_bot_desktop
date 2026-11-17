@@ -23,6 +23,20 @@ Descarga el instalador de tu sistema en la [última versión publicada](https://
 | Windows | `Nyra.Bot_…_x64-setup.exe` |
 | Linux | `.AppImage`, `.deb` o `.rpm` |
 
+### Abrir Nyra por primera vez en macOS
+
+Nyra no está firmada con una cuenta de desarrollador de Apple, así que la primera vez que la abres macOS avisa que no puede comprobar que no tenga software malicioso y no la deja abrir. Solo pasa una vez:
+
+1. Arrastra Nyra Bot a Aplicaciones y ábrela. Cuando salga el aviso, ciérralo.
+2. Ve a **Ajustes del Sistema → Privacidad y seguridad** y baja hasta **Seguridad**.
+3. Junto al mensaje sobre Nyra Bot, pulsa **Abrir igualmente** y confirma con tu contraseña.
+
+Si prefieres la terminal, esto hace lo mismo:
+
+```bash
+xattr -dr com.apple.quarantine "/Applications/Nyra Bot.app"
+```
+
 ## Qué puede hacer
 
 <p align="center">
@@ -86,7 +100,7 @@ Nyra funciona igual en macOS, Windows y Linux, con estas excepciones:
 |---|---|---|---|
 | Mirar la pantalla y guiarte | Sí | Sí | Todavía no |
 | Usar el ratón y el teclado | Sí | Sí | Todavía no |
-| Icono en la barra del sistema | Sí | Sí | Necesita `libayatana-appindicator`, y en GNOME la extensión AppIndicator |
+| Icono en la barra del sistema | Sí | Sí | Sí. Con el `.AppImage` hace falta instalar `libayatana-appindicator`, y en GNOME la extensión AppIndicator |
 
 En macOS, Nyra te pide los permisos de micrófono, grabación de pantalla y accesibilidad solo para las funciones que los usan.
 

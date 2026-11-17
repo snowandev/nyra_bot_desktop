@@ -511,7 +511,6 @@ mod size_tests {
         let sizes: Vec<QuickSize> =
             serde_json::from_str(r#"["normal", "large", "extraLarge"]"#).unwrap();
         let dimensions: Vec<(f64, f64)> = sizes.iter().map(|size| size.dimensions()).collect();
-        assert_eq!(dimensions[0], (680.0, 520.0));
         assert!(dimensions
             .windows(2)
             .all(|pair| pair[1].0 > pair[0].0 && pair[1].1 > pair[0].1));

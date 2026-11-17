@@ -318,6 +318,7 @@ export function useReplyStream(options: Options) {
         isIsolated,
         runCode,
         browser,
+        webSearch,
         canEscalate: !!onEscalate,
         workspace,
         prepareWorkspace,

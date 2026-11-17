@@ -47,8 +47,9 @@ export type ScreenAct =
   | { kind: "scroll"; at: ScreenArea; lines: number; horizontal: boolean; note: string }
   | { kind: "type"; at?: ScreenArea; text: string; enter: boolean; note: string }
   | { kind: "key"; keys: string; note: string };
-// stopped: the user pressed "Stop" while Nyra's pointer was on its way; ownWindow: the place is Nyra's own window
-export type Acted = "done" | "stopped" | "ownWindow";
+// stopped: the user pressed "Stop" while Nyra's pointer was on its way; ownWindow: the place is Nyra's own window;
+// ownKeyboard: the keyboard is in Nyra's own window, so nothing was typed
+export type Acted = "done" | "stopped" | "ownWindow" | "ownKeyboard";
 export const screenAct = (conversationId: string, action: ScreenAct) =>
   invoke<Acted>("screen_act", { conversationId, action });
 // Between two actions: the pointer stays and says it is working out the next one

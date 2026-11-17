@@ -5,6 +5,7 @@ import { REQUEST_TAG_NAMES } from "./replyTags";
 // tags: a page about code keeps its <div> and Vec<String>. The same goes for files and command output.
 const OTHER_APP_TAGS = [
   "app-instructions",
+  "tool-choice",
   "search-results",
   "nyra-remember",
   "memories",

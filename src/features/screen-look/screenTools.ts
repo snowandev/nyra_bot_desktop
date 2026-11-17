@@ -186,6 +186,12 @@ export function actionOf(kind: ScreenAction, value: string): AskedAction | null 
 export function screenTools({ conversationId, signal, see, boxFormat, offset, onRecord }: Options) {
   const fit = fitFor(boxFormat);
   let record: ScreenRecord | null = null;
+  // Stopping the reply stops Nyra's hands at once, like «Detener» on the strip: the pointer leaves, so a click on its
+  // way doesn't happen, without waiting for the action in progress to end
+  const stopHands = () => {
+    if (acted) void screenActEnd(conversationId, null).catch(() => {});
+  };
+  signal.addEventListener("abort", stopHands, { once: true });
   let actions = 0;
   // The reply's latest capture, as the model reads it: marks are found on it
   let view: Picture | null = null;
@@ -459,9 +465,18 @@ export function screenTools({ conversationId, signal, see, boxFormat, offset, on
     showActing(conversationId, true);
     const outcome: Acted = await screenAct(conversationId, action);
     if (outcome === "stopped") return stoppedByUser();
+    // Stopped meanwhile: no pause and no new look for a reply that is over
+    if (signal.aborted) throw new DOMException("Stopped", "AbortError");
     if (outcome === "ownWindow") {
       end({ outcome: "missing" });
       return failure("That place is Nyra's own window, which you never act on. Look again and find it in the user's app.");
+    }
+    if (outcome === "ownKeyboard") {
+      end({ outcome: "inNyra" });
+      return failure(
+        "Nothing was typed or pressed: the keyboard is in Nyra's own window, not in the user's app. First click " +
+          `where it should go in their app, or type with the field: ${tagged("screenType", "the field | text")}.`,
+      );
     }
     await new Promise((done) => setTimeout(done, AFTER_ACTION_MS));
     const now = await capture();
@@ -476,6 +491,7 @@ export function screenTools({ conversationId, signal, see, boxFormat, offset, on
   return {
     // The reply ended: its guide too, and the mouse is the user's again
     close: () => {
+      signal.removeEventListener("abort", stopHands);
       if (guideSteps > 0) showGuide(conversationId, null);
       if (acted) {
         showActing(conversationId, false);

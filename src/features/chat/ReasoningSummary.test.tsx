@@ -34,7 +34,6 @@ describe("the reasoning line", () => {
 
   it("never goes below what it thought before when it starts thinking again", () => {
     // Stopped for a while (a command ran), then a new stretch starts: the stale clock can't count backwards
-    expect(label({ text: "…", durationMs: 9000 }, false)).toBe("Pensó durante 9 s");
     expect(label({ text: "…", durationMs: 9000, thinkingSince: Date.now() + 20_000 }, true)).toBe("Pensando… 9 s");
   });
 

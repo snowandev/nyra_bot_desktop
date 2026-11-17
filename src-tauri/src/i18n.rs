@@ -99,9 +99,11 @@ pub fn t_with(key: &str, values: &[(&str, &str)]) -> String {
     fill(lookup(key), values)
 }
 
-/// Settings → General → Apariencia → Idioma, already resolved ("Sistema" gives "es" or "en")
+/// Settings → General → Apariencia → Idioma, already resolved ("Sistema" gives "es" or "en"). Async, so it runs off
+/// the main thread: a save rebuilding "Recientes" holds that menu while it waits for the main thread, so a command
+/// there wanting the same menu would block both (tray::retitle holds no lock while it changes the menu).
 #[tauri::command]
-pub fn set_language(app: AppHandle, language: String) {
+pub async fn set_language(app: AppHandle, language: String) {
     let chosen = if language == "es" {
         Language::Spanish
     } else {

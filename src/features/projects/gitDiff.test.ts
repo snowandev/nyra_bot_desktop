@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { gitDiffRows, newFileRows } from "./gitDiff";
+import { gitDiffRows } from "./gitDiff";
 
 const diff = [
   "diff --git a/src/app.ts b/src/app.ts",
@@ -30,14 +30,6 @@ describe("gitDiffRows", () => {
       { kind: "header", block: 1, total: 2, line: 21 },
       { kind: "change", block: 1, removed: { n: 20, text: "old();" }, added: undefined },
       { kind: "context", a: 21, b: 21, text: "end();" },
-    ]);
-  });
-
-  it("shows a new file as all added", () => {
-    expect(newFileRows("uno\ndos\n")).toEqual([
-      { kind: "header", block: 0, total: 1, line: 1 },
-      { kind: "change", block: 0, added: { n: 1, text: "uno" } },
-      { kind: "change", block: 0, added: { n: 2, text: "dos" } },
     ]);
   });
 });

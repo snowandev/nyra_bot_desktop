@@ -23,12 +23,12 @@ let conversation = 0;
 // By default the model finds things: first around the middle, then filling the zoom
 const finds = async (image: string): Promise<string> => (image === "whole" ? "[400,400,600,600]" : "[0,0,1000,1000]");
 
-function tools(see: (image: string) => Promise<string> = finds) {
+function tools(see: (image: string) => Promise<string> = finds, signal = new AbortController().signal) {
   let record: ScreenRecord | null = null;
   const id = `s${++conversation}`;
   const screen = screenTools({
     conversationId: id,
-    signal: new AbortController().signal,
+    signal,
     see,
     boxFormat: "thousandths",
     offset: () => 3,
@@ -121,9 +121,7 @@ describe("screenTools", () => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
     const { id, screen, card } = tools();
     const clicking = screen.run("screenClick", "the 'Save' button | Saving");
-    await vi.waitFor(() => expect(card()?.steps).toHaveLength(1));
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    answerLook(id, true);
+    await answerWhenAsked(id, true);
     const seen = await clicking;
     expect(storage.screenAct).toHaveBeenCalledWith(id, expect.objectContaining({ kind: "click", press: "left", note: "Saving" }));
     expect(seen.attachments?.[0]).toMatchObject({ data: "whole" });
@@ -138,14 +136,45 @@ describe("screenTools", () => {
     vi.useRealTimers();
   });
 
+  it("stopping the reply takes the pointer away while an action is on its way", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    const controller = new AbortController();
+    const { id, screen } = tools(finds, controller.signal);
+    // The pointer is still gliding to the button when the user stops the reply
+    let arrive: (acted: "done" | "stopped") => void = () => {};
+    storage.screenAct.mockReturnValueOnce(new Promise((resolve) => (arrive = resolve)));
+    const clicking = screen.run("screenClick", "the 'Send' button | Sending");
+    await answerWhenAsked(id, true);
+    await vi.waitFor(() => expect(storage.screenAct).toHaveBeenCalledTimes(1));
+    controller.abort();
+    // Right away, as «Detener» on the strip does, not once the action ends
+    expect(storage.screenActEnd).toHaveBeenCalledWith(id, null);
+    // The click didn't happen: the pointer left, so the action ends as stopped
+    arrive("stopped");
+    expect((await clicking).content).toContain("stopped you");
+    vi.useRealTimers();
+  });
+
+  it("doesn't type or press keys while the keyboard is in Nyra, and says to click in the user's app first", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    const { id, screen, card } = tools();
+    storage.screenAct.mockResolvedValueOnce("ownKeyboard");
+    const typing = screen.run("screenType", "hello");
+    await answerWhenAsked(id, true);
+    expect((await typing).content).toContain("keyboard is in Nyra's own window");
+    expect(card()?.steps[0].outcome).toBe("inNyra");
+    // Not a stop: the next action, once it clicked in the user's app, goes ahead
+    await screen.run("screenClick", "the search field | Searching");
+    expect(storage.screenAct).toHaveBeenCalledTimes(2);
+    vi.useRealTimers();
+  });
+
   it("stops acting for the rest of the reply once the user stops it", async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
     const { id, screen, card } = tools();
     storage.screenAct.mockResolvedValueOnce("stopped");
     const clicking = screen.run("screenClick", "the menu | Opening it");
-    await vi.waitFor(() => expect(card()?.steps).toHaveLength(1));
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    answerLook(id, true);
+    await answerWhenAsked(id, true);
     expect((await clicking).content).toContain("stopped you");
     expect((await screen.run("screenType", "hello")).content).toContain("stopped you");
     expect(storage.screenAct).toHaveBeenCalledTimes(1);

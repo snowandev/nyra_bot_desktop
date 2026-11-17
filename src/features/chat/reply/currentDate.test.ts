@@ -17,9 +17,7 @@ describe("the current date for the model", () => {
       { role: "assistant", content: "¡Hola!" },
       { role: "user", content: "¿Qué día es hoy?" },
     ];
-    const sent = withCurrentDate(messages, now);
-    expect(sent[2].content.startsWith("¿Qué día es hoy?\n\n<current-date>")).toBe(true);
-    expect(sent[0]).toBe(messages[0]);
-    expect(messages[2].content).toBe("¿Qué día es hoy?");
+    // Which message and leaving the rest untouched is appendToLastUserMessage's, tested with it
+    expect(withCurrentDate(messages, now)[2].content.startsWith("¿Qué día es hoy?\n\n<current-date>")).toBe(true);
   });
 });

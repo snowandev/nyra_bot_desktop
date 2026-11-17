@@ -530,15 +530,17 @@ mod tests {
 
     // A repository brought with a .git/config whose filter would run on `git status`: with Nyra's reading it doesn't
     #[test]
-    #[ignore = "needs git installed"]
     fn never_runs_a_filter_the_repository_defines() {
+        let Some(program) = program() else {
+            return;
+        };
         let dir =
             std::env::temp_dir().join(format!("nyra-git-filter-{}", crate::storage::now_millis()));
         let repo = dir.join("repo");
         fs::create_dir_all(&repo).unwrap();
         let marker = dir.join("ran");
         let git = |args: &[&str]| {
-            std::process::Command::new("git")
+            std::process::Command::new(program)
                 .arg("-C")
                 .arg(&repo)
                 .args(args)
@@ -638,7 +640,7 @@ mod tests {
         );
         let shown = diff(&dir, "src/app.ts", 'A').unwrap();
         assert_eq!(shown.text, "uno\ndos\n");
-        assert!(shown.whole_file && shown.text == "uno\ndos\n");
+        assert!(shown.whole_file);
         assert!(diff(&dir, "../fuera.txt", 'A').is_err());
         // git's own files may keep a token in the remote's address
         assert!(diff(&dir, ".git/config", 'A').is_err());

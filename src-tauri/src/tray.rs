@@ -62,28 +62,30 @@ const ITEM_KEYS: [&str; 4] = [
     "native.tray.quit",
 ];
 
-/// The menu in the interface's current language
+/// The menu in the interface's current language. Runs off the main thread, so it changes the menu with no lock held:
+/// each change waits for the main thread, and a command there (the quick bar's shortcut) may want the same lock.
 pub fn retitle(app: &AppHandle) {
     let tray = app.state::<Tray>();
-    let Ok(items) = tray.items.lock() else {
-        return;
-    };
+    let items = tray.items.lock().ok().and_then(|items| items.clone());
     for (item, key) in items.iter().flatten().zip(ITEM_KEYS) {
         let _ = item.set_text(t(key));
     }
-    drop(items);
-    if let Ok(mut recent) = tray.recent.lock() {
-        if let Some(RecentMenu { submenu, listed }) = recent.as_mut() {
-            let _ = submenu.set_text(t("native.tray.recent"));
+    let submenu = tray.recent.lock().ok().and_then(|mut recent| {
+        recent.as_mut().map(|RecentMenu { submenu, listed }| {
             // Written again, for "none yet" in the new language
             *listed = None;
-        }
+            submenu.clone()
+        })
+    });
+    if let Some(submenu) = submenu {
+        let _ = submenu.set_text(t("native.tray.recent"));
     }
     refresh_recent(app);
 }
 
 /// "Recientes" with the latest conversations, after one is saved, renamed or deleted; only rebuilt when they change.
-/// Their titles are the user's own, shown in their own menu.
+/// Their titles are the user's own, shown in their own menu. Off the main thread it holds the menu while the main
+/// thread rebuilds it, so nothing on the main thread may wait for this menu (see i18n::set_language).
 pub fn refresh_recent(app: &AppHandle) {
     let Ok(latest) = app.state::<crate::storage::Database>().recent(RECENT_COUNT) else {
         return;

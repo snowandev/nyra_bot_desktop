@@ -44,11 +44,3 @@ export function gitDiffRows(diff: string): DiffRow[] {
   return rows;
 }
 
-// A file git doesn't track yet: all of it is new
-export function newFileRows(text: string): DiffRow[] {
-  const lines = text.replace(/\n$/, "").split("\n");
-  return [
-    { kind: "header", block: 0, total: 1, line: 1 },
-    ...lines.map((line, i): DiffRow => ({ kind: "change", block: 0, added: { n: i + 1, text: line } })),
-  ];
-}

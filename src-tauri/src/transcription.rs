@@ -1256,23 +1256,7 @@ mod tests {
         let dir = PathBuf::from(std::env::var("NYRA_SPEECH_MODELS").expect("models"));
         let sample = PathBuf::from(std::env::var("NYRA_SPEECH_SAMPLE").expect("audio"));
         let size = std::env::var("NYRA_WHISPER_SIZE").unwrap_or_else(|_| "small".into());
-        let models = SpeechModels {
-            // A folder of a community model in Transformers' format, or the name of a size in sherpa-onnx's
-            whisper: if dir.join(&size).is_dir() {
-                crate::transcription::WhisperFiles::Transformers(dir.join(&size))
-            } else {
-                crate::transcription::WhisperFiles::Onnx {
-                    encoder: dir.join(format!("{size}-encoder.int8.onnx")),
-                    decoder: dir.join(format!("{size}-decoder.int8.onnx")),
-                    tokens: dir.join(format!("{size}-tokens.txt")),
-                }
-            },
-            language_encoder: dir.join("small-encoder.int8.onnx"),
-            language_decoder: dir.join("small-decoder.int8.onnx"),
-            vad: dir.join("silero_vad.onnx"),
-            segmentation: dir.join("speaker-segmentation.onnx"),
-            embedding: dir.join("speaker-embedding-campplus.onnx"),
-        };
+        let models = models_in(&dir, &size);
         let extension = sample
             .extension()
             .and_then(|e| e.to_str())

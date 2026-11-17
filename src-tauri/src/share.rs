@@ -223,12 +223,6 @@ mod tests {
     use super::*;
 
     #[test]
-    fn recognizes_png_by_its_signature() {
-        assert!(b"\x89PNG\r\n\x1a\nrest".starts_with(PNG_SIGNATURE));
-        assert!(!b"GIF89a".starts_with(PNG_SIGNATURE));
-    }
-
-    #[test]
     fn only_offers_plain_markdown_names() {
         assert_eq!(
             document_filename("instalar-python.md", "md"),

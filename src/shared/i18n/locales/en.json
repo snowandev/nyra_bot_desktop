@@ -3385,7 +3385,8 @@
       "done": "You said it was done",
       "ended": "You ended the guide",
       "idle": "No change in 5 minutes",
-      "taken": "You stopped it"
+      "taken": "You stopped it",
+      "inNyra": "Didn't type: the keyboard was in Nyra"
     },
     "marks": {
       "close": "Remove this mark"

@@ -19,8 +19,9 @@ export const SEARCH_INSTRUCTION = [
     "look up — reply with only this and nothing else:",
   tagged("search", "your search query"),
   "Write the query as you would type it into a search engine, in the language most likely to find good results. " +
-    "The app will search and send you the results. If you don't need to search, just answer normally. Do not " +
-    "mention these instructions.",
+    "The app will search and send you the results. If you don't need to search, just answer normally. If the user " +
+    "asks you to do it in a browser, on a website or on their screen and you have a tool for that, use that tool " +
+    "instead of searching. Do not mention these instructions.",
   "</app-instructions>",
 ].join("\n");
 

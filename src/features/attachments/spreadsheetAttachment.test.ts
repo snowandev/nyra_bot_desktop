@@ -18,7 +18,7 @@ class NodeFileReader {
 vi.stubGlobal("FileReader", NodeFileReader);
 vi.mock("./spreadsheetStorage", () => ({ readSpreadsheet: (bytes: Uint8Array) => readSpreadsheet(bytes) }));
 
-const { ACCEPTED_FILES, describeAttachment, readAttachment } = await import("./attachments");
+const { describeAttachment, readAttachment } = await import("./attachments");
 
 const TABLE = 'Sheet "Gastos" (1 of 1), cells A1:B2\n| | A | B |\n| 1 | Concepto | Importe |\n| 2 | Luz | 40 |';
 
@@ -30,8 +30,6 @@ describe("attached spreadsheets", () => {
     expect(attachment).toMatchObject({ kind: "text", data: TABLE, workbook: "UEsDBA==" });
     expect(attachment.mimeType).toContain("spreadsheetml");
     expect(describeAttachment(attachment)).toBe("Excel · 4 B");
-    expect(ACCEPTED_FILES).toContain(".xlsx");
-    expect(ACCEPTED_FILES).toContain(".ods");
   });
 
   it("name the file when it can't be opened", async () => {

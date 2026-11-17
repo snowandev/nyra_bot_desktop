@@ -59,10 +59,10 @@ export const browserPrompt = (isOpen: boolean, withScreen = false) => [
   "You can also use a web browser on this computer: the user watches it in its window beside Nyra, and your steps " +
     "on a card in your reply. Use " +
     "it when the user asks you to open a site or a local project, sign in, check something on a page or take " +
-    "screenshots; for a plain question, search instead." +
+    "screenshots, or names a browser or a website for the task." +
     (withScreen
-      ? " It is a separate window that Nyra opens, not the browser the user already has open: for something in a " +
-        "browser or app they already have open, use their screen and mouse instead."
+      ? " It is a separate window that Nyra opens with the user's Chrome or Edge, so asking for Chrome is asking for " +
+        "it; only a tab or window they say is already open is on their screen."
       : ""),
   `- ${tagged("browse", "address")} opens an address (http://localhost:3000, https://example.com). If the browser ` +
     "isn't open yet, the user is asked once to allow opening it; once it is open, go to any page without asking.",

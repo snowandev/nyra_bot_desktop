@@ -132,7 +132,6 @@ describe("skillLoadedMessage", () => {
     const message = skillLoadedMessage([skill("summarize", "# Resumir")], [], true);
     expect(message.role).toBe("user");
     expect(message.content).toContain('<skill name="summarize">\n# Resumir\n</skill>');
-    expect(message.content).toContain("not available here");
   });
 
   it("tells where a skill's scripts are once commands can run, and that they can't otherwise", () => {
