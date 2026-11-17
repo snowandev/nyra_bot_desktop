@@ -2,6 +2,19 @@
 
 What changes in each version of Nyra Bot. The same notes in Spanish are in [CHANGELOG.es.md](CHANGELOG.es.md).
 
+## 0.9.4 · 2026-11-17
+
+### New
+- The installers now look like Nyra, on macOS, Windows and Linux.
+
+### Improvements
+- Nyra chooses better between searching the web, its browser and your screen. If you ask it to look something up in Chrome, it opens the browser instead of searching first.
+
+### Fixes
+- Stopping a reply now also stops right away what Nyra was doing on your screen.
+- When Nyra uses your keyboard, it no longer types into its own window. It asks you to click in your app first.
+- Nyra no longer freezes when you change the interface language.
+
 ## 0.9.3 · 2026-11-15
 
 ### Improvements
