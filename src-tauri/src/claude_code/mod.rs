@@ -820,11 +820,15 @@ mod tests {
     static NEXT_FILE: AtomicUsize = AtomicUsize::new(0);
 
     fn session_from(lines: &[Value]) -> Option<Session> {
+        parsed(lines, Files::Keep)
+    }
+
+    fn parsed(lines: &[Value], files: Files) -> Option<Session> {
         let n = NEXT_FILE.fetch_add(1, Ordering::Relaxed);
         let path = std::env::temp_dir().join(format!("nyra-test-{}-{n}.jsonl", std::process::id()));
         let content: Vec<String> = lines.iter().map(Value::to_string).collect();
         fs::write(&path, content.join("\n")).expect("write test session");
-        let session = parse_session(&path, Files::Keep);
+        let session = parse_session(&path, files);
         let _ = fs::remove_file(&path);
         session
     }
@@ -966,19 +970,14 @@ mod tests {
 
     #[test]
     fn a_message_with_only_an_unsupported_file_still_shows_up() {
-        let line = user(
+        let session = session_from(&[user(
             "u1",
             None,
             json!([{ "type": "image", "source": { "type": "base64", "media_type": "image/gif", "data": "R0lG" } }]),
-        );
-        let session = session_from(std::slice::from_ref(&line)).expect("the file is mentioned");
+        )])
+        .expect("the file is mentioned");
+        assert_eq!(session.messages.len(), 1);
         assert!(session.messages[0]["attachments"].is_null());
-        // The list counts it the same way
-        let path = std::env::temp_dir().join(format!("nyra-test-{}-gif.jsonl", std::process::id()));
-        fs::write(&path, line.to_string()).unwrap();
-        let listed = parse_session(&path, Files::Skip).expect("listed too");
-        let _ = fs::remove_file(&path);
-        assert_eq!(listed.messages.len(), session.messages.len());
     }
 
     #[test]
@@ -1033,19 +1032,18 @@ mod tests {
     }
 
     #[test]
-    fn listing_counts_images_without_reading_them() {
-        let path =
-            std::env::temp_dir().join(format!("nyra-test-{}-list.jsonl", std::process::id()));
-        let line = user(
-            "u1",
-            None,
-            json!([{ "type": "image", "source": { "type": "base64", "media_type": "image/png", "data": "AAAA" } }]),
-        );
-        fs::write(&path, line.to_string()).unwrap();
-        let listed = parse_session(&path, Files::Skip).expect("an image-only message still counts");
-        let _ = fs::remove_file(&path);
-        assert_eq!(listed.messages.len(), 1);
-        assert!(listed.messages[0]["attachments"][0].get("data").is_none());
+    fn listing_counts_image_only_messages_without_reading_them() {
+        // The gif can't be imported but is still mentioned, so the list must count it too
+        for (media_type, data) in [("image/gif", "R0lG"), ("image/png", "AAAA")] {
+            let line = user(
+                "u1",
+                None,
+                json!([{ "type": "image", "source": { "type": "base64", "media_type": media_type, "data": data } }]),
+            );
+            let listed = parsed(&[line], Files::Skip).expect("an image-only message still counts");
+            assert_eq!(listed.messages.len(), 1, "{media_type}");
+            assert!(listed.messages[0]["attachments"][0].get("data").is_none());
+        }
     }
 
     #[test]

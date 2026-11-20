@@ -1,6 +1,6 @@
 [package]
 name = "nyra-bot"
-version = "0.9.4"
+version = "0.9.5"
 description = "Nyra Bot"
 authors = ["snowandev"]
 license = "MIT"
@@ -19,7 +19,7 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
-tauri = { version = "2", features = ["image-png", "tray-icon", "macos-private-api"] }
+tauri = { version = "2", features = ["image-png", "tray-icon", "macos-private-api", "protocol-asset"] }
 # unsafe-headers: Ollama's requests go without Origin, which it refuses on Windows (see providers/ollamaApi.ts)
 tauri-plugin-http = { version = "2.8.0", features = ["gzip", "brotli", "deflate", "unsafe-headers"] }
 tauri-plugin-clipboard-manager = "2.4.1"
@@ -34,7 +34,7 @@ tauri-plugin-global-shortcut = "2.4.1"
 # Updates published on GitHub, signed with the project's key, and relaunching once installed (updates.rs)
 tauri-plugin-updater = "2"
 tauri-plugin-process = "2"
-zip = { version = "9.0.4", default-features = false, features = ["deflate"] }
+zip = { version = "9.8.1", default-features = false, features = ["deflate"] }
 yaml-rust2 = "0.13.0"
 base64 = "0.22"
 scraper = "0.27.0"
@@ -65,10 +65,10 @@ tokio = { version = "1", features = ["process", "io-util", "time", "sync"] }
 cpal = "0.18.2"
 # The Whisper models of the community, in Hugging Face's Transformers format (whisper_transformers.rs): run as they
 # are published, without converting them; the tokenizer with its pure-Rust regular expressions, nothing to compile
-candle-core = "0.11.0"
-candle-nn = "0.11.0"
-candle-transformers = "0.11.0"
-tokenizers = { version = "0.22", default-features = false, features = ["fancy-regex"] }
+candle-core = "0.11.1"
+candle-nn = "0.11.1"
+candle-transformers = "0.11.1"
+tokenizers = { version = "0.23", default-features = false, features = ["fancy-regex"] }
 
 
 [dev-dependencies]
@@ -89,6 +89,8 @@ xcap = "0.9.8"
 enigo = { version = "0.6.1", default-features = false }
 # The taskbar's theme, for the tray icon to show on it (tray.rs)
 windows-registry = "0.6.1"
+# Which window is in front where Nyra clicks, so one of Nyra's behind the user's app doesn't count (screen_act.rs)
+windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_UI_WindowsAndMessaging"] }
 
 # On a Mac they run on its graphics chip; elsewhere, on the processor
 [target."cfg(target_os = \"macos\")".dependencies]
@@ -102,13 +104,20 @@ enigo = { version = "0.6.1", default-features = false }
 objc2-application-services = { version = "0.3.2", default-features = false, features = ["std", "HIServices", "AXUIElement", "AXError", "libc"] }
 # Whether the microphone is allowed, and asking for it, from the welcome (system_access.rs)
 objc2-av-foundation = { version = "0.3.2", default-features = false, features = ["std", "block2", "AVCaptureDevice", "AVMediaFormat"] }
-objc2-foundation = { version = "0.3.2", default-features = false, features = ["std", "NSArray", "NSError", "NSString"] }
+objc2-foundation = { version = "0.3.2", default-features = false, features = ["std", "NSArray", "NSError", "NSString", "NSDictionary", "NSValue", "NSUUID", "NSObject"] }
+# What the computer plays, for meeting recordings, whatever the output is (audio_devices.rs)
+objc2-core-audio = { version = "0.3.2", default-features = false, features = ["std", "AudioHardware", "objc2", "objc2-foundation"] }
 objc2-core-foundation = { version = "0.3.2", default-features = false, features = ["std", "CFCGTypes", "CFString", "CFArray", "CFNumber"] }
 objc2 = "0.6"
 block2 = "0.6"
-candle-core = { version = "0.11.0", features = ["metal"] }
-candle-nn = { version = "0.11.0", features = ["metal"] }
-candle-transformers = { version = "0.11.0", features = ["metal"] }
+candle-core = { version = "0.11.1", features = ["metal"] }
+candle-nn = { version = "0.11.1", features = ["metal"] }
+candle-transformers = { version = "0.11.1", features = ["metal"] }
 
 [target."cfg(unix)".dependencies]
 libc = "0.2.191"
+
+[target."cfg(target_os = \"linux\")".dependencies]
+# PulseAudio (and PipeWire, which speaks it) for the computer's own sound in meeting recordings (audio_devices.rs);
+# ALSA stays when there is no sound server
+cpal = { version = "0.18.2", features = ["pulseaudio"] }

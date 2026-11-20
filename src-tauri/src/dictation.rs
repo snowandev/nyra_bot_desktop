@@ -3,16 +3,15 @@
 
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::mpsc::{self, Receiver, RecvTimeoutError, Sender};
-use std::sync::{Arc, Mutex};
+use std::sync::Mutex;
 use std::thread::JoinHandle;
 use std::time::{Duration, Instant};
 
-use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
-use cpal::{ErrorKind, FromSample, SampleFormat, SizedSample};
 use serde::Serialize;
 use tauri::{AppHandle, Emitter, Manager, State};
 
-use crate::i18n::{t, t_with};
+use crate::audio_devices::{capture, microphone, microphone_error};
+use crate::i18n::t;
 use crate::speech_models::models_for;
 use crate::transcription::{at_model_rate, transcribe, Loaded, Speakers};
 
@@ -97,47 +96,6 @@ struct Level {
     level: f32,
 }
 
-fn microphone_error(error: cpal::Error) -> String {
-    if error.kind() == ErrorKind::PermissionDenied {
-        t("native.dictation.noPermission")
-    } else {
-        t_with(
-            "native.dictation.couldNotRecord",
-            &[("error", &error.to_string())],
-        )
-    }
-}
-
-/// Every sample of a frame becomes one, whatever its channels and format
-fn input_stream<T>(
-    device: &cpal::Device,
-    config: cpal::StreamConfig,
-    heard: Arc<Mutex<Vec<f32>>>,
-) -> Result<cpal::Stream, cpal::Error>
-where
-    T: SizedSample,
-    f32: FromSample<T>,
-{
-    let channels = usize::from(config.channels).max(1);
-    device.build_input_stream(
-        config,
-        move |data: &[T], _: &_| {
-            if let Ok(mut heard) = heard.lock() {
-                heard.extend(data.chunks(channels).map(|frame| {
-                    frame.iter().map(|s| s.to_sample::<f32>()).sum::<f32>() / channels as f32
-                }));
-            }
-        },
-        // A late buffer (common as it starts) loses a few milliseconds and recording goes on
-        |error| {
-            if error.kind() != ErrorKind::Xrun {
-                eprintln!("The microphone stream failed: {error}");
-            }
-        },
-        None,
-    )
-}
-
 /// How loud these samples are, from 0 to 1, as the button shows it
 fn loudness(samples: &[f32]) -> f32 {
     if samples.is_empty() {
@@ -147,35 +105,17 @@ fn loudness(samples: &[f32]) -> f32 {
     (mean.sqrt() * 10.0).min(1.0)
 }
 
-/// Records until told to stop or the limit is reached; started says whether the microphone opened
+/// Records until told to stop or the limit is reached; started says whether the microphone opened. chosen: the
+/// microphone picked in Settings.
 fn record(
     app: AppHandle,
+    chosen: Option<String>,
     stop: Receiver<()>,
     started: Sender<Result<(), String>>,
 ) -> Result<Captured, String> {
-    let opened = (|| {
-        let device = cpal::default_host()
-            .default_input_device()
-            .ok_or_else(|| t("native.dictation.noMicrophone"))?;
-        let supported = device.default_input_config().map_err(microphone_error)?;
-        let rate = supported.sample_rate();
-        let config = supported.config();
-        let heard = Arc::new(Mutex::new(Vec::new()));
-        let shared = Arc::clone(&heard);
-        let stream = match supported.sample_format() {
-            SampleFormat::F32 => input_stream::<f32>(&device, config, shared),
-            SampleFormat::I16 => input_stream::<i16>(&device, config, shared),
-            SampleFormat::U16 => input_stream::<u16>(&device, config, shared),
-            SampleFormat::I32 => input_stream::<i32>(&device, config, shared),
-            SampleFormat::I8 => input_stream::<i8>(&device, config, shared),
-            SampleFormat::U8 => input_stream::<u8>(&device, config, shared),
-            _ => return Err(t("native.dictation.unsupported")),
-        }
-        .map_err(microphone_error)?;
-        stream.play().map_err(microphone_error)?;
-        Ok((stream, heard, rate))
-    })();
-    let (stream, heard, rate) = match opened {
+    let opened =
+        microphone(chosen.as_deref()).and_then(|device| capture(&device).map_err(microphone_error));
+    let recording = match opened {
         Ok(opened) => {
             let _ = started.send(Ok(()));
             opened
@@ -191,7 +131,8 @@ fn record(
         match stop.recv_timeout(LEVEL_EVERY) {
             Ok(()) | Err(RecvTimeoutError::Disconnected) => break,
             Err(RecvTimeoutError::Timeout) => {
-                let level = heard
+                let level = recording
+                    .heard
                     .lock()
                     .map(|samples| {
                         let level = loudness(&samples[told.min(samples.len())..]);
@@ -208,21 +149,21 @@ fn record(
             }
         }
     }
-    drop(stream);
-    let samples = heard
-        .lock()
-        .map(|mut s| std::mem::take(&mut *s))
-        .unwrap_or_default();
-    Ok(Captured { samples, rate })
+    let samples = recording.take();
+    Ok(Captured {
+        samples,
+        rate: recording.rate,
+    })
 }
 
 /// Opens the microphone and starts recording. model: the Whisper size it will be written with, checked now so the
-/// user doesn't speak for nothing.
+/// user doesn't speak for nothing. microphone: the one chosen in Settings; none is the system's.
 #[tauri::command]
 pub async fn dictation_start(
     app: AppHandle,
     state: State<'_, Dictation>,
     model: String,
+    microphone: Option<String>,
 ) -> Result<(), String> {
     let models = models_for(&app, &model)?;
     let (started_tx, started) = mpsc::channel();
@@ -234,7 +175,7 @@ pub async fn dictation_start(
         // Kept before the microphone answers, so a second start meanwhile finds it taken
         let (stop, stop_rx) = mpsc::channel();
         let recorder = app.clone();
-        let done = std::thread::spawn(move || record(recorder, stop_rx, started_tx));
+        let done = std::thread::spawn(move || record(recorder, microphone, stop_rx, started_tx));
         *recording = Some(Recording { stop, done });
     }
     state.cancelled.store(false, Ordering::SeqCst);
@@ -337,23 +278,7 @@ mod tests {
         use std::path::PathBuf;
         let dir = PathBuf::from(std::env::var("NYRA_SPEECH_MODELS").expect("models"));
         let size = std::env::var("NYRA_WHISPER_SIZE").unwrap_or_else(|_| "small".into());
-        let models = crate::transcription::SpeechModels {
-            // A folder of a community model in Transformers' format, or the name of a size in sherpa-onnx's
-            whisper: if dir.join(&size).is_dir() {
-                crate::transcription::WhisperFiles::Transformers(dir.join(&size))
-            } else {
-                crate::transcription::WhisperFiles::Onnx {
-                    encoder: dir.join(format!("{size}-encoder.int8.onnx")),
-                    decoder: dir.join(format!("{size}-decoder.int8.onnx")),
-                    tokens: dir.join(format!("{size}-tokens.txt")),
-                }
-            },
-            language_encoder: dir.join("small-encoder.int8.onnx"),
-            language_decoder: dir.join("small-decoder.int8.onnx"),
-            vad: dir.join("silero_vad.onnx"),
-            segmentation: dir.join("speaker-segmentation.onnx"),
-            embedding: dir.join("speaker-embedding-campplus.onnx"),
-        };
+        let models = crate::transcription::tests::models_in(&dir, &size);
         let bytes = std::fs::read(std::env::var("NYRA_SPEECH_SAMPLE").expect("recording")).unwrap();
         let samples =
             std::sync::Arc::new(crate::transcription::read_audio(bytes, Some("wav")).unwrap());

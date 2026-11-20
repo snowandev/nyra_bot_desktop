@@ -8,6 +8,8 @@
 	<string>Nyra se conecta a Ollama u otros servidores de modelos que tengas en tu red local.</string>
 	<!-- Without it macOS doesn't let the app open the microphone at all, and never asks the user -->
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Nyra escucha el micrófono solo mientras dictas, y transcribe lo que dices en tu equipo.</string>
+	<string>Nyra escucha el micrófono solo mientras dictas o grabas una reunión, y lo transcribe en tu equipo.</string>
+	<key>NSAudioCaptureUsageDescription</key>
+	<string>Nyra graba lo que suena en tu equipo solo mientras grabas una reunión, para transcribir lo que dicen los demás.</string>
 </dict>
 </plist>

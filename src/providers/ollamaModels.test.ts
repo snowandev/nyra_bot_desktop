@@ -1,13 +1,18 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { OllamaConnectionError } from "./ollamaApi";
-import {
+
+const fetchMock = vi.fn();
+vi.mock("@tauri-apps/plugin-http", () => ({ fetch: (...args: unknown[]) => fetchMock(...args) }));
+
+const {
   chatModelsOf,
   chooseEmbeddingModel,
   embeddingQuery,
   isValidModelName,
+  loadedContextWindow,
   phaseOf,
   pullErrorKind,
-} from "./ollamaModels";
+} = await import("./ollamaModels");
 
 describe("chooseEmbeddingModel", () => {
   const installed = ["nomic-embed-text", "qwen3-embedding:0.6b", "bge-m3"];
@@ -71,4 +76,45 @@ it("tells Ollama's pull phases apart, whatever the wording of the layer lines", 
   expect(phaseOf({ status: "downloading sha256:6a07", digest: "sha256:6a07" })).toBe("downloading");
   expect(phaseOf({ status: "verifying sha256 digest" })).toBe("verifying");
   expect(phaseOf({ status: "writing manifest" })).toBe("writing");
+});
+
+const config = { baseUrl: "http://localhost:11434", apiKey: "" };
+
+// An Ollama that never answers: the request only ends when it is aborted, at once if it already was, like fetch
+function hangs(_url: string, init: RequestInit) {
+  return new Promise((_, reject) => {
+    const abort = () => reject(new DOMException("Aborted", "AbortError"));
+    if (init.signal?.aborted) abort();
+    init.signal?.addEventListener("abort", abort);
+  });
+}
+
+describe("loadedContextWindow", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    fetchMock.mockReset();
+  });
+  afterEach(() => vi.useRealTimers());
+
+  it("reads the context Ollama loaded for the model", async () => {
+    fetchMock.mockResolvedValue(
+      new Response(JSON.stringify({ models: [{ name: "qwen3:8b", context_length: 32768 }] }), { status: 200 }),
+    );
+    expect(await loadedContextWindow(config, "qwen3:8b")).toBe(32768);
+  });
+
+  it("gives up after a few seconds instead of holding the reply back", async () => {
+    fetchMock.mockImplementation(hangs);
+    const loaded = loadedContextWindow(config, "qwen3:8b");
+    await vi.advanceTimersByTimeAsync(3000);
+    expect(await loaded).toBeUndefined();
+  });
+
+  it("stops at once when the reply is stopped", async () => {
+    fetchMock.mockImplementation(hangs);
+    const reply = new AbortController();
+    const loaded = loadedContextWindow(config, "qwen3:8b", reply.signal);
+    reply.abort();
+    expect(await loaded).toBeUndefined();
+  });
 });

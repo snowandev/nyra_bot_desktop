@@ -1,4 +1,5 @@
 mod attachments;
+mod audio_devices;
 mod browser;
 mod claude_code;
 mod code_runs;
@@ -8,6 +9,7 @@ mod folders;
 mod git;
 mod i18n;
 mod mcp;
+mod meeting;
 mod memories;
 mod navigation;
 mod projects;
@@ -83,6 +85,7 @@ pub fn run() {
             app.manage(transcription::Transcriptions::default());
             app.manage(mcp::McpConnections::default());
             app.manage(dictation::Dictation::default());
+            app.manage(meeting::Meeting::default());
             browser::clear_profiles(app.handle());
             transcription::sweep_audio(app.handle());
             // Nyra works without it. Its shortcut is the user's choice, so the main window registers it once loaded.
@@ -175,9 +178,14 @@ pub fn run() {
             transcription::transcribe_stored_audio,
             transcription::transcription_cancel,
             transcription::forget_audio,
+            transcription::audio_path,
             dictation::dictation_start,
             dictation::dictation_stop,
             dictation::dictation_cancel,
+            audio_devices::audio_inputs,
+            meeting::meeting_start,
+            meeting::meeting_stop,
+            meeting::meeting_discard,
             share::save_pdf,
             share::save_table,
             secrets::secret_store,

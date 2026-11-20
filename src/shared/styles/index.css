@@ -51,5 +51,6 @@
 @import "../../features/transcription/transcription.css";
 @import "../../features/mcp/mcp.css";
 @import "../../features/dictation/dictation.css";
+@import "../../features/meeting/meeting.css";
 @import "../../features/screen-look/screen.css";
 @import "../../features/updates/updates.css";

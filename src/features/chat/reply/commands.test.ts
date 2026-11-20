@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
+import { i18n } from "@/shared/i18n/i18n";
 import {
+  COMMANDS,
   type ComposerCommand,
   describeCommand,
   matchCommands,
@@ -23,8 +25,12 @@ describe("matchCommands", () => {
     expect(matchCommands([compact], "summarize")).toEqual([]);
   });
 
-  it("describes each command in the interface language", () => {
-    expect(describeCommand("compact")).toContain("Resume la conversación");
+});
+
+describe("describeCommand", () => {
+  it("describes a command with its catalog text, and an unknown one with nothing", () => {
+    expect(describeCommand("compact")).toBe(i18n.t("commands.compact.description"));
+    expect(describeCommand("unknown" as Parameters<typeof describeCommand>[0])).toBe("");
   });
 });
 
@@ -64,9 +70,10 @@ describe("modelQueryOf", () => {
     expect(modelQueryOf("/models")).toBeNull();
     expect(modelQueryOf("cambia el /model gemini")).toBeNull();
   });
+});
 
-  it("is the only command that waits for an argument", () => {
-    expect(takesArgument("model")).toBe(true);
-    expect(takesArgument("new")).toBe(false);
+describe("takesArgument", () => {
+  it("is true for /model alone", () => {
+    for (const { name } of COMMANDS) expect(takesArgument(name)).toBe(name === "model");
   });
 });

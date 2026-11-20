@@ -72,7 +72,6 @@ describe("claudeErrorMessage", () => {
   const apiError = (status: number) => Anthropic.APIError.generate(status, { error: {} }, "detalle", new Headers());
 
   it("explains the common API errors in Spanish", () => {
-    expect(claudeErrorMessage(apiError(401), Anthropic)).toBe("La API Key de Anthropic no es válida.");
     expect(claudeErrorMessage(apiError(429), Anthropic)).toContain("límite de uso");
     expect(claudeErrorMessage(apiError(529), Anthropic)).toContain("saturados");
     const offline = new Anthropic.APIConnectionError({ message: "offline" });

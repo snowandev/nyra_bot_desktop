@@ -2,6 +2,18 @@
 
 What changes in each version of Nyra Bot. The same notes in Spanish are in [CHANGELOG.es.md](CHANGELOG.es.md).
 
+## 0.9.5 · 2026-11-20
+
+### New
+- Record your computer's audio and your microphone at the same time, to get the audio of any app.
+- Choose in Settings which microphone Nyra uses.
+- Listen to the audio in the chat: opening one shows a player.
+
+### Fixes
+- "Automatic" no longer turns itself off when you pick a model in another window.
+- The text box no longer keeps waiting for the answer to a command that already finished.
+- When Nyra clicks on your screen, it no longer mistakes it for its own window when another one is in front.
+
 ## 0.9.4 · 2026-11-17
 
 ### New

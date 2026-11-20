@@ -8,16 +8,17 @@ describe("the tool choice instructions", () => {
     expect(toolChoicePrompt({ search: true, browser: true, screen: false })).toContain("<tool-choice>");
   });
 
-  it("send a named browser or site to Nyra's browser, without searching first", () => {
+  it("speak of each tool the reply has", () => {
     const prompt = toolChoicePrompt({ search: true, browser: true, screen: true }) ?? "";
-    expect(prompt).toContain("asking for Chrome");
-    expect(prompt).toContain("Don't search the web first");
-    expect(prompt).toContain("the tab I have open");
+    expect(prompt).toContain("your web browser");
+    expect(prompt).toContain("answer from what you know");
+    expect(prompt).toContain("their screen");
   });
 
   it("only speak of the tools the reply has", () => {
     const prompt = toolChoicePrompt({ search: true, browser: false, screen: true }) ?? "";
     expect(prompt).not.toContain("your web browser");
     expect(prompt).toContain("their screen");
+    expect(toolChoicePrompt({ search: false, browser: true, screen: true })).not.toContain("answer from what you know");
   });
 });

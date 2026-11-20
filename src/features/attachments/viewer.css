@@ -134,10 +134,20 @@
 
 /* An audio: only what it is for, since what it says is in its transcript */
 .viewer-audio {
-  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   padding: 24px;
   color: var(--text-soft);
   font-size: calc(14px * var(--font-scale));
+}
+
+.viewer-audio p {
+  margin: 0;
+}
+
+.audio-player {
+  width: 100%;
 }
 
 .viewer-code {

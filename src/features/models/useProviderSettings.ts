@@ -54,7 +54,7 @@ export function useProviderSettings() {
   const keys = useApiKeys();
 
   // Another window changed them (Settings or the model menu in the main window while the quick bar stays open, or
-  // the other way round): this one follows. The model picked stays each window's own.
+  // the other way round): this one follows. The model picked, and whether it's «Automático», stays each window's own.
   useEffect(() => {
     const onStorage = (event: StorageEvent) => {
       if (!isModelSettingsKey(event.key)) return;
@@ -67,7 +67,6 @@ export function useProviderSettings() {
       );
       setDefaultModelId(loadDefaultModel());
       setDemandingModelId(loadDemandingModel());
-      setIsAuto(loadAutoModel());
       setAskBeforeCloud(loadAskBeforeCloud());
       setHiddenModelIds(loadHiddenModels());
       setStoredOptions(loadProviderOptions());

@@ -3,7 +3,6 @@ import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import type { InstalledModel } from "@/providers/ollamaModels";
-import { EmbeddingStatus } from "./EmbeddingStatus";
 import { InstalledModelRow } from "./InstalledModelRow";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -64,21 +63,5 @@ describe("an embedding model's row", () => {
     const unused = renderRow(false, false);
     expect(unused.toggle?.getAttribute("aria-label")).toBe("Usar busca-mini para buscar en carpetas");
     expect(unused.pill).toBeNull();
-  });
-});
-
-describe("EmbeddingStatus", () => {
-  function renderStatus(isChosen: boolean, isOnlyOne: boolean) {
-    act(() => {
-      root.render(<EmbeddingStatus inUse="busca-mini" isChosen={isChosen} isOnlyOne={isOnlyOne} onLetNyraChoose={() => {}} />);
-    });
-    return container.textContent ?? "";
-  }
-
-  it("says which model searches and why", () => {
-    expect(renderStatus(true, false)).toContain("Lo elegiste tú.");
-    expect(container.querySelector("button")?.textContent).toBe("Que elija Nyra");
-    expect(renderStatus(false, true)).toContain("Es el único que tienes");
-    expect(renderStatus(false, false)).toContain("No has marcado ninguno");
   });
 });

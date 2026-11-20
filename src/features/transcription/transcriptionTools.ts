@@ -91,6 +91,7 @@ export function transcriptionTools({ conversationId, history, signal, onTranscri
         model,
         speakers,
         speakerCount,
+        meeting: audio.meeting === true,
       });
       const transcript = transcriptAttachment(audio.name, lines);
       made.set(audio.id, transcript);

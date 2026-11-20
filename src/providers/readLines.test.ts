@@ -1,13 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { readLines } from "./readLines";
 
-const streamOf = (chunks: string[], onCancel?: () => void) =>
+const streamOf = (chunks: string[]) =>
   new ReadableStream<Uint8Array>({
     start(controller) {
       for (const chunk of chunks) controller.enqueue(new TextEncoder().encode(chunk));
       controller.close();
     },
-    cancel: onCancel,
   });
 
 describe("readLines", () => {

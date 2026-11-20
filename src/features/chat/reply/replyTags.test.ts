@@ -68,7 +68,9 @@ describe("cleanRequestValue", () => {
   it("leaves a search as it is, apart from stray tags", () => {
     expect(cleanRequestValue("grep", "count (3 files)")).toBe("count (3 files)");
   });
+});
 
+describe("readWorkspaceRound", () => {
   it("reads the requests of a round already cleaned", () => {
     const round = readWorkspaceRound("<nyra-read><nyra-read>a.ts</nyra-read>");
     expect(round.requests).toEqual([{ kind: "read", value: "a.ts" }]);

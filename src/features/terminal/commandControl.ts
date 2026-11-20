@@ -12,6 +12,12 @@ const stopped = new Set<string>();
 // The command each conversation waits on: what the user writes meanwhile answers Nyra instead of running it
 const waitingIn = new Map<string, string>();
 
+// Checked against the store too: it notifies once a decision is taken, before `waitingIn` is cleaned up
+function awaitedIn(conversationId: string) {
+  const id = waitingIn.get(conversationId);
+  return id && decisions.isWaiting(id) ? id : undefined;
+}
+
 // Settles when the user runs or rejects the command, or answers instead; with a rejection if the reply stops first
 export async function waitForDecision(id: string, conversationId: string, signal: AbortSignal) {
   waitingIn.set(conversationId, id);
@@ -25,7 +31,7 @@ export async function waitForDecision(id: string, conversationId: string, signal
 // The user wrote to Nyra while a command waited: it isn't run, and the reply answers what they wrote. False when
 // nothing waits.
 export function answerInstead(conversationId: string, text: string) {
-  const id = waitingIn.get(conversationId);
+  const id = awaitedIn(conversationId);
   if (!id) return false;
   decisions.decide(id, { run: false, answer: text });
   return true;
@@ -33,7 +39,7 @@ export function answerInstead(conversationId: string, text: string) {
 
 // Whether a command of the conversation waits for the user, so the composer can answer it
 export function useAwaitingCommand(conversationId: string) {
-  const read = () => waitingIn.has(conversationId);
+  const read = () => awaitedIn(conversationId) !== undefined;
   return useSyncExternalStore(decisions.subscribe, read, read);
 }
 

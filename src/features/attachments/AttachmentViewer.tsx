@@ -14,6 +14,7 @@ import { useCodeViews } from "@/features/markdown/useCodeViews";
 import { PdfDocumentView } from "./PdfDocumentView";
 import { SaveDocumentButton } from "@/features/documents/SaveDocumentButton";
 import { transcriptNameOf } from "@/features/transcription/transcript";
+import { AudioPlayer } from "@/features/transcription/AudioPlayer";
 
 type Props = {
   attachment: Attachment;
@@ -124,7 +125,10 @@ export function AttachmentViewer({ attachment, onClose, actions }: Props) {
           ))}
         </div>
       ) : isAudio ? (
-        <p className="viewer-audio">{audioNote}</p>
+        <div className="viewer-audio">
+          <AudioPlayer key={attachment.id} audio={attachment} />
+          <p>{audioNote}</p>
+        </div>
       ) : (
         <div className="viewer-code">
           <HighlightedCode code={views.shown} language={fileType} />

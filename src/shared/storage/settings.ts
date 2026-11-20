@@ -29,7 +29,6 @@ const MODEL_SETTINGS_KEYS = new Set([
   MODELS_KEY,
   DEFAULT_MODEL_KEY,
   DEMANDING_MODEL_KEY,
-  AUTO_MODEL_KEY,
   ASK_BEFORE_CLOUD_KEY,
   HIDDEN_MODELS_KEY,
 ]);
@@ -120,6 +119,8 @@ export type Preferences = {
   // The Whisper the user chose among those added, by id; null, or one deleted since, means the first one there
   transcriptionModel: string | null;
   transcriptionSpeakers: boolean;
+  // The microphone for dictation and meetings, with its name to show it while unplugged; null is the system's
+  microphone: Microphone | null;
   // Closing the window hides Nyra in the system bar instead of quitting
   keepInTray: boolean;
   // On opening, Nyra asks GitHub for the latest published version
@@ -129,6 +130,8 @@ export type Preferences = {
   quickShortcut: string;
   quickSize: QuickSize;
 };
+
+export type Microphone = { id: string; name: string };
 
 // API keys are intentionally left out: secrets never go to localStorage
 export type StoredProviderOptions = Partial<Omit<ProviderOptions, "apiKey">>;
@@ -160,6 +163,7 @@ const DEFAULT_PREFERENCES: Preferences = {
   transcription: true,
   transcriptionModel: null,
   transcriptionSpeakers: true,
+  microphone: null,
   keepInTray: true,
   checkUpdates: true,
   quickShortcutEnabled: true,
@@ -305,6 +309,11 @@ function readPersonalization(stored: unknown): Personalization {
   return { name: text("name"), occupation: text("occupation"), instructions: text("instructions") };
 }
 
+function isMicrophone(value: unknown): value is Microphone {
+  const fields = value as Partial<Microphone> | null;
+  return typeof fields?.id === "string" && typeof fields.name === "string";
+}
+
 export function loadPreferences(): Preferences {
   const stored = read<Partial<Preferences>>(PREFERENCES_KEY, {});
   return {
@@ -318,6 +327,7 @@ export function loadPreferences(): Preferences {
       ? stored.shareImageQuality
       : DEFAULT_PREFERENCES.shareImageQuality,
     transcriptionModel: typeof stored.transcriptionModel === "string" ? stored.transcriptionModel : null,
+    microphone: isMicrophone(stored.microphone) ? stored.microphone : null,
     quickSize: isQuickSize(stored.quickSize) ? stored.quickSize : DEFAULT_PREFERENCES.quickSize,
     // Preferences saved before the welcome existed are someone who already uses Nyra: it doesn't open for them
     welcomeDone: typeof stored.welcomeDone === "boolean" ? stored.welcomeDone : Object.keys(stored).length > 0,

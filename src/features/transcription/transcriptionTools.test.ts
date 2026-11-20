@@ -63,10 +63,11 @@ describe("transcriptionTools", () => {
       model: "small",
       speakers: true,
       speakerCount: null,
+      meeting: false,
     });
     expect(result.content).toContain('<audio-transcript name="reunion.m4a">');
     expect(result.content).toContain("**[00:00] Hablante 1:** Agrupamos los envíos los viernes.");
-    expect(result.content).toContain("never copy it out");
+    expect(result.content).toMatch(/<\/audio-transcript>\n<app-instructions>[^]+<\/app-instructions>$/);
     expect(onTranscript).toHaveBeenCalledWith("a1", expect.objectContaining({ name: "reunion (transcripción).md" }));
     // Asked again in the same reply, it isn't made twice
     await tools.run("REUNION.M4A");

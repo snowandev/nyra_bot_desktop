@@ -26,6 +26,18 @@ describe("transcripts", () => {
     expect(transcriptText("silencio.wav", [])).toContain("No se oye a nadie hablar en silencio.wav.");
   });
 
+  it("names the user and the others in a meeting Nyra recorded", () => {
+    const text = transcriptText("Reunión.wav", [
+      { start: 1, end: 3, speaker: null, text: "Empecemos.", you: true },
+      { start: 4, end: 9, speaker: null, text: "Traigo las cifras." },
+    ]);
+    expect(text.split("\n\n").slice(1)).toEqual([
+      "00:09 · 2 hablantes",
+      "**[00:01] Tú:** Empecemos.",
+      "**[00:04] Los demás:** Traigo las cifras.",
+    ]);
+  });
+
   it("goes as a Markdown file named after the audio, saved under a plain name", () => {
     expect(transcriptAttachment("reunion.m4a", [])).toMatchObject({ kind: "text", name: "reunion (transcripción).md" });
     expect(transcriptFileName("Reunión del lunes.m4a")).toBe("reunion-del-lunes-transcripcion.md");

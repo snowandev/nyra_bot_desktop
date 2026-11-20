@@ -626,21 +626,39 @@ mod tests {
         let _ = std::fs::remove_dir_all(&dir);
         std::fs::create_dir_all(dir.join("src")).unwrap();
         init(&dir).unwrap();
+        for (key, value) in [("user.name", "Marta"), ("user.email", "marta@example.com")] {
+            run(&dir, &["config", key, value]).unwrap();
+        }
+        std::fs::write(dir.join("src/main.ts"), "uno\ndos\n").unwrap();
+        commit(&dir, "Add main", &["src/main.ts".to_string()]).unwrap();
+        std::fs::write(dir.join("src/main.ts"), "uno\ntres\ncuatro\n").unwrap();
         std::fs::write(dir.join("src/app.ts"), "uno\ndos\n").unwrap();
-        let found = changes(&dir);
-        assert_eq!(found.total, 1);
+        let mut found = changes(&dir);
+        assert_eq!(found.total, 2);
+        found.files.sort_by(|a, b| a.path.cmp(&b.path));
         assert_eq!(
             found.files,
-            [GitChange {
-                path: "src/app.ts".to_string(),
-                status: 'A',
-                added: Some(2),
-                removed: Some(0),
-            }]
+            [
+                GitChange {
+                    path: "src/app.ts".to_string(),
+                    status: 'A',
+                    added: Some(2),
+                    removed: Some(0),
+                },
+                GitChange {
+                    path: "src/main.ts".to_string(),
+                    status: 'M',
+                    added: Some(2),
+                    removed: Some(1),
+                }
+            ]
         );
         let shown = diff(&dir, "src/app.ts", 'A').unwrap();
         assert_eq!(shown.text, "uno\ndos\n");
         assert!(shown.whole_file);
+        let changed = diff(&dir, "src/main.ts", 'M').unwrap();
+        assert!(!changed.whole_file);
+        assert!(changed.text.contains("\n-dos\n") && changed.text.contains("\n+tres\n+cuatro\n"));
         assert!(diff(&dir, "../fuera.txt", 'A').is_err());
         // git's own files may keep a token in the remote's address
         assert!(diff(&dir, ".git/config", 'A').is_err());

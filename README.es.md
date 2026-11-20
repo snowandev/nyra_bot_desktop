@@ -76,6 +76,7 @@ xattr -dr com.apple.quarantine "/Applications/Nyra Bot.app"
 
 - **Chat rápido:** una barra que se abre con un atajo desde cualquier app, para preguntar algo sin cambiar de ventana.
 - **Voz:** dicta tus mensajes o transcribe archivos de audio. Todo ocurre en tu equipo, con Whisper.
+- **Reuniones:** graba una llamada de Meet, Teams o cualquier otra app. Nyra graba tu micrófono y lo que suena en tu equipo, y luego la transcribe con lo que dijiste tú y lo que dijeron los demás.
 - **El navegador de Nyra:** el modelo puede abrir páginas, leerlas y usarlas en tu Chrome, Edge u otro navegador basado en Chromium, con tu permiso.
 - **Tu pantalla:** Nyra puede mirarla para explicarte lo que ves, guiarte paso a paso señalando dónde hacer clic, o usar el ratón y el teclado si se lo permites.
 
@@ -100,9 +101,10 @@ Nyra funciona igual en macOS, Windows y Linux, con estas excepciones:
 |---|---|---|---|
 | Mirar la pantalla y guiarte | Sí | Sí | Todavía no |
 | Usar el ratón y el teclado | Sí | Sí | Todavía no |
+| Grabar el sonido del equipo en una reunión | Sí, desde macOS 14.2 | Sí | Sí, con PulseAudio o PipeWire |
 | Icono en la barra del sistema | Sí | Sí | Sí. Con el `.AppImage` hace falta instalar `libayatana-appindicator`, y en GNOME la extensión AppIndicator |
 
-En macOS, Nyra te pide los permisos de micrófono, grabación de pantalla y accesibilidad solo para las funciones que los usan.
+En macOS, Nyra te pide los permisos de micrófono, grabación de pantalla, audio de otras apps y accesibilidad solo para las funciones que los usan.
 
 ## Compilar Nyra desde el código
 

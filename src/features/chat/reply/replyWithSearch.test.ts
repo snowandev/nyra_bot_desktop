@@ -1,9 +1,16 @@
 import { describe, expect, it } from "vitest";
 import type { Message, WebSearchRecord } from "@/shared/types";
 import { ANSWER_NOW, ANSWER_OR_ASK, CONTINUE_AFTER_COMMANDS, KEEP_GOING, replyWithSearch } from "./replyWithSearch";
-import type { CommandAsked } from "./replyTags";
-import { NO_MORE_SEARCHES } from "@/features/web/webSearchAgent";
+import { closingTag, type CommandAsked } from "./replyTags";
+import { NO_MORE_SEARCHES, SEARCH_INSTRUCTION } from "@/features/web/webSearchAgent";
 import type { WebSearchResult } from "@/features/web/webSearchStorage";
+
+type ReplyOptions = Parameters<typeof replyWithSearch>[0];
+type Chat = ReplyOptions["chat"];
+type Workspace = NonNullable<ReplyOptions["workspace"]>;
+type Commands = NonNullable<ReplyOptions["commands"]>;
+// Any option can be replaced; wrapChat acts around each round of the scripted model
+type Setup = Partial<ReplyOptions> & { wrapChat?: (chat: Chat, requests: Message[][]) => Chat };
 
 // Each round of the fake model replies with the next scripted text, token by token
 function scriptedChat(replies: string[]) {
@@ -20,6 +27,46 @@ function scriptedChat(replies: string[]) {
   return { chat, requests };
 }
 
+// Runs a reply against the scripted model and keeps what reaches the screen
+function startReply(replies: string[], { wrapChat, ...overrides }: Setup = {}) {
+  const scripted = scriptedChat(replies);
+  const { requests } = scripted;
+  let text = "";
+  let kept = 0;
+  let cleared = 0;
+  // Every piece that reached the screen, also those cleared afterwards
+  const pieces: string[] = [];
+  const reply = replyWithSearch({
+    chat: wrapChat ? wrapChat(scripted.chat, requests) : scripted.chat,
+    history: [{ role: "user", content: "?" }],
+    canSearch: false,
+    forcedQuery: null,
+    contextWindow: 8192,
+    signal: new AbortController().signal,
+    onText: (t) => {
+      text += t;
+      pieces.push(t);
+    },
+    onClearText: () => {
+      text = text.slice(0, kept);
+      cleared++;
+    },
+    onKeepText: () => (kept = text.length),
+    onProgress: () => {},
+    onRecord: () => {},
+    ...overrides,
+  });
+  return {
+    reply,
+    requests,
+    pieces,
+    text: () => text,
+    everShown: () => pieces.join(""),
+    kept: () => kept,
+    cleared: () => cleared,
+  };
+}
+
 const result = (n: number): WebSearchResult => ({
   title: `Page ${n}`,
   url: `https://example${n}.com/`,
@@ -27,46 +74,89 @@ const result = (n: number): WebSearchResult => ({
   source: "duckduckgo",
 });
 
-type Overrides = {
-  forcedQuery?: string;
-  results?: WebSearchResult[];
-  canSearch?: boolean;
-  skillTurn?: (names: string[], canAskAnother: boolean) => Message;
-  browser?: Parameters<typeof replyWithSearch>[0]["browser"];
-  screen?: Parameters<typeof replyWithSearch>[0]["screen"];
-};
-
-function run(replies: string[], overrides: Overrides = {}) {
-  const { chat, requests } = scriptedChat(replies);
+function run(replies: string[], { results, ...setup }: Setup & { results?: WebSearchResult[] } = {}) {
   const queries: string[] = [];
   const records: WebSearchRecord[] = [];
-  let text = "";
-  // Everything that reached the screen, also what was cleared afterwards
-  let everShown = "";
-  const reply = replyWithSearch({
-    chat,
+  const r = startReply(replies, {
     history: [{ role: "user", content: "¿Qué hay de nuevo en Python?" }],
-    canSearch: overrides.canSearch ?? true,
-    forcedQuery: overrides.forcedQuery ?? null,
-    contextWindow: 8192,
-    signal: new AbortController().signal,
-    onText: (t) => {
-      text += t;
-      everShown += t;
-    },
-    onClearText: () => (text = ""),
-    onProgress: () => {},
-    onRecord: (r) => records.push(r),
+    canSearch: true,
+    onRecord: (record) => records.push(record),
     search: async (query) => {
       queries.push(query);
-      return overrides.results ?? [result(queries.length * 10 + 1), result(queries.length * 10 + 2)];
+      return results ?? [result(queries.length * 10 + 1), result(queries.length * 10 + 2)];
     },
     read: async (url) => ({ url, title: "", text: `Text of ${url}`, truncated: false }),
-    skillTurn: overrides.skillTurn,
-    browser: overrides.browser,
-    screen: overrides.screen,
+    ...setup,
   });
-  return { reply, requests, queries, records, text: () => text, everShown: () => everShown };
+  return { ...r, queries, records };
+}
+
+// A connected folder whose requests find nothing
+const emptyFolder: Workspace = {
+  canAsk: () => true,
+  run: async () => ({ role: "user", content: "<folder-results></folder-results>" }),
+  compact: () => null,
+  readNames: () => [],
+};
+
+// asked: per round, the model's notes and then its requests
+function folderRun(
+  replies: string[],
+  { workspace, ...setup }: Omit<Setup, "workspace"> & { workspace?: Partial<Workspace> } = {},
+) {
+  const asked: string[][] = [];
+  const r = startReply(replies, {
+    history: [{ role: "user", content: "¿Dónde se usa useChat?" }],
+    workspace: {
+      canAsk: () => true,
+      run: async (requested, notes) => {
+        asked.push([...notes.map((n) => `note:${n}`), ...requested.map((q) => `${q.kind}:${q.value}`)]);
+        return { role: "user", content: `<folder-results>${requested.map((q) => q.kind).join(",")}</folder-results>` };
+      },
+      compact: () => null,
+      readNames: () =>
+        asked.flat().flatMap((a) => (a.startsWith("read:") ? a.slice(5).split("\n").map((p) => p.split("/").pop() ?? p) : [])),
+      ...workspace,
+    },
+    ...setup,
+  });
+  return { ...r, asked };
+}
+
+// Commands with nothing running in the background
+const noBackground = {
+  hasPending: () => false,
+  takeFinished: () => null,
+  wait: async () => ({ role: "user" as const, content: "" }),
+  finishAll: async () => null,
+};
+
+function runWithCommands(
+  replies: string[],
+  { commands, ...setup }: Omit<Setup, "commands"> & { commands?: Partial<Commands> } = {},
+) {
+  const asked: CommandAsked[][] = [];
+  const reads: string[] = [];
+  const r = startReply(replies, {
+    history: [{ role: "user", content: "¿Pasan los tests?" }],
+    commands: {
+      canRun: () => true,
+      canRunCode: () => false,
+      canRead: () => true,
+      run: async (requested) => {
+        asked.push(requested);
+        return { role: "user", content: '<command-results><command-result n="1" exit-code="0"></command-result></command-results>' };
+      },
+      read: (_kind, value) => {
+        reads.push(value);
+        return { role: "user", content: "<command-output>…</command-output>" };
+      },
+      ...noBackground,
+      ...commands,
+    },
+    ...setup,
+  });
+  return { ...r, asked, reads };
 }
 
 describe("replyWithSearch", () => {
@@ -88,7 +178,10 @@ describe("replyWithSearch", () => {
     );
     await r.reply;
     expect(asked).toEqual(["watch:Mueve el alfil a c4"]);
-    expect(r.requests[1].at(-1)?.content).toContain("</nyra-watch> without its opening tag");
+    const followUp = r.requests[1].at(-1);
+    expect(followUp?.role).toBe("user");
+    expect(followUp?.content).toContain("<app-instructions>");
+    expect(followUp?.content).toContain(closingTag("watch"));
     expect(r.text()).not.toContain("</nyra-watch>");
   });
 
@@ -108,6 +201,15 @@ describe("replyWithSearch", () => {
     expect(r.text()).toBe("Salió Python 3.14 [1].");
     expect(r.records.at(-1)?.steps[0].sources.map((s) => s.n)).toEqual([1, 2]);
     expect(r.requests[1].at(-1)?.content).toContain("[1] Page 11");
+  });
+
+  it("never flashes the sentence the model writes before a request, in any language", async () => {
+    for (const preface of ["Ahora voy a buscarlo.", "Let me look that up.", "Je vais chercher ça."]) {
+      const r = run([`${preface}\n<nyra-search>python 3.14</nyra-search>`, "Salió Python 3.14 [1]."]);
+      await r.reply;
+      expect(r.everShown()).not.toContain(preface);
+      expect(r.text()).toBe("Salió Python 3.14 [1].");
+    }
   });
 
   it("searches first when the user asked explicitly", async () => {
@@ -166,7 +268,7 @@ describe("replyWithSearch with skills", () => {
     });
     await r.reply;
     expect(r.queries).toEqual(["python 3.14"]);
-    expect(r.requests[1].at(-3)?.content).toContain("<nyra-search>your search query</nyra-search>");
+    expect(r.requests[1].at(-3)?.content).toContain(SEARCH_INSTRUCTION);
     expect(r.text()).toBe("Python 3.14 trae…");
   });
 
@@ -204,36 +306,60 @@ describe("replyWithSearch with skills", () => {
   });
 });
 
-describe("connected folder", () => {
-  function folderRun(replies: string[], canAsk = () => true) {
-    const asked: string[][] = [];
-    const { chat, requests } = scriptedChat(replies);
-    let text = "";
-    const reply = replyWithSearch({
-      chat,
-      history: [{ role: "user", content: "¿Dónde se usa useChat?" }],
-      canSearch: false,
-      forcedQuery: null,
-      contextWindow: 8192,
-      signal: new AbortController().signal,
-      onText: (t) => (text += t),
-      onClearText: () => (text = ""),
-      onProgress: () => {},
-      onRecord: () => {},
-      workspace: {
-        canAsk,
-        run: async (requested, notes) => {
-          asked.push([...notes.map((n) => `note:${n}`), ...requested.map((r) => `${r.kind}:${r.value}`)]);
-          return { role: "user", content: `<folder-results>${requested.map((r) => r.kind).join(",")}</folder-results>` };
-        },
-        compact: () => null,
-        readNames: () =>
-          asked.flat().flatMap((a) => (a.startsWith("read:") ? a.slice(5).split("\n").map((p) => p.split("/").pop() ?? p) : [])),
+describe("the browser", () => {
+  it("works in the browser one action at a time, with the sentence before each tag as what it is doing", async () => {
+    const actions: string[] = [];
+    const browser = {
+      run: async (kind: string, value: string, preface: string): Promise<Message> => {
+        actions.push(`${kind}|${value}|${preface}`);
+        return { role: "user", content: `<browser-page>after ${kind}</browser-page>` };
       },
-    });
-    return { reply, asked, requests, text: () => text };
-  }
+    };
+    const r = run(
+      [
+        "Abro la tienda.\n<nyra-browse>localhost:5173</nyra-browse>",
+        "<nyra-type>1 | marta@example.com</nyra-type>",
+        "<nyra-click>3</nyra-click>",
+        "Ya entré: el panel muestra 42 ventas.",
+      ],
+      { browser, canSearch: false },
+    );
+    await expect(r.reply).resolves.toMatchObject({ received: true });
+    expect(actions).toEqual(["browse|localhost:5173|Abro la tienda.", "type|1 | marta@example.com|", "click|3|"]);
+    expect(r.text()).toBe("Ya entré: el panel muestra 42 ventas.");
+    expect(r.requests[1].at(-1)?.content).toContain("after browse");
+  });
 
+  it("hands every browser tag to the browser, which answers what can't be done instead of it passing as text", async () => {
+    const actions: string[] = [];
+    const browser = {
+      run: async (kind: string): Promise<Message> => {
+        actions.push(kind);
+        return { role: "user", content: '<browser-error action="click">No page is open.</browser-error>' };
+      },
+    };
+    const r = run(["<nyra-click>3</nyra-click>", "No hay ninguna página abierta todavía."], { browser, canSearch: false });
+    await r.reply;
+    expect(actions).toEqual(["click"]);
+    expect(r.requests[1].at(-1)?.content).toContain("No page is open");
+    expect(r.text()).toBe("No hay ninguna página abierta todavía.");
+  });
+
+  it("keeps a long text written before a browser action, goes on below it and lets the model know it said it", async () => {
+    const said = `Tienes razón: la contraseña lleva un signo al final. ${"Lo corrijo y vuelvo a intentarlo. ".repeat(6)}`;
+    const browser = {
+      run: async (): Promise<Message> => ({ role: "user", content: "<browser-page>Panel</browser-page>" }),
+    };
+    const r = run([`${said}\n<nyra-click>3</nyra-click>`, "Ya entré al panel."], { browser, canSearch: false });
+    await r.reply;
+    // Never cleared: what was on screen is still there, with the answer after it
+    expect(r.text()).toContain(said.trim());
+    expect(r.text()).toContain("Ya entré al panel.");
+    expect(r.requests[1].at(-2)?.content).toContain("Tienes razón");
+  });
+});
+
+describe("connected folder", () => {
   it("runs everything asked in one reply together, with the model's notes, and answers after", async () => {
     const r = folderRun([
       "<nyra-note>Busco useChat y miro la estructura.</nyra-note>\n<nyra-grep>useChat</nyra-grep>\n<nyra-outline>src</nyra-outline>",
@@ -285,35 +411,27 @@ describe("connected folder", () => {
     expect(r.text()).toBe("Está en App.tsx.");
   });
 
-  it("goes on when, after reading, it only says what it will look at next", async () => {
+  it.each([
+    ["in Spanish", "Ahora voy a revisar los componentes.", "El chat vive en Chat.tsx y lo monta App.tsx."],
+    ["in Portuguese", "Agora vou verificar os componentes.", "O chat está em App.tsx."],
+    ["ending with a colon", "Estos son los archivos que revisaré:", "Listo: App.tsx."],
+  ])("goes on when, after reading, it only says what it will look at next (%s)", async (_, announcement, answer) => {
     const r = folderRun([
       "<nyra-read>src/App.tsx</nyra-read>",
-      "Ahora voy a revisar los componentes.",
+      announcement,
       "<nyra-read>src/components/Chat.tsx</nyra-read>",
-      "El chat vive en Chat.tsx y lo monta App.tsx.",
+      answer,
     ]);
     await r.reply;
     expect(r.asked).toHaveLength(2);
-    expect(r.text()).toBe("El chat vive en Chat.tsx y lo monta App.tsx.");
+    expect(r.requests).toHaveLength(4);
+    expect(r.text()).toBe(answer);
   });
 
-  it("goes on in any language when it only announces, and not when it answers", async () => {
-    const portuguese = folderRun([
-      "<nyra-read>src/App.tsx</nyra-read>",
-      "Agora vou verificar os componentes.",
-      "O chat está em App.tsx.",
-    ]);
-    await portuguese.reply;
-    expect(portuguese.requests).toHaveLength(3);
-    expect(portuguese.text()).toBe("O chat está em App.tsx.");
-
-    const colon = folderRun(["<nyra-read>src/App.tsx</nyra-read>", "Estos son los archivos que revisaré:", "Listo: App.tsx."]);
-    await colon.reply;
-    expect(colon.text()).toBe("Listo: App.tsx.");
-
-    const answered = folderRun(["<nyra-read>src/App.tsx</nyra-read>", "Está en App.tsx, línea 3."]);
-    await answered.reply;
-    expect(answered.requests).toHaveLength(2);
+  it("doesn't go on when, after reading, it answers", async () => {
+    const r = folderRun(["<nyra-read>src/App.tsx</nyra-read>", "Está en App.tsx, línea 3."]);
+    await r.reply;
+    expect(r.requests).toHaveLength(2);
   });
 
   it("takes a short answer that names nothing it read once the model says it again", async () => {
@@ -325,34 +443,16 @@ describe("connected folder", () => {
   });
 
   it("holds a short reply back until it ends, so an announcement never shows", async () => {
-    const shown: string[] = [];
-    const { chat } = scriptedChat([
+    const r = folderRun([
       "<nyra-read>src/App.tsx</nyra-read>",
       "Ahora voy a revisar los componentes:",
       "El chat vive en App.tsx. " + "Detalle. ".repeat(60),
     ]);
-    await replyWithSearch({
-      chat,
-      history: [{ role: "user", content: "¿Dónde está el chat?" }],
-      canSearch: false,
-      forcedQuery: null,
-      contextWindow: 8192,
-      signal: new AbortController().signal,
-      onText: (t) => shown.push(t),
-      onClearText: () => shown.push("<clear>"),
-      onProgress: () => {},
-      onRecord: () => {},
-      workspace: {
-        canAsk: () => true,
-        run: async () => ({ role: "user", content: "<folder-results>read</folder-results>" }),
-        compact: () => null,
-        readNames: () => ["App.tsx"],
-      },
-    });
-    expect(shown.join("")).not.toContain("voy a revisar");
-    expect(shown).not.toContain("<clear>");
+    await r.reply;
+    expect(r.everShown()).not.toContain("voy a revisar");
+    expect(r.cleared()).toBe(0);
     // A long answer still arrives as it is written, once it is past the short length
-    expect(shown.length).toBeGreaterThan(1);
+    expect(r.pieces.length).toBeGreaterThan(1);
   });
 
   it("shows its notes rather than nothing when it never answers", async () => {
@@ -364,104 +464,31 @@ describe("connected folder", () => {
 
   it("gives the turns to compact before each round", async () => {
     const seen: number[] = [];
-    const { chat } = scriptedChat(["<nyra-grep>a</nyra-grep>", "<nyra-grep>b</nyra-grep>", "Fin."]);
-    await replyWithSearch({
-      chat,
-      history: [{ role: "user", content: "?" }],
-      canSearch: false,
-      forcedQuery: null,
-      contextWindow: 8192,
-      signal: new AbortController().signal,
-      onText: () => {},
-      onClearText: () => {},
-      onProgress: () => {},
-      onRecord: () => {},
+    const r = folderRun(["<nyra-grep>a</nyra-grep>", "<nyra-grep>b</nyra-grep>", "Fin."], {
       workspace: {
-        canAsk: () => true,
-        run: async () => ({ role: "user", content: "<folder-results>x</folder-results>" }),
-        readNames: () => [],
         compact: (turns) => {
           seen.push(turns.length);
           return turns.length >= 4 ? [{ role: "assistant", content: "<nyra-note>resumen</nyra-note>" }, ...turns.slice(-2)] : null;
         },
       },
     });
+    await r.reply;
     expect(seen).toEqual([0, 2, 4]);
   });
-});
 
-it("asks once more for an answer when the model only wrote a request it can no longer make", async () => {
-  const { chat, requests } = scriptedChat(["<nyra-read>a.ts</nyra-read>", "Con lo que tengo: está en b.ts."]);
-  let text = "";
-  const reply = await replyWithSearch({
-    chat,
-    history: [{ role: "user", content: "¿Dónde está?" }],
-    canSearch: false,
-    forcedQuery: null,
-    contextWindow: 8192,
-    signal: new AbortController().signal,
-    onText: (t) => (text += t),
-    onClearText: () => (text = ""),
-    onProgress: () => {},
-    onRecord: () => {},
-    workspace: {
-      canAsk: () => false,
-      run: async () => ({ role: "user", content: "" }),
-      compact: () => null,
-      readNames: () => [],
-    },
+  it("asks once more for an answer when the model only wrote a request it can no longer make", async () => {
+    const r = folderRun(["<nyra-read>a.ts</nyra-read>", "Con lo que tengo: está en b.ts."], {
+      workspace: { canAsk: () => false },
+    });
+    const reply = await r.reply;
+    expect(r.requests).toHaveLength(2);
+    expect(r.requests[1].at(-1)?.content).toBe(ANSWER_NOW.content);
+    expect(r.text()).toBe("Con lo que tengo: está en b.ts.");
+    expect(reply.received).toBe(true);
   });
-  expect(requests).toHaveLength(2);
-  expect(requests[1].at(-1)?.content).toBe(ANSWER_NOW.content);
-  expect(text).toBe("Con lo que tengo: está en b.ts.");
-  expect(reply.received).toBe(true);
 });
-
-// Commands with nothing running in the background
-const noBackground = {
-  hasPending: () => false,
-  takeFinished: () => null,
-  wait: async () => ({ role: "user" as const, content: "" }),
-  finishAll: async () => null,
-};
 
 describe("commands", () => {
-  function runWithCommands(replies: string[]) {
-    const { chat, requests } = scriptedChat(replies);
-    const asked: CommandAsked[][] = [];
-    const reads: string[] = [];
-    let text = "";
-    let kept = 0;
-    const reply = replyWithSearch({
-      chat,
-      history: [{ role: "user", content: "¿Pasan los tests?" }],
-      canSearch: false,
-      forcedQuery: null,
-      contextWindow: 8192,
-      signal: new AbortController().signal,
-      onText: (t) => (text += t),
-      onClearText: () => (text = text.slice(0, kept)),
-      onKeepText: () => (kept = text.length),
-      onProgress: () => {},
-      onRecord: () => {},
-      commands: {
-        canRun: () => true,
-        canRunCode: () => false,
-        canRead: () => true,
-        run: async (commands) => {
-          asked.push(commands);
-          return { role: "user", content: '<command-results><command-result n="1" exit-code="0"></command-result></command-results>' };
-        },
-        read: (_kind, value) => {
-          reads.push(value);
-          return { role: "user", content: "<command-output>…</command-output>" };
-        },
-        ...noBackground,
-      },
-    });
-    return { reply, requests, asked, reads, text: () => text, kept: () => kept };
-  }
-
   it("keeps what came before the commands, runs them in order and goes on below", async () => {
     const r = runWithCommands([
       "Voy a pasar los tests.\n<nyra-run>npm run lint</nyra-run>\n<nyra-run>npm test</nyra-run>",
@@ -480,30 +507,12 @@ describe("commands", () => {
   });
 
   it("never shows a command tag while it is being written", async () => {
-    const shown: string[] = [];
-    const { chat } = scriptedChat(["Compruebo.<nyra-run>git status</nyra-run>", "Limpio."]);
-    await replyWithSearch({
-      chat,
-      history: [{ role: "user", content: "¿Hay cambios?" }],
-      canSearch: false,
-      forcedQuery: null,
-      contextWindow: 8192,
-      signal: new AbortController().signal,
-      onText: (t) => shown.push(t),
-      onClearText: () => {},
-      onProgress: () => {},
-      onRecord: () => {},
-      commands: {
-        canRun: () => true,
-        canRunCode: () => false,
-        canRead: () => false,
-        run: async () => ({ role: "user", content: "<command-results></command-results>" }),
-        read: () => ({ role: "user", content: "" }),
-        ...noBackground,
-      },
+    const r = runWithCommands(["Compruebo.<nyra-run>git status</nyra-run>", "Limpio."], {
+      commands: { canRead: () => false },
     });
-    expect(shown.join("")).toBe("Compruebo.Limpio.");
-    expect(shown.some((t) => t.includes("<"))).toBe(false);
+    await r.reply;
+    expect(r.everShown()).toBe("Compruebo.Limpio.");
+    expect(r.pieces.some((t) => t.includes("<"))).toBe(false);
   });
 
   it("asks for the commands that come after a note, never taking them for the answer", async () => {
@@ -517,33 +526,19 @@ describe("commands", () => {
   });
 
   it("says it is waiting when it asks for commands, even with nothing written before them", async () => {
-    const { chat } = scriptedChat(["<nyra-run>npm test</nyra-run>", "Pasan."]);
     let waits = 0;
     let waitsBeforeRunning = 0;
-    await replyWithSearch({
-      chat,
-      history: [{ role: "user", content: "¿Pasan los tests?" }],
-      canSearch: false,
-      forcedQuery: null,
-      contextWindow: 8192,
-      signal: new AbortController().signal,
-      onText: () => {},
-      onClearText: () => {},
-      onProgress: () => {},
-      onRecord: () => {},
+    const r = runWithCommands(["<nyra-run>npm test</nyra-run>", "Pasan."], {
       onWaiting: () => waits++,
       commands: {
-        canRun: () => true,
-        canRunCode: () => false,
         canRead: () => false,
         run: async () => {
           waitsBeforeRunning = waits;
           return { role: "user", content: "<command-results></command-results>" };
         },
-        read: () => ({ role: "user", content: "" }),
-        ...noBackground,
       },
     });
+    await r.reply;
     // Before the command runs, so the thinking line stops while it waits
     expect(waitsBeforeRunning).toBeGreaterThan(0);
   });
@@ -611,30 +606,32 @@ describe("commands in the background", () => {
     replies: string[],
     tools: ReturnType<typeof backgroundTools>["tools"],
     afterRound?: (n: number) => void,
+    setup: Setup = {},
   ) {
-    const scripted = scriptedChat(replies);
-    const { requests } = scripted;
-    let text = "";
-    let kept = 0;
-    const reply = replyWithSearch({
-      chat: async (messages, onToken, signal) => {
-        const usage = await scripted.chat(messages, onToken, signal);
+    return startReply(replies, {
+      history: [{ role: "user", content: "Compila y revisa el README" }],
+      commands: tools,
+      wrapChat: (chat, requests) => async (messages, onToken, signal) => {
+        const usage = await chat(messages, onToken, signal);
         afterRound?.(requests.length);
         return usage;
       },
-      history: [{ role: "user", content: "Compila y revisa el README" }],
-      canSearch: false,
-      forcedQuery: null,
-      contextWindow: 8192,
-      signal: new AbortController().signal,
-      onText: (t) => (text += t),
-      onClearText: () => (text = text.slice(0, kept)),
-      onKeepText: () => (kept = text.length),
-      onProgress: () => {},
-      onRecord: () => {},
-      commands: tools,
+      ...setup,
     });
-    return { reply, requests, text: () => text };
+  }
+
+  // A folder that records what it was asked to read or search, without the notes
+  function recordingFolder(readNames: string[]) {
+    const asks: string[] = [];
+    const workspace: Workspace = {
+      ...emptyFolder,
+      run: async (asked) => {
+        asks.push(...asked.map((q) => `${q.kind}:${q.value}`));
+        return { role: "user", content: `<folder-results>${asked.map((q) => q.kind).join(",")}</folder-results>` };
+      },
+      readNames: () => readNames,
+    };
+    return { workspace, asks };
   }
 
   it("goes on while one runs and continues the answer below with its result when it ends meanwhile", async () => {
@@ -670,115 +667,65 @@ describe("commands in the background", () => {
 
   it("also continues the answer that comes after notes alone", async () => {
     const { tools, finish } = backgroundTools();
-    const scripted = scriptedChat([
-      "Compilo mientras tanto.<nyra-run-background>npm run build</nyra-run-background>",
-      "<nyra-note>El README ya lo leí.</nyra-note>\nEl README está bien.",
-      "La compilación también terminó bien.",
-    ]);
-    const { requests } = scripted;
-    const reply = await replyWithSearch({
-      chat: async (messages, onToken, signal) => {
-        const usage = await scripted.chat(messages, onToken, signal);
-        if (requests.length === 2) finish();
-        return usage;
-      },
-      history: [{ role: "user", content: "Compila y revisa el README" }],
-      canSearch: false,
-      forcedQuery: null,
-      contextWindow: 8192,
-      signal: new AbortController().signal,
-      onText: () => {},
-      onClearText: () => {},
-      onProgress: () => {},
-      onRecord: () => {},
-      workspace: {
-        canAsk: () => true,
-        run: async () => ({ role: "user", content: "<folder-results></folder-results>" }),
-        compact: () => null,
-        readNames: () => [],
-      },
-      commands: tools,
-    });
-    expect(requests).toHaveLength(3);
-    expect(requests[2].at(-1)?.content).toContain(CONTINUE_AFTER_COMMANDS);
+    const r = replyWith(
+      [
+        "Compilo mientras tanto.<nyra-run-background>npm run build</nyra-run-background>",
+        "<nyra-note>El README ya lo leí.</nyra-note>\nEl README está bien.",
+        "La compilación también terminó bien.",
+      ],
+      tools,
+      (n) => n === 2 && finish(),
+      { workspace: emptyFolder },
+    );
+    const reply = await r.reply;
+    expect(r.requests).toHaveLength(3);
+    expect(r.requests[2].at(-1)?.content).toContain(CONTINUE_AFTER_COMMANDS);
     expect(reply.received).toBe(true);
   });
 
   it("also reads the files asked for along with the command, in the same round", async () => {
     const { tools, finish } = backgroundTools();
-    const folderAsks: string[] = [];
-    const { chat, requests } = scriptedChat([
-      "Compilo y leo el README.<nyra-run-background>npm run build</nyra-run-background><nyra-read>README.md</nyra-read>",
-      "El README explica la instalación.",
-      "Y la compilación terminó bien.",
-    ]);
+    const folder = recordingFolder(["README.md"]);
+    const r = replyWith(
+      [
+        "Compilo y leo el README.<nyra-run-background>npm run build</nyra-run-background><nyra-read>README.md</nyra-read>",
+        "El README explica la instalación.",
+        "Y la compilación terminó bien.",
+      ],
+      tools,
+      undefined,
+      { workspace: folder.workspace },
+    );
     setTimeout(finish, 0);
-    await replyWithSearch({
-      chat,
-      history: [{ role: "user", content: "Compila y revisa el README" }],
-      canSearch: false,
-      forcedQuery: null,
-      contextWindow: 8192,
-      signal: new AbortController().signal,
-      onText: () => {},
-      onClearText: () => {},
-      onProgress: () => {},
-      onRecord: () => {},
-      commands: tools,
-      workspace: {
-        canAsk: () => true,
-        run: async (asked, notes) => {
-          folderAsks.push(...asked.map((r) => `${r.kind}:${r.value}`), ...notes.map((n) => `note:${n}`));
-          return { role: "user", content: "<folder-results>README</folder-results>" };
-        },
-        compact: () => null,
-        readNames: () => ["README.md"],
-      },
-    });
-    expect(folderAsks).toEqual(["read:README.md"]);
-    expect(requests[1].at(-1)?.content).toContain('running-in-background="true"');
-    expect(requests[1].at(-1)?.content).toContain("<folder-results>");
+    await r.reply;
+    expect(folder.asks).toEqual(["read:README.md"]);
+    expect(r.requests[1].at(-1)?.content).toContain('running-in-background="true"');
+    expect(r.requests[1].at(-1)?.content).toContain("<folder-results>");
   });
 
   it("also runs the commands asked for after a file to read, in the same round", async () => {
     const { tools, finish } = backgroundTools();
-    const folderAsks: string[] = [];
+    const folder = recordingFolder([]);
     let ran = 0;
     const run = tools.run;
     tools.run = async (commands) => {
       ran += commands.length;
       return run(commands);
     };
-    const { chat } = scriptedChat([
-      "Leo el package.json y audito.\n<nyra-read>web/package.json</nyra-read>\n<nyra-run-background>npm audit</nyra-run-background>",
-      "Listo.",
-      "Y la auditoría también.",
-    ]);
+    const r = replyWith(
+      [
+        "Leo el package.json y audito.\n<nyra-read>web/package.json</nyra-read>\n<nyra-run-background>npm audit</nyra-run-background>",
+        "Listo.",
+        "Y la auditoría también.",
+      ],
+      tools,
+      undefined,
+      { history: [{ role: "user", content: "Audita el front" }], workspace: folder.workspace },
+    );
     setTimeout(finish, 0);
-    await replyWithSearch({
-      chat,
-      history: [{ role: "user", content: "Audita el front" }],
-      canSearch: false,
-      forcedQuery: null,
-      contextWindow: 8192,
-      signal: new AbortController().signal,
-      onText: () => {},
-      onClearText: () => {},
-      onProgress: () => {},
-      onRecord: () => {},
-      commands: tools,
-      workspace: {
-        canAsk: () => true,
-        run: async (asked) => {
-          folderAsks.push(...asked.map((r) => `${r.kind}:${r.value}`));
-          return { role: "user", content: "<folder-results></folder-results>" };
-        },
-        compact: () => null,
-        readNames: () => [],
-      },
-    });
+    await r.reply;
     expect(ran).toBe(1);
-    expect(folderAsks).toEqual(["read:web/package.json"]);
+    expect(folder.asks).toEqual(["read:web/package.json"]);
   });
 
   it("waits for one when the model asks, and gets its result", async () => {
@@ -818,139 +765,39 @@ describe("commands in the background", () => {
 describe("an answer written after notes alone", () => {
   it("arrives whole and as it is written, however long", async () => {
     const answer = `## Segunda pasada\n\n${"Hallazgo detallado sobre el código del proyecto. ".repeat(40)}Fin.`;
-    const { chat } = scriptedChat([`<nyra-note>Ya tengo los archivos que faltaban.</nyra-note>\n${answer}`]);
-    const shown: string[] = [];
     let stopped = false;
-    await replyWithSearch({
-      chat: async (messages, onToken, signal) => {
+    const r = startReply([`<nyra-note>Ya tengo los archivos que faltaban.</nyra-note>\n${answer}`], {
+      history: [{ role: "user", content: "continúa" }],
+      contextWindow: 32768,
+      workspace: emptyFolder,
+      wrapChat: (chat) => async (messages, onToken, signal) => {
         signal.addEventListener("abort", () => (stopped = true));
         return chat(messages, onToken, signal);
       },
-      history: [{ role: "user", content: "continúa" }],
-      canSearch: false,
-      forcedQuery: null,
-      contextWindow: 32768,
-      signal: new AbortController().signal,
-      onText: (t) => shown.push(t),
-      onClearText: () => shown.push("<clear>"),
-      onProgress: () => {},
-      onRecord: () => {},
-      workspace: {
-        canAsk: () => true,
-        run: async () => ({ role: "user", content: "<folder-results></folder-results>" }),
-        compact: () => null,
-        readNames: () => [],
-      },
     });
+    await r.reply;
     expect(stopped).toBe(false);
-    expect(shown.join("")).toBe(answer);
+    expect(r.everShown()).toBe(answer);
+    expect(r.cleared()).toBe(0);
     // Shown in pieces while it arrived, not all at the end
-    expect(shown.length).toBeGreaterThan(2);
+    expect(r.pieces.length).toBeGreaterThan(2);
   });
 
   it("never shows a long program that follows the notes, and runs it", async () => {
     const program = `print(${"1 + ".repeat(200)}1)`;
-    const { chat } = scriptedChat([
-      `<nyra-note>Plan: sumar.</nyra-note>\nLo calculo.\n<nyra-code>\n\`\`\`python\n${program}\n\`\`\`\n</nyra-code>`,
-      "Da 201.",
-    ]);
-    const asked: CommandAsked[][] = [];
-    let text = "";
-    let kept = 0;
-    await replyWithSearch({
-      chat,
-      history: [{ role: "user", content: "suma" }],
-      canSearch: false,
-      forcedQuery: null,
-      contextWindow: 32768,
-      signal: new AbortController().signal,
-      onText: (t) => (text += t),
-      onClearText: () => (text = text.slice(0, kept)),
-      onKeepText: () => (kept = text.length),
-      onProgress: () => {},
-      onRecord: () => {},
-      workspace: {
-        canAsk: () => true,
-        run: async () => ({ role: "user", content: "<folder-results></folder-results>" }),
-        compact: () => null,
-        readNames: () => [],
+    const r = runWithCommands(
+      [`<nyra-note>Plan: sumar.</nyra-note>\nLo calculo.\n<nyra-code>\n\`\`\`python\n${program}\n\`\`\`\n</nyra-code>`, "Da 201."],
+      {
+        history: [{ role: "user", content: "suma" }],
+        contextWindow: 32768,
+        workspace: emptyFolder,
+        commands: { canRun: () => false, canRunCode: () => true, canRead: () => false },
       },
-      commands: {
-        canRun: () => false,
-        canRunCode: () => true,
-        canRead: () => false,
-        run: async (commands) => {
-          asked.push(commands);
-          return { role: "user", content: '<command-results><command-result n="1" exit-code="0"></command-result></command-results>' };
-        },
-        read: () => ({ role: "user", content: "" }),
-        ...noBackground,
-      },
-    });
-    expect(asked).toEqual([[{ command: "", background: false, code: { language: "python", source: program } }]]);
-    expect(text).not.toContain("nyra-code");
-    expect(text).not.toContain(program);
-    expect(text).toBe("Lo calculo.\n\nDa 201.");
-  });
-
-  it("works in the browser one action at a time, with the sentence before each tag as what it is doing", async () => {
-    const actions: string[] = [];
-    const browser = {
-      run: async (kind: string, value: string, preface: string): Promise<Message> => {
-        actions.push(`${kind}|${value}|${preface}`);
-        return { role: "user", content: `<browser-page>after ${kind}</browser-page>` };
-      },
-    };
-    const r = run(
-      [
-        "Abro la tienda.\n<nyra-browse>localhost:5173</nyra-browse>",
-        "<nyra-type>1 | marta@example.com</nyra-type>",
-        "<nyra-click>3</nyra-click>",
-        "Ya entré: el panel muestra 42 ventas.",
-      ],
-      { browser, canSearch: false },
     );
-    await expect(r.reply).resolves.toMatchObject({ received: true });
-    expect(actions).toEqual(["browse|localhost:5173|Abro la tienda.", "type|1 | marta@example.com|", "click|3|"]);
-    expect(r.text()).toBe("Ya entré: el panel muestra 42 ventas.");
-    expect(r.requests[1].at(-1)?.content).toContain("after browse");
-  });
-
-  it("hands every browser tag to the browser, which answers what can't be done instead of it passing as text", async () => {
-    const actions: string[] = [];
-    const browser = {
-      run: async (kind: string): Promise<Message> => {
-        actions.push(kind);
-        return { role: "user", content: '<browser-error action="click">No page is open.</browser-error>' };
-      },
-    };
-    const r = run(["<nyra-click>3</nyra-click>", "No hay ninguna página abierta todavía."], { browser, canSearch: false });
     await r.reply;
-    expect(actions).toEqual(["click"]);
-    expect(r.requests[1].at(-1)?.content).toContain("No page is open");
-    expect(r.text()).toBe("No hay ninguna página abierta todavía.");
-  });
-
-  it("never flashes the sentence the model writes before a request, in any language", async () => {
-    for (const preface of ["Ahora voy a buscarlo.", "Let me look that up.", "Je vais chercher ça."]) {
-      const r = run([`${preface}\n<nyra-search>python 3.14</nyra-search>`, "Salió Python 3.14 [1]."]);
-      await r.reply;
-      expect(r.everShown()).not.toContain(preface);
-      expect(r.text()).toBe("Salió Python 3.14 [1].");
-    }
-  });
-
-  it("keeps a long text written before a browser action, goes on below it and lets the model know it said it", async () => {
-    const said = `Tienes razón: la contraseña lleva un signo al final. ${"Lo corrijo y vuelvo a intentarlo. ".repeat(6)}`;
-    const browser = {
-      run: async (): Promise<Message> => ({ role: "user", content: "<browser-page>Panel</browser-page>" }),
-    };
-    const r = run([`${said}\n<nyra-click>3</nyra-click>`, "Ya entré al panel."], { browser, canSearch: false });
-    await r.reply;
-    // Never cleared: what was on screen is still there, with the answer after it
-    expect(r.text()).toContain(said.trim());
-    expect(r.text()).toContain("Ya entré al panel.");
-    expect(r.requests[1].at(-2)?.content).toContain("Tienes razón");
+    expect(r.asked).toEqual([[{ command: "", background: false, code: { language: "python", source: program } }]]);
+    expect(r.text()).not.toContain("nyra-code");
+    expect(r.text()).not.toContain(program);
+    expect(r.text()).toBe("Lo calculo.\n\nDa 201.");
   });
 });
-

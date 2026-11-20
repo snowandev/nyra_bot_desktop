@@ -38,6 +38,8 @@ import { ContextIndicator } from "./ContextIndicator";
 import { DropOverlay } from "@/features/attachments/DropOverlay";
 import { DictationButton } from "@/features/dictation/DictationButton";
 import { DictationNotice } from "@/features/dictation/DictationNotice";
+import { MeetingButton } from "@/features/meeting/MeetingButton";
+import { MeetingNotice } from "@/features/meeting/MeetingNotice";
 import { useDictation } from "@/features/dictation/useDictation";
 import { HeavySkillsNotice } from "@/features/skills/HeavySkillsNotice";
 import { ModelSelector } from "@/features/models/ModelSelector";
@@ -168,6 +170,7 @@ export function Composer(props: Props) {
     pendingAudios,
     fileError,
     addFiles,
+    addAttachment,
     addLinks,
     cancelPage,
     cancelAudio,
@@ -480,6 +483,7 @@ export function Composer(props: Props) {
           </p>
         )}
         <DictationNotice dictation={dictation} />
+        {preferences.transcription && <MeetingNotice />}
         <div className="composer-bar">
           <div className="composer-tools">
             <input
@@ -557,6 +561,7 @@ export function Composer(props: Props) {
                 onHideAll={canHide ? hideSensitive : undefined}
               />
             )}
+            {preferences.transcription && <MeetingButton className="icon-button soft" onRecorded={addAttachment} />}
             <DictationButton dictation={dictation} className="icon-button soft" shortcutsEnabled={shortcutsEnabled} />
             {isStreaming && !answersCommand ? (
               <button type="button" className="send-button" aria-label={t("chat.composer.stop")} onClick={onStop}>

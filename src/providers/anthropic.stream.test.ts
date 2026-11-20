@@ -140,7 +140,7 @@ describe("anthropic.chat", () => {
 });
 
 describe("anthropic.listModels", () => {
-  it("lists the models with their context window and reply limit", async () => {
+  it("lists the account's models, each read by toModel", async () => {
     reply = jsonReply(200, {
       data: [
         {
@@ -158,6 +158,8 @@ describe("anthropic.listModels", () => {
       last_id: "claude-opus-5-5",
     });
     const models = await anthropic.listModels(config);
-    expect(models).toMatchObject([{ id: "claude-opus-5-5", contextWindow: 1_000_000, maxOutputTokens: 128_000 }]);
+    expect(lastRequest.url).toContain("https://api.anthropic.test/v1/models");
+    expect(lastRequest.headers.get("x-api-key")).toBe("sk-ant-test");
+    expect(models.map((m) => m.id)).toEqual(["claude-opus-5-5"]);
   });
 });

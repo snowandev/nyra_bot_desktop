@@ -64,7 +64,7 @@ export function useDictation({ inputRef, onChange }: Options) {
     }
     model.current = whisper.id;
     try {
-      await startDictation(whisper.id);
+      await startDictation(whisper.id, loadPreferences().microphone?.id ?? null);
       // Dropped while the microphone opened
       if (turn !== dropped.current) {
         void cancelDictation();

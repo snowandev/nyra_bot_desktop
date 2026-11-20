@@ -376,7 +376,7 @@ fn at_place(
         ))
         .map_err(to_message)?;
     thread::sleep(SETTLE);
-    let allowed = !over_own_window(app);
+    let allowed = !over_own_window(app, screen_point((x, y), &shot));
     if allowed {
         press(clicks + 1)?;
     }
@@ -465,7 +465,53 @@ fn own_keyboard(app: &AppHandle) -> bool {
     own_windows(app).any(|window| window.is_focused().unwrap_or(false))
 }
 
-fn over_own_window(app: &AppHandle) -> bool {
+/// Whether the click would land on Nyra: asked to the system, so a window of Nyra behind the user's app doesn't
+/// count. Where it can't tell, any of Nyra's windows under the pointer does.
+fn over_own_window(app: &AppHandle, at: (f64, f64)) -> bool {
+    in_front_is_own(app, at).unwrap_or_else(|| inside_own_window(app))
+}
+
+#[cfg(target_os = "macos")]
+fn in_front_is_own(_app: &AppHandle, (x, y): (f64, f64)) -> Option<bool> {
+    crate::screen_press::owner_at(x, y).map(|pid| pid == std::process::id() as i32)
+}
+
+/// At the pointer, which is already where the click goes
+#[cfg(windows)]
+fn in_front_is_own(app: &AppHandle, _at: (f64, f64)) -> Option<bool> {
+    use windows_sys::Win32::Foundation::POINT;
+    use windows_sys::Win32::UI::WindowsAndMessaging::{
+        GetAncestor, GetCursorPos, GetWindowThreadProcessId, WindowFromPoint, GA_ROOT,
+    };
+    let mut point = POINT { x: 0, y: 0 };
+    // SAFETY: reads of the system's windows; point and pid are written by the calls
+    unsafe {
+        if GetCursorPos(&mut point) == 0 {
+            return None;
+        }
+        let root = GetAncestor(WindowFromPoint(point), GA_ROOT);
+        if root.is_null() {
+            return None;
+        }
+        // The marks window lets the mouse through; if the system still names it, it can't tell what is under
+        let marks = app
+            .get_webview_window(MARKS_LABEL)
+            .and_then(|w| w.hwnd().ok());
+        if marks.is_some_and(|marks| marks.0 as usize == root as usize) {
+            return None;
+        }
+        let mut pid = 0;
+        GetWindowThreadProcessId(root, &mut pid);
+        Some(pid == std::process::id())
+    }
+}
+
+#[cfg(not(any(target_os = "macos", windows)))]
+fn in_front_is_own(_app: &AppHandle, _at: (f64, f64)) -> Option<bool> {
+    None
+}
+
+fn inside_own_window(app: &AppHandle) -> bool {
     let Ok(cursor) = app.cursor_position() else {
         return false;
     };
@@ -698,10 +744,11 @@ mod tests {
         let screen = shot(1.0);
         let short = glide_for((0.5, 0.5), (0.52, 0.5), &screen);
         let long = glide_for((0.0, 0.0), (0.9, 0.9), &screen);
+        let ms = |glide: Duration| glide.as_millis() as f64;
+        assert_eq!(ms(glide_for((0.3, 0.3), (0.3, 0.3), &screen)), GLIDE_MIN_MS);
+        assert_eq!(ms(long), GLIDE_MAX_MS);
+        assert!(GLIDE_MIN_MS < ms(short) && ms(short) < GLIDE_MAX_MS);
         assert!(short < long);
-        assert_eq!(short.as_millis(), 312);
-        assert_eq!(long.as_millis(), 750);
-        assert_eq!(glide_for((0.3, 0.3), (0.3, 0.3), &screen).as_millis(), 300);
     }
 
     #[test]

@@ -944,18 +944,23 @@ pub fn close_all(app: &AppHandle) {
 mod tests {
     use super::*;
 
-    #[test]
-    fn makes_plain_ids_from_names() {
-        let taken = vec![McpServer {
-            id: "tareas".into(),
-            name: "Tareas".into(),
+    /// An enabled server started with npx, with nothing allowed or turned off
+    fn server(id: &str) -> McpServer {
+        McpServer {
+            id: id.into(),
+            name: id.into(),
             command: "npx".into(),
             args: vec![],
             env_names: vec![],
             enabled: true,
             always_allowed: vec![],
             disabled_tools: vec![],
-        }];
+        }
+    }
+
+    #[test]
+    fn makes_plain_ids_from_names() {
+        let taken = vec![server("tareas")];
         assert_eq!(new_id("Mi Base de Datos!", &[]), "mi-base-de-datos");
         assert_eq!(new_id("Tareas", &taken), "tareas-2");
         assert_eq!(new_id("日本語", &[]), "server");
@@ -1009,14 +1014,8 @@ mod tests {
     #[test]
     fn refuses_off_servers_and_tools() {
         let server = McpServer {
-            id: "notas".into(),
-            name: "Notas".into(),
-            command: "npx".into(),
-            args: vec![],
-            env_names: vec![],
-            enabled: true,
-            always_allowed: vec![],
             disabled_tools: vec!["delete_page".into()],
+            ..server("notas")
         };
         assert!(usable_tool(&server, "search").is_ok());
         assert!(usable_tool(&server, "delete_page").is_err());
@@ -1097,17 +1096,11 @@ mod tests {
     #[ignore = "starts a server with npx, which needs Node and the network"]
     async fn uses_a_real_server() {
         let server = McpServer {
-            id: "everything".into(),
-            name: "Everything".into(),
-            command: "npx".into(),
             args: vec![
                 "-y".into(),
                 "@modelcontextprotocol/server-everything".into(),
             ],
-            env_names: vec![],
-            enabled: true,
-            always_allowed: vec![],
-            disabled_tools: vec![],
+            ..server("everything")
         };
         let connection = start(&server, &Map::new(), Log::default())
             .await

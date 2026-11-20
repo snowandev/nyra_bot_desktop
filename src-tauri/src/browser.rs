@@ -1342,6 +1342,28 @@ mod tests {
         height: 700,
     };
 
+    /// Serves the page `page` picks from each request's first line, on a free local port it returns
+    fn serve(page: impl Fn(&str) -> &'static str + Send + 'static) -> u16 {
+        use std::io::{Read, Write};
+        use std::net::TcpListener;
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let port = listener.local_addr().unwrap().port();
+        thread::spawn(move || {
+            for mut stream in listener.incoming().flatten() {
+                let mut request = [0u8; 4096];
+                let read = stream.read(&mut request).unwrap_or(0);
+                let request = String::from_utf8_lossy(&request[..read]);
+                let body = page(request.lines().next().unwrap_or(""));
+                let reply = format!(
+                    "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
+                    body.len()
+                );
+                let _ = stream.write_all(reply.as_bytes());
+            }
+        });
+        port
+    }
+
     #[test]
     fn names_the_browser_by_where_it_is() {
         assert_eq!(
@@ -1363,33 +1385,14 @@ mod tests {
     #[test]
     #[ignore = "opens the installed browser"]
     fn logs_in_on_a_local_page_and_takes_a_screenshot() {
-        use std::io::{Read, Write};
-        use std::net::TcpListener;
-        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
-        let port = listener.local_addr().unwrap().port();
-        thread::spawn(move || {
-            for stream in listener.incoming().flatten() {
-                let mut stream = stream;
-                let mut request = [0u8; 4096];
-                let read = stream.read(&mut request).unwrap_or(0);
-                let first = String::from_utf8_lossy(&request[..read])
-                    .lines()
-                    .next()
-                    .unwrap_or("")
-                    .to_string();
-                let body = if first.starts_with("GET /panel") {
-                    "<html><head><title>Panel</title></head><body><h1>Hola, Marta</h1><p>Ventas: 42</p></body></html>"
-                } else {
-                    "<html><head><title>Entrar</title></head><body><form action='/panel'>
-                     <label for='u'>Usuario</label><input id='u' name='u'>
-                     <label for='p'>Contraseña</label><input id='p' name='p' type='password'>
-                     <button type='submit'>Entrar</button></form></body></html>"
-                };
-                let reply = format!(
-                    "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
-                    body.len()
-                );
-                let _ = stream.write_all(reply.as_bytes());
+        let port = serve(|request_line| {
+            if request_line.starts_with("GET /panel") {
+                "<html><head><title>Panel</title></head><body><h1>Hola, Marta</h1><p>Ventas: 42</p></body></html>"
+            } else {
+                "<html><head><title>Entrar</title></head><body><form action='/panel'>
+                 <label for='u'>Usuario</label><input id='u' name='u'>
+                 <label for='p'>Contraseña</label><input id='p' name='p' type='password'>
+                 <button type='submit'>Entrar</button></form></body></html>"
             }
         });
         let emit: Emit = Arc::new(|_, _| {});
@@ -1457,28 +1460,14 @@ mod tests {
     #[test]
     #[ignore = "opens the installed browser"]
     fn keeps_numbers_when_the_page_adds_elements_and_finds_text() {
-        use std::io::{Read, Write};
-        use std::net::TcpListener;
-        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
-        let port = listener.local_addr().unwrap().port();
-        thread::spawn(move || {
-            for stream in listener.incoming().flatten() {
-                let mut stream = stream;
-                let mut request = [0u8; 4096];
-                let _ = stream.read(&mut request);
-                // Writing in the field adds a "Borrar" button before "Buscar", as some search boxes do
-                let body = "<html><body><p>Canción del día: Música en Ñuñoa</p><div id='box'>
-                    <input id='q' aria-label='Buscar texto'><button id='go'>Buscar</button></div>
-                    <script>document.getElementById('q').addEventListener('input', () => {
-                      if (document.getElementById('clear')) return;
-                      const b = document.createElement('button'); b.id = 'clear'; b.textContent = 'Borrar';
-                      document.getElementById('go').before(b); });</script></body></html>";
-                let reply = format!(
-                    "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
-                    body.len()
-                );
-                let _ = stream.write_all(reply.as_bytes());
-            }
+        // Writing in the field adds a "Borrar" button before "Buscar", as some search boxes do
+        let port = serve(|_| {
+            "<html><body><p>Canción del día: Música en Ñuñoa</p><div id='box'>
+            <input id='q' aria-label='Buscar texto'><button id='go'>Buscar</button></div>
+            <script>document.getElementById('q').addEventListener('input', () => {
+              if (document.getElementById('clear')) return;
+              const b = document.createElement('button'); b.id = 'clear'; b.textContent = 'Borrar';
+              document.getElementById('go').before(b); });</script></body></html>"
         });
         let emit: Emit = Arc::new(|_, _| {});
         let profiles = std::env::temp_dir().join(format!("nyra-browser-test-{}", now_millis()));
@@ -1563,26 +1552,12 @@ mod tests {
     #[test]
     #[ignore = "opens the installed browser"]
     fn opens_a_new_tab_in_the_page_and_says_where_it_went() {
-        use std::io::{Read, Write};
-        use std::net::TcpListener;
-        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
-        let port = listener.local_addr().unwrap().port();
-        thread::spawn(move || {
-            for mut stream in listener.incoming().flatten() {
-                let mut request = [0u8; 4096];
-                let read = stream.read(&mut request).unwrap_or(0);
-                let other = String::from_utf8_lossy(&request[..read]).starts_with("GET /other");
-                let body = if other {
-                    "<html><head><title>Otra</title></head><body>Otra página</body></html>"
-                } else {
-                    "<html><head><title>Inicio</title></head><body>
-                     <a id=a href='/other' target='_blank' style='font-size:40px'>Abrir</a></body></html>"
-                };
-                let reply = format!(
-                    "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
-                    body.len()
-                );
-                let _ = stream.write_all(reply.as_bytes());
+        let port = serve(|request_line| {
+            if request_line.starts_with("GET /other") {
+                "<html><head><title>Otra</title></head><body>Otra página</body></html>"
+            } else {
+                "<html><head><title>Inicio</title></head><body>
+                 <a id=a href='/other' target='_blank' style='font-size:40px'>Abrir</a></body></html>"
             }
         });
         let pages = Arc::new(Mutex::new(Vec::<String>::new()));

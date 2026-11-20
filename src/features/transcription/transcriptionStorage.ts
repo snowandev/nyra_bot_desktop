@@ -1,4 +1,4 @@
-import { Channel, invoke } from "@tauri-apps/api/core";
+import { Channel, convertFileSrc, invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 
 // Audio is transcribed in Rust, on this computer, with the Whisper models the user added
@@ -35,8 +35,8 @@ export const addSpeechModelFromFolder = (onProgress: (done: number, total: numbe
 export const cancelSpeechDownload = () => invoke<void>("speech_models_cancel");
 export const deleteSpeechModel = (id: string) => invoke<void>("speech_models_delete", { id });
 
-// One line: in seconds, and the speaker from 1 when they were told apart
-export type TranscriptLine = { start: number; end: number; speaker: number | null; text: string };
+// One line: in seconds, and the speaker from 1 when they were told apart. you: the user, in a meeting Nyra recorded.
+export type TranscriptLine = { start: number; end: number; speaker: number | null; text: string; you?: boolean };
 
 export type TranscriptionStage = "reading" | "speakers" | "transcribing";
 
@@ -44,6 +44,10 @@ export type TranscriptionStage = "reading" | "speakers" | "transcribing";
 // Resolves to how long it lasts, in seconds.
 export const storeAudio = (bytes: ArrayBuffer, id: string, extension: string) =>
   invoke<number>("store_audio", bytes, { headers: { "x-id": id, "x-extension": extension } });
+
+// Where the webview plays a stored audio from: streamed from its file, never loaded whole
+export const playableAudio = async (id: string, extension: string) =>
+  convertFileSrc(await invoke<string>("audio_path", { id, extension }));
 
 // The files of these attached audios go now, as a private conversation closes
 export const forgetAudio = (ids: string[]) => invoke<void>("forget_audio", { ids });
@@ -57,6 +61,7 @@ export const transcribeStoredAudio = (options: {
   model: string;
   speakers: boolean;
   speakerCount: number | null;
+  meeting: boolean;
 }) => invoke<TranscriptLine[]>("transcribe_stored_audio", options);
 
 export const cancelTranscription = (id: string) => invoke<void>("transcription_cancel", { id });

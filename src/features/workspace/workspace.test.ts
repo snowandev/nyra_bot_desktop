@@ -79,26 +79,6 @@ describe("changes", () => {
     expect(changesBetween(before, after)).toEqual({ added: 1, modified: 1, removed: 1 });
   });
 
-  it("finds files read earlier that changed since", () => {
-    const history: Message[] = [
-      {
-        role: "assistant",
-        content: "",
-        workspaceConsult: {
-          folder: "app",
-          root: "/app",
-          read: [{ path: "a.ts", size: 1, modified: 1 }, { path: "b.ts", size: 1, modified: 1 }],
-          searches: [],
-          listed: [],
-          skipped: [],
-          tokens: 0,
-          budget: 0,
-        },
-      },
-    ];
-    expect(changedSinceRead(history, [file("a.ts"), file("b.ts", 5)])).toEqual(["b.ts"]);
-  });
-
   const readIn = (...read: { path: string; modified: number }[]): Message => ({
     role: "assistant",
     content: "",
@@ -112,6 +92,11 @@ describe("changes", () => {
       tokens: 0,
       budget: 0,
     },
+  });
+
+  it("finds files read earlier that changed since", () => {
+    const history = [readIn({ path: "a.ts", modified: 1 }, { path: "b.ts", modified: 1 })];
+    expect(changedSinceRead(history, [file("a.ts"), file("b.ts", 5)])).toEqual(["b.ts"]);
   });
 
   it("leaves out reads with no time, as those imported from Claude Code", () => {

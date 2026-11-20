@@ -20,17 +20,29 @@ export function clock(seconds: number) {
 
 const transcriptTitle = (audioName: string) => i18n.t("transcription.title", { name: audioName });
 
+// In a meeting the others are one side even when their voices weren't told apart
+function whoSays(line: TranscriptLine, isMeeting: boolean) {
+  if (line.you) return i18n.t("transcription.you");
+  if (line.speaker !== null) return i18n.t("transcription.speaker", { n: line.speaker });
+  return isMeeting ? i18n.t("transcription.others") : "";
+}
+
 // A Markdown document, as the user reads it on its card and the model gets it: a title, how long and how many speak,
 // then one paragraph per turn with its time and, if known, who speaks. The labels follow the interface's language,
 // as the rest of the user's data.
 export function transcriptText(name: string, lines: TranscriptLine[]) {
   if (lines.length === 0) return `# ${transcriptTitle(name)}\n\n${i18n.t("transcription.empty", { name })}`;
   const duration = clock(lines[lines.length - 1].end);
-  const speakers = new Set(lines.flatMap((line) => (line.speaker === null ? [] : [line.speaker]))).size;
+  const isMeeting = lines.some((line) => line.you);
+  const told = new Set(lines.flatMap((line) => (line.speaker === null ? [] : [line.speaker]))).size;
+  // In a meeting: the user, and the others as one when their voices weren't told apart
+  const others = told || (isMeeting && lines.some((line) => !line.you) ? 1 : 0);
+  const speakers = others + (isMeeting ? 1 : 0);
   const about =
     speakers > 0 ? i18n.t("transcription.aboutSpeakers", { duration, count: speakers }) : duration;
   const body = lines.map((line) => {
-    const who = line.speaker === null ? "" : ` ${i18n.t("transcription.speaker", { n: line.speaker })}:`;
+    const name = whoSays(line, isMeeting);
+    const who = name ? ` ${name}:` : "";
     return `**[${clock(line.start)}]${who}** ${line.text.replace(/\s+/g, " ")}`;
   });
   return [`# ${transcriptTitle(name)}`, about, ...body].join("\n\n");

@@ -36,7 +36,7 @@ use crate::storage::Database;
 use crate::util::{data_dir, is_plain_id, to_message};
 
 // What every model here takes
-const SAMPLE_RATE: i32 = 16_000;
+pub(crate) const SAMPLE_RATE: i32 = 16_000;
 // Whisper hears 30 seconds at a time; phrases are cut a little shorter so none loses its end
 const MAX_PHRASE_SECONDS: f32 = 28.0;
 // Whispers writing at once in a whole transcription: each holds its own copy, so a large one (turbo, about 1 GB
@@ -83,7 +83,7 @@ const MIN_SECONDS_TO_TELL: f32 = 2.0;
 const JOIN_GAP_SECONDS: f32 = 1.5;
 // A long recording, kept in memory while it is transcribed: four hours are about 900 MB of samples
 const MAX_AUDIO_BYTES: usize = 1024 * 1024 * 1024;
-const MAX_SECONDS: f32 = 4.0 * 3600.0;
+pub(crate) const MAX_SECONDS: f32 = 4.0 * 3600.0;
 pub const PROGRESS_EVENT: &str = "transcription-progress";
 
 /// Where a transcription is, for the composer to show it
@@ -120,13 +120,15 @@ pub struct SpeechModels {
 }
 
 /// One line of the transcript: when it starts and ends, in seconds, who speaks (from 1) when speakers were told apart,
-/// and what they say
+/// and what they say. you: said by the user, in a meeting Nyra recorded.
 #[derive(Serialize, Clone, Debug, PartialEq)]
 pub struct TranscriptLine {
     pub start: f32,
     pub end: f32,
     pub speaker: Option<u32>,
     pub text: String,
+    #[serde(skip_serializing_if = "std::ops::Not::not")]
+    pub you: bool,
 }
 
 /// A phrase the detector found, by its samples
@@ -158,7 +160,11 @@ fn shared_threads() -> (i32, i32) {
 
 /// The audio of a file as 16 kHz mono samples. extension: the file's, which helps tell its format.
 pub fn read_audio(bytes: Vec<u8>, extension: Option<&str>) -> Result<Vec<f32>, String> {
-    decode_audio(Box::new(Cursor::new(bytes)), extension)
+    mono(decode_audio(
+        Box::new(Cursor::new(bytes)),
+        extension,
+        Channels::Mixed,
+    )?)
 }
 
 /// The same, read from the file as it decodes: a long WAV is gigabytes that never need to be in memory at once
@@ -167,13 +173,35 @@ pub fn read_audio_file(
     extension: Option<&str>,
 ) -> Result<Vec<f32>, String> {
     let file = fs::File::open(path).map_err(|_| t("native.transcription.gone"))?;
-    decode_audio(Box::new(file), extension)
+    mono(decode_audio(Box::new(file), extension, Channels::Mixed)?)
+}
+
+/// Each channel of the file on its own, at 16 kHz: a meeting's sides
+fn read_audio_tracks(
+    path: &std::path::Path,
+    extension: Option<&str>,
+) -> Result<Vec<Vec<f32>>, String> {
+    let file = fs::File::open(path).map_err(|_| t("native.transcription.gone"))?;
+    decode_audio(Box::new(file), extension, Channels::Apart)
+}
+
+fn mono(mut tracks: Vec<Vec<f32>>) -> Result<Vec<f32>, String> {
+    tracks
+        .pop()
+        .ok_or_else(|| t("native.transcription.noAudio"))
+}
+
+#[derive(Clone, Copy, PartialEq)]
+enum Channels {
+    Mixed,
+    Apart,
 }
 
 fn decode_audio(
     source: Box<dyn symphonia::core::io::MediaSource>,
     extension: Option<&str>,
-) -> Result<Vec<f32>, String> {
+    channels_out: Channels,
+) -> Result<Vec<Vec<f32>>, String> {
     let unreadable = || t("native.transcription.unreadable");
     let stream = MediaSourceStream::new(source, MediaSourceStreamOptions::default());
     let mut hint = Hint::new();
@@ -201,12 +229,13 @@ fn decode_audio(
     let mut decoder = symphonia::default::get_codecs()
         .make_audio_decoder(&params, &AudioDecoderOptions::default())
         .map_err(|_| unreadable())?;
-    // Mixed to mono and brought to the models' rate packet by packet: the whole audio at its own rate (often 44.1 or
-    // 48 kHz) was the largest copy of a long recording
-    let mut out = Vec::new();
-    let mut resampling: Option<Option<LinearResampler>> = None;
+    // Mixed to mono (or split) and brought to the models' rate packet by packet: the whole audio at its own rate (often
+    // 44.1 or 48 kHz) was the largest copy of a long recording
+    let mut tracks: Vec<Vec<f32>> = Vec::new();
+    // One per track, known from the first packet; a resampler keeps its state between packets
+    let mut resamplers: Option<Vec<Option<LinearResampler>>> = None;
     let mut frame = Vec::<f32>::new();
-    let mut mixed = Vec::<f32>::new();
+    let mut parts: Vec<Vec<f32>> = Vec::new();
     loop {
         let packet = match format.next_packet() {
             Ok(Some(packet)) => packet,
@@ -229,32 +258,58 @@ fn decode_audio(
             return Err(t("native.transcription.noAudio"));
         }
         decoded.copy_to_vec_interleaved(&mut frame);
-        mixed.clear();
-        mixed.extend(
-            frame
-                .chunks(channels)
-                .map(|samples| samples.iter().sum::<f32>() / channels as f32),
-        );
-        // Known from the first packet; a resampler keeps its state between packets
-        if resampling.is_none() {
-            resampling = Some(if rate as i32 == SAMPLE_RATE {
-                None
-            } else {
-                Some(LinearResampler::create(rate as i32, SAMPLE_RATE).ok_or_else(unreadable)?)
-            });
+        let count = match channels_out {
+            Channels::Mixed => 1,
+            Channels::Apart => channels,
+        };
+        parts.resize_with(count, Vec::new);
+        parts.iter_mut().for_each(Vec::clear);
+        for samples in frame.chunks(channels) {
+            match channels_out {
+                Channels::Mixed => parts[0].push(samples.iter().sum::<f32>() / channels as f32),
+                Channels::Apart => {
+                    for (part, sample) in parts.iter_mut().zip(samples) {
+                        part.push(*sample);
+                    }
+                }
+            }
         }
-        match resampling.as_ref().and_then(Option::as_ref) {
-            Some(resampler) => out.extend(resampler.resample(&mixed, false)),
-            None => out.extend_from_slice(&mixed),
+        if resamplers.is_none() {
+            tracks.resize_with(count, Vec::new);
+            resamplers = Some(
+                (0..count)
+                    .map(|_| {
+                        if rate as i32 == SAMPLE_RATE {
+                            Ok(None)
+                        } else {
+                            LinearResampler::create(rate as i32, SAMPLE_RATE)
+                                .map(Some)
+                                .ok_or_else(unreadable)
+                        }
+                    })
+                    .collect::<Result<_, _>>()?,
+            );
+        }
+        let each = tracks
+            .iter_mut()
+            .zip(&parts)
+            .zip(resamplers.iter().flatten());
+        for ((track, part), resampler) in each {
+            match resampler {
+                Some(resampler) => track.extend(resampler.resample(part, false)),
+                None => track.extend_from_slice(part),
+            }
         }
     }
-    if let Some(Some(resampler)) = &resampling {
-        out.extend(resampler.resample(&[], true));
+    for (track, resampler) in tracks.iter_mut().zip(resamplers.iter().flatten()) {
+        if let Some(resampler) = resampler {
+            track.extend(resampler.resample(&[], true));
+        }
     }
-    if out.is_empty() {
+    if tracks.iter().all(Vec::is_empty) {
         return Err(t("native.transcription.noAudio"));
     }
-    Ok(out)
+    Ok(tracks)
 }
 
 /// Mono samples at the rate every model here takes
@@ -554,6 +609,19 @@ pub fn transcribe(
     speakers: Speakers,
     progress: impl Fn(Stage, f32) -> bool,
 ) -> Result<Vec<TranscriptLine>, String> {
+    Ok(joined(transcribe_phrases(
+        samples, models, loaded, speakers, progress,
+    )?))
+}
+
+/// The same, one line per phrase Whisper wrote, before the close ones of a speaker are joined
+fn transcribe_phrases(
+    samples: Arc<Vec<f32>>,
+    models: &SpeechModels,
+    loaded: &mut Loaded,
+    speakers: Speakers,
+    progress: impl Fn(Stage, f32) -> bool,
+) -> Result<Vec<TranscriptLine>, String> {
     let stopped = || t("native.transcription.cancelled");
     let found = phrases(&samples, models)?;
     // Both at once share the cores instead of fighting over them; alone, Whisper has them all
@@ -604,20 +672,114 @@ pub fn transcribe(
     for Written { start, end, text } in written {
         let speaker = speaker_of(start, end, &turns, &order)
             .or_else(|| lines.last().and_then(|line| line.speaker));
-        match lines.last_mut() {
-            Some(last) if last.speaker == speaker && start - last.end < JOIN_GAP_SECONDS => {
-                last.text = format!("{} {text}", last.text);
-                last.end = end;
-            }
-            _ => lines.push(TranscriptLine {
-                start,
-                end,
-                speaker,
-                text,
-            }),
-        }
+        lines.push(TranscriptLine {
+            start,
+            end,
+            speaker,
+            text,
+            you: false,
+        });
     }
     Ok(lines)
+}
+
+/// The phrases in order, those of a speaker said close together as one line
+fn joined(phrases: Vec<TranscriptLine>) -> Vec<TranscriptLine> {
+    let mut lines: Vec<TranscriptLine> = Vec::new();
+    for phrase in phrases {
+        match lines.last_mut() {
+            Some(last)
+                if last.speaker == phrase.speaker
+                    && last.you == phrase.you
+                    && phrase.start - last.end < JOIN_GAP_SECONDS =>
+            {
+                last.text = format!("{} {}", last.text, phrase.text);
+                last.end = phrase.end;
+            }
+            _ => lines.push(phrase),
+        }
+    }
+    lines
+}
+
+/// A meeting Nyra recorded: the user on the left, what the computer played on the right. Each side is written on its
+/// own, the user's lines as theirs and the others told apart as usual, then put back in time order.
+fn transcribe_meeting(
+    tracks: Vec<Vec<f32>>,
+    models: &SpeechModels,
+    loaded: &mut Loaded,
+    others: Speakers,
+    progress: impl Fn(Stage, f32) -> bool,
+) -> Result<Vec<TranscriptLine>, String> {
+    let mut tracks = tracks.into_iter();
+    let (Some(user), Some(computer)) = (tracks.next(), tracks.next()) else {
+        return Err(t("native.transcription.unreadable"));
+    };
+    // Phrase by phrase: joined first, the user's words and the others' heard right after were one line, which went whole
+    let mine = transcribe_phrases(
+        Arc::new(user),
+        models,
+        loaded,
+        Speakers::Off,
+        |stage, done| progress(stage, done / 2.0),
+    )?;
+    let theirs = transcribe(Arc::new(computer), models, loaded, others, |stage, done| {
+        progress(stage, 0.5 + done / 2.0)
+    })?;
+    Ok(meeting_lines(mine, theirs))
+}
+
+// Share of a line's letter pairs also said by the others at that time for it to be them, heard by the microphone
+const ECHO_SHARE: f32 = 0.6;
+// Share of it said while the others spoke: a short phrase can match a long one's letter pairs by chance
+const ECHO_TIME_SHARE: f32 = 0.4;
+
+/// The user's phrases and the others' lines, in time order. Without headphones the microphone also hears the others: a
+/// phrase of the user's that mostly repeats what the others said meanwhile is that, and goes.
+fn meeting_lines(mine: Vec<TranscriptLine>, theirs: Vec<TranscriptLine>) -> Vec<TranscriptLine> {
+    let yours: Vec<TranscriptLine> = mine
+        .into_iter()
+        .filter(|line| {
+            let meanwhile: Vec<&TranscriptLine> = theirs
+                .iter()
+                .filter(|other| other.start < line.end && line.start < other.end)
+                .collect();
+            let overlapped: f32 = meanwhile
+                .iter()
+                .map(|other| other.end.min(line.end) - other.start.max(line.start))
+                .sum();
+            let said: Vec<&str> = meanwhile.iter().map(|other| other.text.as_str()).collect();
+            overlapped < ECHO_TIME_SHARE * (line.end - line.start)
+                || echoed_share(&line.text, &said.join(" ")) < ECHO_SHARE
+        })
+        .map(|line| TranscriptLine {
+            speaker: None,
+            you: true,
+            ..line
+        })
+        .collect();
+    let mut lines: Vec<TranscriptLine> = joined(yours).into_iter().chain(theirs).collect();
+    lines.sort_by(|a, b| a.start.total_cmp(&b.start));
+    lines
+}
+
+/// How much of a text is also in another, by pairs of letters: alike however each side heard it, and in any
+/// language, with or without spaces between words
+fn echoed_share(text: &str, other: &str) -> f32 {
+    let pairs = |text: &str| -> Vec<(char, char)> {
+        let letters: Vec<char> = text
+            .chars()
+            .filter(|c| c.is_alphanumeric())
+            .flat_map(char::to_lowercase)
+            .collect();
+        letters.windows(2).map(|pair| (pair[0], pair[1])).collect()
+    };
+    let mine = pairs(text);
+    if mine.is_empty() {
+        return 0.0;
+    }
+    let theirs: HashSet<(char, char)> = pairs(other).into_iter().collect();
+    mine.iter().filter(|pair| theirs.contains(pair)).count() as f32 / mine.len() as f32
 }
 
 /// How Whisper writes: how many at once, each with how many threads
@@ -821,7 +983,7 @@ fn plain_extension(extension: &str) -> String {
         .to_ascii_lowercase()
 }
 
-fn audio_file(app: &AppHandle, id: &str, extension: &str) -> Result<PathBuf, String> {
+pub(crate) fn audio_file(app: &AppHandle, id: &str, extension: &str) -> Result<PathBuf, String> {
     if !is_plain_id(id) {
         return Err(t("native.transcription.unreadable"));
     }
@@ -886,14 +1048,19 @@ pub async fn store_audio(app: AppHandle, request: Request<'_>) -> Result<f32, St
     }
     fs::create_dir_all(audio_dir(&app)?).map_err(to_message)?;
     fs::write(&path, &bytes).map_err(to_message)?;
-    if let Ok(mut ids) = app.state::<Transcriptions>().stored_now.lock() {
-        ids.insert(id);
-    }
+    stored_now(&app, id);
     Ok(seconds)
 }
 
+/// An audio stored in this session, which no saved message may hold yet: kept until the next start
+pub(crate) fn stored_now(app: &AppHandle, id: String) {
+    if let Ok(mut ids) = app.state::<Transcriptions>().stored_now.lock() {
+        ids.insert(id);
+    }
+}
+
 /// A stored audio as its transcript, with the Whisper size asked and its speakers told apart or not. Its progress goes
-/// out as events under the audio's id.
+/// out as events under the audio's id. meeting: one Nyra recorded, the user on one side and the others on the other.
 #[tauri::command]
 pub async fn transcribe_stored_audio(
     app: AppHandle,
@@ -902,8 +1069,18 @@ pub async fn transcribe_stored_audio(
     model: String,
     speakers: bool,
     speaker_count: Option<u32>,
+    meeting: Option<bool>,
 ) -> Result<Vec<TranscriptLine>, String> {
-    let speakers = Speakers::from(speakers, speaker_count);
+    let meeting = meeting.unwrap_or(false);
+    // In a meeting the count the user gave includes them, who are on a side of their own
+    let others = speaker_count.map(|count| {
+        if meeting {
+            count.saturating_sub(1)
+        } else {
+            count
+        }
+    });
+    let speakers = Speakers::from(speakers, others);
     let path = audio_file(&app, &id, &extension)?;
     if !path.is_file() {
         return Err(t("native.transcription.gone"));
@@ -932,14 +1109,13 @@ pub async fn transcribe_stored_audio(
             if is_cancelled() {
                 return Err(t("native.transcription.cancelled"));
             }
+            let mut loaded = Loaded::default();
+            if meeting {
+                let tracks = read_audio_tracks(&path, Some(&extension))?;
+                return transcribe_meeting(tracks, &models, &mut loaded, speakers, send);
+            }
             let samples = read_audio_file(&path, Some(&extension))?;
-            transcribe(
-                Arc::new(samples),
-                &models,
-                &mut Loaded::default(),
-                speakers,
-                send,
-            )
+            transcribe(Arc::new(samples), &models, &mut loaded, speakers, send)
         })();
         if let Ok(mut ids) = state.cancelled.lock() {
             ids.remove(&id);
@@ -955,6 +1131,16 @@ pub fn transcription_cancel(app: AppHandle, id: String) {
     if let Ok(mut ids) = app.state::<Transcriptions>().cancelled.lock() {
         ids.insert(id);
     }
+}
+
+/// Where an attached audio is, to play it
+#[tauri::command]
+pub fn audio_path(app: AppHandle, id: String, extension: String) -> Result<PathBuf, String> {
+    let path = audio_file(&app, &id, &extension)?;
+    if !path.is_file() {
+        return Err(t("native.transcription.gone"));
+    }
+    Ok(path)
 }
 
 /// The audio files of a private conversation that closed: they go now, not on the next start
@@ -1012,7 +1198,7 @@ pub fn sweep_audio(app: &AppHandle) {
 }
 
 #[cfg(test)]
-mod tests {
+pub(crate) mod tests {
     use super::*;
 
     /// A stereo WAV at 44.1 kHz, built here: one second of two tones, one per channel
@@ -1068,8 +1254,91 @@ mod tests {
         assert!(worst < 1e-3, "{worst}");
     }
 
-    /// The models as Nyra names them in a folder, with Whisper of this size and small telling the language
-    fn models_in(dir: &std::path::Path, size: &str) -> SpeechModels {
+    /// Each side of a recording, as a meeting is read
+    pub(crate) fn tracks_of(path: &std::path::Path) -> Vec<Vec<f32>> {
+        read_audio_tracks(path, Some("wav")).unwrap()
+    }
+
+    #[test]
+    fn a_meeting_keeps_the_users_lines_but_not_the_others_heard_by_their_microphone() {
+        let line = |start: f32, end: f32, speaker: Option<u32>, text: &str| TranscriptLine {
+            start,
+            end,
+            speaker,
+            text: text.to_string(),
+            you: false,
+        };
+        let mine = vec![
+            line(0.0, 2.0, None, "Hola a todos, empecemos."),
+            // The others through the speakers, a little off as the microphone heard them
+            line(3.1, 6.0, None, "Traigo las cifras de mayo y las de junio"),
+            line(7.0, 8.0, None, "Perfecto, gracias."),
+        ];
+        let theirs = vec![
+            line(3.0, 4.5, Some(1), "Traigo las cifras de mayo,"),
+            line(4.5, 6.0, Some(1), "y las de junio."),
+        ];
+        let lines = meeting_lines(mine, theirs);
+        let said: Vec<(&str, bool, Option<u32>)> = lines
+            .iter()
+            .map(|l| (l.text.as_str(), l.you, l.speaker))
+            .collect();
+        assert_eq!(
+            said,
+            [
+                ("Hola a todos, empecemos.", true, None),
+                ("Traigo las cifras de mayo,", false, Some(1)),
+                ("y las de junio.", false, Some(1)),
+                ("Perfecto, gracias.", true, None),
+            ]
+        );
+    }
+
+    #[test]
+    fn a_meeting_keeps_what_the_user_said_right_before_the_others_heard_by_their_microphone() {
+        let line = |start: f32, end: f32, speaker: Option<u32>, text: &str| TranscriptLine {
+            start,
+            end,
+            speaker,
+            text: text.to_string(),
+            you: false,
+        };
+        let mine = vec![
+            line(1.0, 2.0, None, "Hola"),
+            // Short, and its letter pairs are in what the others say just after: still the user's
+            line(2.5, 4.0, None, "las ves"),
+            line(
+                4.5,
+                9.0,
+                None,
+                "Las ventas subieron en mayo y bajaron en junio",
+            ),
+        ];
+        let theirs = vec![line(
+            3.8,
+            9.0,
+            Some(1),
+            "Las ventas subieron en mayo y bajaron en junio",
+        )];
+        let lines = meeting_lines(mine, theirs);
+        let said: Vec<(&str, bool)> = lines.iter().map(|l| (l.text.as_str(), l.you)).collect();
+        assert_eq!(
+            said,
+            [
+                ("Hola las ves", true),
+                ("Las ventas subieron en mayo y bajaron en junio", false),
+            ]
+        );
+    }
+
+    #[test]
+    fn tells_an_echo_in_any_script() {
+        assert!(echoed_share("会議を始めましょう", "では会議を始めましょう") > ECHO_SHARE);
+        assert!(echoed_share("Bonjour à tous", "Le budget est prêt") < ECHO_SHARE);
+        assert_eq!(echoed_share("…", "Hola"), 0.0);
+    }
+
+    pub(crate) fn models_in(dir: &std::path::Path, size: &str) -> SpeechModels {
         SpeechModels {
             // A folder of a community model in Transformers' format, or the name of a size in sherpa-onnx's
             whisper: if dir.join(size).is_dir() {

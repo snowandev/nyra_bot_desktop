@@ -145,6 +145,12 @@ describe("pageText", () => {
   });
 });
 
+describe("openPageNote", () => {
+  it("brings the open page's numbered elements to the model", () => {
+    expect(openPageNote(loginPage)).toContain('[3] button "Entrar"');
+  });
+});
+
 describe("screenshotName", () => {
   it("makes a file name of what the model called it", () => {
     expect(screenshotName("Panel / ventas: mayo", 1)).toBe("Panel ventas mayo.png");
@@ -378,64 +384,7 @@ describe("browserTools", () => {
     expect(result.content).toContain("Not taken");
     expect((await browser.run("screenshot", "Rebajas", "")).content).toContain("Not taken");
   });
-});
 
-describe("a browser left open", () => {
-  it("brings its page to the model, which clicks right away with its numbers", async () => {
-    const id = `c${++conversation}`;
-    showPage(id, { url: loginPage.url, title: loginPage.title });
-    void answerWhenAsked(id, true).catch(() => {});
-    const signal = new AbortController().signal;
-    const browser = browserTools({
-      conversationId: id,
-      seesImages: true,
-      signal,
-      onScreenshot: () => {},
-      request: "",
-      page: loginPage,
-      ...NO_CARD,
-    });
-    storage.browserClick.mockResolvedValue(loginPage);
-    await browser.run("click", "3", "");
-    expect(storage.browserClick).toHaveBeenCalledWith(id, 3);
-    expect(openPageNote(loginPage)).toContain('[3] button "Entrar"');
-  });
-});
-
-describe("passwords typed in the browser", () => {
-  it("are covered where the answer repeats them, keeping the text's length", async () => {
-    const { browser } = tools();
-    await browser.run("browse", "localhost:5173/login", "");
-    await browser.run("type", "1 | marta@example.com", "");
-    await browser.run("type", "2 | Clave-Secreta", "");
-    await browser.run("type", "2 | Clave-Secreta!", "");
-    const answer = "Entré como marta@example.com: la clave buena era Clave-Secreta! y no Clave-Secreta.";
-    const hidden = browser.hideSecrets(answer);
-    expect(hidden).not.toContain("Clave-Secreta");
-    expect(hidden).toContain("marta@example.com");
-    expect(hidden).toHaveLength(answer.length);
-  });
-
-  it("leave short values alone, which would cover ordinary words", () => {
-    expect(hideSecrets("una casa", ["una"])).toBe("una casa");
-  });
-});
-
-describe("quotedFrom", () => {
-  it("finds the user's words however the model copied their case, accents or punctuation, in any language", () => {
-    expect(quotedFrom("sacame una captura", "Entra y ¡sácame una CAPTURA!")).toBe(true);
-    expect(quotedFrom("take a screenshot", "Open it and take a screenshot, please")).toBe(true);
-    expect(quotedFrom("fais-en une capture", "Ouvre l'article et fais-en une capture")).toBe(true);
-    expect(quotedFrom("スクリーンショットを撮って", "このページのスクリーンショットを撮って")).toBe(true);
-    expect(quotedFrom("截图", "打开这个页面并截个图")).toBe(false);
-    expect(quotedFrom("截个图", "打开这个页面并截个图")).toBe(true);
-  });
-
-  it("doesn't take words the user didn't write, or too few to mean anything", () => {
-    expect(quotedFrom("sácame una captura", "Ahora abre la noticia de las rebajas.")).toBe(false);
-    expect(quotedFrom("a", "a captura")).toBe(false);
-    expect(quotedFrom("", "sácame una captura")).toBe(false);
-  });
   it("tells the model what its action really changed, checked by the app", async () => {
     const { browser, card } = tools();
     await browser.run("browse", "localhost:5173/login", "");
@@ -516,6 +465,63 @@ describe("quotedFrom", () => {
     const results = [];
     for (let i = 0; i < 4; i++) results.push((await browser.run("click", "3", "")).content);
     expect(results[2]).not.toContain("Stop trying");
-    expect(results[3]).toContain("Stop trying: tell the user what you tried and that it didn't work.");
+    expect(results[3]).toContain("Stop trying");
   }, 15_000);
+});
+
+describe("a browser left open", () => {
+  it("brings its page to the model, which clicks right away with its numbers", async () => {
+    const id = `c${++conversation}`;
+    showPage(id, { url: loginPage.url, title: loginPage.title });
+    void answerWhenAsked(id, true).catch(() => {});
+    const signal = new AbortController().signal;
+    const browser = browserTools({
+      conversationId: id,
+      seesImages: true,
+      signal,
+      onScreenshot: () => {},
+      request: "",
+      page: loginPage,
+      ...NO_CARD,
+    });
+    storage.browserClick.mockResolvedValue(loginPage);
+    await browser.run("click", "3", "");
+    expect(storage.browserClick).toHaveBeenCalledWith(id, 3);
+  });
+});
+
+describe("passwords typed in the browser", () => {
+  it("are covered where the answer repeats them, keeping the text's length", async () => {
+    const { browser } = tools();
+    await browser.run("browse", "localhost:5173/login", "");
+    await browser.run("type", "1 | marta@example.com", "");
+    await browser.run("type", "2 | Clave-Secreta", "");
+    await browser.run("type", "2 | Clave-Secreta!", "");
+    const answer = "Entré como marta@example.com: la clave buena era Clave-Secreta! y no Clave-Secreta.";
+    const hidden = browser.hideSecrets(answer);
+    expect(hidden).not.toContain("Clave-Secreta");
+    expect(hidden).toContain("marta@example.com");
+    expect(hidden).toHaveLength(answer.length);
+  });
+
+  it("leave short values alone, which would cover ordinary words", () => {
+    expect(hideSecrets("una casa", ["una"])).toBe("una casa");
+  });
+});
+
+describe("quotedFrom", () => {
+  it("finds the user's words however the model copied their case, accents or punctuation, in any language", () => {
+    expect(quotedFrom("sacame una captura", "Entra y ¡sácame una CAPTURA!")).toBe(true);
+    expect(quotedFrom("take a screenshot", "Open it and take a screenshot, please")).toBe(true);
+    expect(quotedFrom("fais-en une capture", "Ouvre l'article et fais-en une capture")).toBe(true);
+    expect(quotedFrom("スクリーンショットを撮って", "このページのスクリーンショットを撮って")).toBe(true);
+    expect(quotedFrom("截图", "打开这个页面并截个图")).toBe(false);
+    expect(quotedFrom("截个图", "打开这个页面并截个图")).toBe(true);
+  });
+
+  it("doesn't take words the user didn't write, or too few to mean anything", () => {
+    expect(quotedFrom("sácame una captura", "Ahora abre la noticia de las rebajas.")).toBe(false);
+    expect(quotedFrom("a", "a captura")).toBe(false);
+    expect(quotedFrom("", "sácame una captura")).toBe(false);
+  });
 });

@@ -3,11 +3,12 @@ import { useTranslation } from "react-i18next";
 import { usePreferencesContext } from "@/features/settings/preferencesContext";
 import { SettingsOption } from "@/shared/ui/SettingsOption";
 import { SettingsPanel } from "@/shared/ui/SettingsPanel";
+import { MicrophoneSettings } from "./MicrophoneSettings";
 import { activeModel, useSpeechModels } from "./speechModels";
 import { TranscriptionSettings } from "./TranscriptionSettings";
 
-// Settings → Proveedores de audio: who transcribes the audio the user attaches. Today only this computer; a service
-// with an API would be one more in the list, with its own panel.
+// Settings → Proveedores de audio: the microphone Nyra listens to, and who transcribes the audio. Today only this
+// computer transcribes; a service with an API would be one more in the list, with its own panel.
 export function AudioProvidersSettings() {
   const { t } = useTranslation();
   const { preferences, updatePreferences } = usePreferencesContext();
@@ -17,6 +18,14 @@ export function AudioProvidersSettings() {
 
   return (
     <div className="settings-content">
+      <section aria-label={t("microphone.title")} className="settings-list">
+        <div className="section-label">{t("microphone.title")}</div>
+        <MicrophoneSettings
+          microphone={preferences.microphone}
+          onChange={(microphone) => updatePreferences({ microphone })}
+        />
+      </section>
+
       <section aria-label={t("transcription.providers.list")} className="settings-list">
         <div className="section-label">{t("transcription.providers.list")}</div>
         <SettingsOption

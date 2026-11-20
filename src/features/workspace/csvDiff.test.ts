@@ -14,6 +14,9 @@ describe("reading a CSV", () => {
   it("splits quoted fields with separators and quotes inside", () => {
     expect(splitCsvLine('"Taller 9, S.L.",12,"dice ""hola"""', ",")).toEqual(["Taller 9, S.L.", "12", 'dice "hola"']);
     expect(splitCsvLine('"empieza aquí', ",")).toBeNull();
+  });
+
+  it("knows a CSV file by its extension, whatever its case", () => {
     expect(isCsvPath("datos/Ventas.CSV")).toBe(true);
   });
 });

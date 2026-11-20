@@ -76,6 +76,7 @@ xattr -dr com.apple.quarantine "/Applications/Nyra Bot.app"
 
 - **Quick chat:** a bar that opens with a shortcut from any app, to ask something without switching windows.
 - **Voice:** dictate your messages or transcribe audio files. It all happens on your computer, with Whisper.
+- **Meetings:** record a call on Meet, Teams or any other app. Nyra records your microphone and what your computer plays, then transcribes it with what you said and what the others said.
 - **Nyra's browser:** the model can open pages, read them and use them in your Chrome, Edge or another Chromium-based browser, with your permission.
 - **Your screen:** Nyra can look at it to explain what you see, guide you step by step by pointing where to click, or use the mouse and keyboard if you allow it.
 
@@ -100,9 +101,10 @@ Nyra works the same on macOS, Windows and Linux, with these exceptions:
 |---|---|---|---|
 | Looking at the screen and guiding you | Yes | Yes | Not yet |
 | Using the mouse and keyboard | Yes | Yes | Not yet |
+| Recording what your computer plays in a meeting | Yes, from macOS 14.2 | Yes | Yes, with PulseAudio or PipeWire |
 | Icon in the system bar | Yes | Yes | Yes. With the `.AppImage` you need to install `libayatana-appindicator`, and on GNOME the AppIndicator extension |
 
-On macOS, Nyra asks for microphone, screen recording and accessibility permissions only for the features that use them.
+On macOS, Nyra asks for microphone, screen recording, other apps' audio and accessibility permissions only for the features that use them.
 
 ## Build Nyra from source
 

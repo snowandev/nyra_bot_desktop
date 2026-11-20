@@ -148,7 +148,7 @@ describe("commands in the background", () => {
     expect(endedLive).toEqual([`c1:${runs[0].id}`]);
   });
 
-  it("stops one when the reply is stopped, and those that run in the foreground", async () => {
+  it("stops one and doesn't keep it when the reply is stopped", async () => {
     const controller = new AbortController();
     const t = tools({ signal: controller.signal });
     await t.run([{ command: "npm run dev", background: true }]);

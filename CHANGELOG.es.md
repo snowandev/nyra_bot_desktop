@@ -2,6 +2,18 @@
 
 Lo que cambia en cada versión de Nyra Bot. Las mismas notas en inglés están en [CHANGELOG.md](CHANGELOG.md).
 
+## 0.9.5 · 2026-11-20
+
+### Novedades
+- Graba a la vez el audio de tu equipo y tu micrófono, para tener el audio de cualquier aplicación.
+- Elige en Configuración qué micrófono usa Nyra.
+- Escucha los audios del chat: al abrir uno aparece un reproductor.
+
+### Arreglos
+- «Automático» ya no se desactiva solo cuando eliges un modelo en otra ventana.
+- La caja de texto ya no se queda esperando la respuesta a un comando que ya terminó.
+- Cuando Nyra hace clic en tu pantalla, ya no lo confunde con su propia ventana si hay otra delante.
+
 ## 0.9.4 · 2026-11-17
 
 ### Novedades

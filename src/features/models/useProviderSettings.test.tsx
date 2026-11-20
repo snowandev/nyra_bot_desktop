@@ -64,6 +64,21 @@ describe("useProviderSettings", () => {
     expect(settings.selectedModel?.id).toBe("qwen-chosen");
   });
 
+  it("stays on «Automático» when the other window picks a model by hand", async () => {
+    act(() => settings.replaceProviderModels("ollama", [model("a"), model("b")]));
+    act(() => settings.changeDefaultModel("a"));
+    act(() => settings.changeDemandingModel("b"));
+    expect(settings.isAuto).toBe(true);
+    // The quick bar picks a model, and also saves another setting the windows share
+    localStorage.setItem("nyrabot.autoModel", JSON.stringify(false));
+    localStorage.setItem("nyrabot.hiddenModels", JSON.stringify([]));
+    act(() => {
+      window.dispatchEvent(new StorageEvent("storage", { key: "nyrabot.autoModel" }));
+      window.dispatchEvent(new StorageEvent("storage", { key: "nyrabot.hiddenModels" }));
+    });
+    expect(settings.isAuto).toBe(true);
+  });
+
   it("starts a new conversation on the default model", async () => {
     act(() => settings.replaceProviderModels("ollama", [model("a"), model("b")]));
     act(() => settings.selectModel("b"));

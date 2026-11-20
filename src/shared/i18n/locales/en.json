@@ -440,6 +440,21 @@
     "nothingHeard": "Nothing was heard. Speak closer to the microphone, or check that Nyra is allowed to use it in the system.",
     "dismiss": "Close notice"
   },
+  "microphone": {
+    "title": "Microphone",
+    "system": "The system's",
+    "systemHint": "Whichever your computer uses at the time",
+    "unplugged": "It isn't connected. Meanwhile, the system's is used."
+  },
+  "meeting": {
+    "start": "Record a meeting",
+    "stop": "Stop recording",
+    "recording": "Recording the meeting. When you stop, it's attached to the message for Nyra to transcribe.",
+    "onlyMicrophone": "Only your microphone is being recorded. {{error}}",
+    "discard": "Discard",
+    "dismiss": "Close notice",
+    "fileName": "Meeting {{date}}.wav"
+  },
   "quick": {
     "window": "Nyra quick chat",
     "untitled": "New conversation",
@@ -2702,6 +2717,15 @@
       "alreadyRecording": "Dictation is already running in another Nyra window.",
       "notRecording": "There was no dictation in progress."
     },
+    "meeting": {
+      "noSystemSound": "Nyra couldn't find where the computer plays its sound, so it can't record what the others say.",
+      "noSoundServer": "To record what the computer plays, Linux needs PulseAudio or PipeWire.",
+      "noSystemPermission": "Nyra isn't allowed to record what the computer plays. Turn it on in the system's privacy settings.",
+      "systemFailed": "What the computer plays couldn't be recorded: {{error}}",
+      "systemFailedMac": "What the computer plays couldn't be recorded. It needs macOS 14.2 or later and permission to record other apps' audio, in Privacy & Security. ({{error}})",
+      "alreadyRecording": "A meeting is already being recorded.",
+      "notRecording": "There was no recording in progress."
+    },
     "quick": {
       "notOpen": "The quick chat bar isn't open.",
       "noScreen": "No screen was found.",
@@ -3093,6 +3117,8 @@
       }
     },
     "speaker": "Speaker {{n}}",
+    "you": "You",
+    "others": "The others",
     "fileName": "{{name}} (transcript).md",
     "empty": "Nobody can be heard speaking in {{name}}.",
     "disabled": "Audio transcription is turned off in Settings → General → Nyra's features.",
@@ -3117,7 +3143,9 @@
     },
     "viewer": {
       "pending": "Nyra transcribes it when it needs to: ask it to “transcribe it”, “summarize it” or “what was decided?”.",
-      "done": "Its transcript is in “{{name}}”."
+      "done": "Its transcript is in “{{name}}”.",
+      "play": "Play {{name}}",
+      "cannotPlay": "This format can't be played here, but Nyra can still transcribe it."
     },
     "title": "Transcript of {{name}}",
     "aboutSpeakers_one": "{{duration}} · {{count, number}} speaker",

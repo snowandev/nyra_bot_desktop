@@ -313,8 +313,9 @@ mod tests {
         assert!(!is_whisper_config("not json"));
     }
 
-    // A community model in a folder (config.json, tokenizer.json, model.safetensors) and a recording at 16 kHz:
-    // NYRA_TRANSFORMERS_MODEL=… NYRA_SPEECH_SAMPLE=….wav cargo test whisper_transformers -- --ignored --nocapture
+    // A community model in a folder (config.json, tokenizer.json, model.safetensors), a Spanish recording at 16 kHz
+    // and, optionally, a word it says: NYRA_TRANSFORMERS_MODEL=… NYRA_SPEECH_SAMPLE=….wav NYRA_SPEECH_WORD=…
+    // cargo test whisper_transformers -- --ignored --nocapture
     #[test]
     #[ignore = "needs a community model and a recording"]
     fn writes_a_phrase_with_a_community_model() {
@@ -329,7 +330,12 @@ mod tests {
         let written = started.elapsed() - loaded;
         let guessed = whisper.write(&samples, "").unwrap();
         println!("loaded in {loaded:?}, written in {written:?}\nes: {given}\nguessed: {guessed}");
-        assert!(given.to_lowercase().contains("noviembre"));
+        if let Ok(word) = std::env::var("NYRA_SPEECH_WORD") {
+            assert!(
+                given.to_lowercase().contains(&word.to_lowercase()),
+                "{word}"
+            );
+        }
         assert_eq!(given, guessed);
     }
 }

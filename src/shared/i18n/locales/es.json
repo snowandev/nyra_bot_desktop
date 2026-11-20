@@ -458,6 +458,21 @@
     "nothingHeard": "No se oyó nada. Habla más cerca del micrófono, o revisa que Nyra tenga permiso para usarlo en el sistema.",
     "dismiss": "Cerrar aviso"
   },
+  "microphone": {
+    "title": "Micrófono",
+    "system": "El del sistema",
+    "systemHint": "El que use tu equipo en cada momento",
+    "unplugged": "No está conectado. Mientras, se usa el del sistema."
+  },
+  "meeting": {
+    "start": "Grabar una reunión",
+    "stop": "Terminar la grabación",
+    "recording": "Grabando la reunión. Al terminar, queda adjunta al mensaje para que Nyra la transcriba.",
+    "onlyMicrophone": "Solo se graba tu micrófono. {{error}}",
+    "discard": "Descartar",
+    "dismiss": "Cerrar aviso",
+    "fileName": "Reunión {{date}}.wav"
+  },
   "quick": {
     "window": "Chat rápido de Nyra",
     "untitled": "Conversación nueva",
@@ -2802,6 +2817,15 @@
       "alreadyRecording": "Ya se está dictando en otra ventana de Nyra.",
       "notRecording": "No había ningún dictado en curso."
     },
+    "meeting": {
+      "noSystemSound": "No se encontró por dónde suena el equipo, así que no se puede grabar lo que dicen los demás.",
+      "noSoundServer": "Para grabar lo que suena en el equipo, Linux necesita PulseAudio o PipeWire.",
+      "noSystemPermission": "Nyra no tiene permiso para grabar lo que suena en el equipo. Actívalo en la configuración de privacidad del sistema.",
+      "systemFailed": "No se pudo grabar lo que suena en el equipo: {{error}}",
+      "systemFailedMac": "No se pudo grabar lo que suena en el equipo. Hace falta macOS 14.2 o posterior y permiso para grabar el audio de otras apps, en Privacidad y seguridad. ({{error}})",
+      "alreadyRecording": "Ya se está grabando una reunión.",
+      "notRecording": "No había ninguna grabación en curso."
+    },
     "quick": {
       "notOpen": "La barra de chat rápido no está abierta.",
       "noScreen": "No se encontró ninguna pantalla.",
@@ -3197,6 +3221,8 @@
       }
     },
     "speaker": "Hablante {{n}}",
+    "you": "Tú",
+    "others": "Los demás",
     "fileName": "{{name}} (transcripción).md",
     "empty": "No se oye a nadie hablar en {{name}}.",
     "disabled": "La transcripción de audio está desactivada en Configuración → General → Funciones de Nyra.",
@@ -3221,7 +3247,9 @@
     },
     "viewer": {
       "pending": "Nyra lo transcribe cuando lo necesita: pídele «transcríbelo», «resúmelo» o «¿qué se decidió?».",
-      "done": "Su transcripción está en «{{name}}»."
+      "done": "Su transcripción está en «{{name}}».",
+      "play": "Reproducir {{name}}",
+      "cannotPlay": "Este formato no se puede reproducir aquí, pero Nyra puede transcribirlo igual."
     },
     "title": "Transcripción de {{name}}",
     "aboutSpeakers_one": "{{duration}} · {{count, number}} hablante",

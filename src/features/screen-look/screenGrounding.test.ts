@@ -31,10 +31,15 @@ describe("boxOf", () => {
 });
 
 describe("boxFormatFor", () => {
-  it("tells the family by the model, and asks each in its way", () => {
+  it("tells the family by the model", () => {
     expect(boxFormatFor({ id: "claude-sonnet-5-5", providerId: "anthropic" })).toBe("pixels");
     expect(boxFormatFor({ id: "gemini-3-flash", providerId: "gemini" })).toBe("thousandthsYX");
     expect(boxFormatFor({ id: "qwen3.8:27b", providerId: "ollama" })).toBe("thousandths");
+  });
+});
+
+describe("groundingPrompt and fitFor", () => {
+  it("asks each family in its way, on an image sized for it", () => {
     expect(fitFor("pixels")).toEqual({ width: 1568, pixels: 1_150_000 });
     expect(fitFor("thousandths")).toBeUndefined();
     expect(groundingPrompt("the 'Save' button", "pixels", whole)).toContain("1600×900 pixels");

@@ -11,7 +11,7 @@ describe("Código skills", () => {
     );
     expect(enabled.map((s) => s.name)).not.toContain("debug");
     expect(enabled.map((s) => s.name)).not.toContain("refactor");
-    expect(enabled).toHaveLength(6);
+    expect(enabled).toHaveLength(CODE_SKILLS.length - 2);
   });
 
   it("starts a project's conversations with the code defaults the project keeps on and that are installed", () => {

@@ -19,7 +19,8 @@ describe("formulas in Markdown", () => {
     expect(html("$$\n\\int_0^1 x\\,dx\n$$")).toContain('class="katex-display"');
   });
 
-  it("leaves prices as text", () => {
+  // Two prices in a sentence would read as one formula if a lone $ could open it
+  it("is set so a lone $ never opens a formula", () => {
     const out = html("Cuesta $5 y el otro $10.");
     expect(out).not.toContain("katex");
     expect(out).toContain("$5");

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { readAttachment } from "./attachments";
 import { i18n } from "@/shared/i18n/i18n";
 import { errorMessage } from "@/shared/lib/errors";
@@ -126,6 +126,11 @@ export function useComposerAttachments() {
     setPendingPages((list) => list.filter((p) => p.id !== id));
   }
 
+  // One made by Nyra rather than read from a file (a meeting it recorded); stable, for an effect to depend on
+  const addAttachment = useCallback((attachment: Attachment) => {
+    setAttachments((list) => [...list, attachment]);
+  }, []);
+
   function removeAttachment(id: string) {
     setAttachments((list) => list.filter((a) => a.id !== id));
   }
@@ -153,6 +158,7 @@ export function useComposerAttachments() {
     pendingAudios,
     fileError,
     addFiles,
+    addAttachment,
     addLinks,
     cancelPage,
     removeAttachment,

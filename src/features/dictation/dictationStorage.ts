@@ -3,8 +3,9 @@ import { listen } from "@tauri-apps/api/event";
 
 // The microphone is recorded in Rust and written there with the Whisper chosen for audio
 
-// model: the Whisper's id
-export const startDictation = (model: string) => invoke<void>("dictation_start", { model });
+// model: the Whisper's id. microphone: the one chosen in Settings; null is the system's.
+export const startDictation = (model: string, microphone: string | null) =>
+  invoke<void>("dictation_start", { model, microphone });
 
 // What was said; empty if nothing was
 export const stopDictation = (model: string) => invoke<string>("dictation_stop", { model });

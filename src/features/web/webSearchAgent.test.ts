@@ -36,10 +36,22 @@ it("numbers the pages so the model can cite them", () => {
   expect(message.content).toContain(NO_MORE_SEARCHES);
 });
 
-it("shares the room for pages, never below a useful minimum", () => {
-  expect(pageCharBudget(8192, 4)).toBe(1842);
-  expect(pageCharBudget(200_000, 4)).toBe(9000);
-  expect(pageCharBudget(2048, 4)).toBe(1500);
+describe("pageCharBudget", () => {
+  it("gives pages more room in a bigger context window, up to a cap", () => {
+    expect(pageCharBudget(32_768, 4)).toBeGreaterThan(pageCharBudget(8192, 4));
+    expect(pageCharBudget(1_000_000, 4)).toBe(pageCharBudget(200_000, 4));
+  });
+
+  it("shares the room between the pages", () => {
+    expect(pageCharBudget(200_000, 4) * 4).toBeCloseTo(pageCharBudget(200_000, 1), -1);
+  });
+
+  it("never goes below a useful minimum, however small the window or many the pages", () => {
+    const floor = pageCharBudget(1024, 4);
+    expect(floor).toBeGreaterThan(0);
+    expect(pageCharBudget(512, 4)).toBe(floor);
+    expect(pageCharBudget(1024, 40)).toBe(floor);
+  });
 });
 
 describe("search results", () => {

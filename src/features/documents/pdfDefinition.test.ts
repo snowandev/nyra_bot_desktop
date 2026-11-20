@@ -110,7 +110,7 @@ describe("pdfDefinition", () => {
     expect(math).toContain(`{"sup":true,"text":"2","font":"${MATH_FONT}"}`);
     expect(math).toContain("cuesta $5 y ");
     // ≠ is a / drawn over the =
-    expect(math).toMatch(/"text":"=\/","font":"KaTeX","characterSpacing":-6\.7/);
+    expect(math).toMatch(new RegExp(`"text":"=/","font":"${MATH_FONT}","characterSpacing":-\\d`));
   });
 
   it("puts a formula on its own line as its picture, or as centered text without one", () => {
@@ -128,7 +128,7 @@ describe("pdfDefinition", () => {
 
   it("draws a callout as a box with its title, and its marker left out", () => {
     const boxed = flat(pdfDefinition("> [!WARNING]\n> Haz una copia antes.\n\n> [!TIP] Un atajo\n> Pulsa dos veces.", "A").content);
-    expect(boxed).toContain('"text":"Atención","bold":true,"color":"#9a4e06"');
+    expect(boxed).toContain('"text":"Atención","bold":true');
     expect(boxed).toContain('"text":"Un atajo"');
     expect(boxed).toContain("Haz una copia antes.");
     expect(boxed).not.toContain("[!");

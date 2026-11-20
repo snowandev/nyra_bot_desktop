@@ -22,6 +22,12 @@ pub fn press_at(_x: f64, _y: f64) -> Pressed {
     Pressed::NotHere
 }
 
+/// The process whose window is in front at this place, in the same points; None when the system can't tell
+#[cfg(target_os = "macos")]
+pub fn owner_at(x: f64, y: f64) -> Option<i32> {
+    mac::owner_at(x, y)
+}
+
 #[cfg(target_os = "macos")]
 mod mac {
     use std::collections::HashSet;
@@ -83,6 +89,13 @@ mod mac {
             Found::Own => Pressed::Own,
             Found::Nothing => Pressed::NotHere,
         }
+    }
+
+    pub fn owner_at(x: f64, y: f64) -> Option<i32> {
+        // SAFETY: as in press_at
+        let system = unsafe { AXUIElement::new_system_wide() };
+        unsafe { system.set_messaging_timeout(TIMEOUT_SECONDS) };
+        element_at(&system, x, y).and_then(|hit| pid_of(&hit))
     }
 
     enum Found {

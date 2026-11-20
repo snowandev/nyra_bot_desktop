@@ -30,6 +30,8 @@ export type Attachment = {
   // it, the id of its transcript, a text file attached next to it
   duration?: number;
   transcript?: string;
+  // Audio only: a meeting Nyra recorded, the user's microphone on one side and the computer's sound on the other
+  meeting?: boolean;
 };
 
 // A page Nyra read for a reply; n is the number the model cites it by
