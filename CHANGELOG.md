@@ -2,6 +2,23 @@
 
 What changes in each version of Nyra Bot. The same notes in Spanish are in [CHANGELOG.es.md](CHANGELOG.es.md).
 
+## 0.9.6 · 2026-11-22
+
+### New
+- Ask Nyra to transcribe an audio again, in the chat or with the button you see when you open it. Earlier transcripts stay, so you can compare them.
+
+### Improvements
+- Transcripts no longer pile up next to the audio in your message: they are in the reply and in the files panel.
+- Nyra uses much less memory with long audio and keeps responding while it does heavy work.
+
+### Fixes
+- Closing Nyra no longer loses which transcript belongs to each audio.
+- A private key pasted only in part is now hidden when you click "Hide before sending".
+- A skill can no longer lose its main file when you add another with the same name in lowercase.
+- On Windows, the warning shows again when a command uses a path outside the folder.
+- If you type in Japanese, Chinese or Korean, the Enter you use to pick a word no longer sends the message.
+- Fixes in dictation, web search, the file changes Nyra proposes and importing skills.
+
 ## 0.9.5 · 2026-11-20
 
 ### New

@@ -79,7 +79,9 @@ export function useDictation({ inputRef, onChange }: Options) {
     }
   }
 
+  // The end of the recording's time and the user's click may both arrive: the first one stops it
   const stop = useStableCallback(async () => {
+    if (phase.current !== "recording") return;
     enter("transcribing");
     const turn = dropped.current;
     try {

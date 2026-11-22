@@ -1,4 +1,6 @@
 import type { CellChangeSpec, ChangeBlock } from "@/shared/types";
+import { TAG_ATTRIBUTES, tagAttributes, withoutPartialTag } from "@/features/chat/reply/appTags";
+import { folderPath } from "./workspace";
 
 // Changes the model proposes to the files of the connected folder. Like documents, any model can follow a plain text
 // convention: a tag per file, with SEARCH/REPLACE blocks for an edit (a format many models already know), the
@@ -6,8 +8,8 @@ import type { CellChangeSpec, ChangeBlock } from "@/shared/types";
 // them as cards to review.
 
 // The tag and its attributes, in any order: path, and for a spreadsheet the sheet
-const OPEN_TAG = /<nyra-(edit|create|cells)((?:\s+[a-z]+\s*=\s*"[^"]*")*)\s*>\n?/;
-const TAG_NAMES = ["<nyra-edit", "<nyra-create", "<nyra-cells"];
+const TAG_NAMES = ["nyra-edit", "nyra-create", "nyra-cells"];
+const OPEN_TAG = new RegExp(`<nyra-(edit|create|cells)(${TAG_ATTRIBUTES})\\s*>\\n?`);
 // "B3: 120", "$D$10: =SUM(D2:D9)", "C4:" (emptied)
 const CELL_LINE = /^\s*\$?([A-Za-z]{1,3})\$?(\d{1,7})\s*:(.*)$/;
 const SEARCH = /^<{7} ?SEARCH\s*$/;
@@ -64,11 +66,8 @@ export type ParsedChange = {
 };
 
 function attributesOf(text: string) {
-  const attributes: Record<string, string> = Object.fromEntries(
-    [...text.matchAll(/([a-z]+)\s*=\s*"([^"]*)"/g)].map((m) => [m[1], m[2].trim()]),
-  );
-  // Written with Windows separators, the path still names the folder's file as the index keys it
-  if (attributes.path) attributes.path = attributes.path.replaceAll("\\", "/").replace(/^(\.\/)+/, "");
+  const attributes = tagAttributes(text);
+  if (attributes.path) attributes.path = folderPath(attributes.path);
   return attributes;
 }
 
@@ -97,7 +96,10 @@ function blocksOf(body: string): ChangeBlock[] {
   const blocks: ChangeBlock[] = [];
   let pair: { search: string[]; replace: string[] | null } | null = null;
   const close = () => {
-    if (pair?.replace) blocks.push({ search: pair.search.join("\n"), replace: pair.replace.join("\n") });
+    if (pair?.replace) {
+      const blankLine = pair.replace.length === 1 && pair.replace[0] === "";
+      blocks.push({ search: pair.search.join("\n"), replace: pair.replace.join("\n"), ...(blankLine && { blankLine }) });
+    }
     pair = null;
   };
   for (const line of body.split("\n")) {
@@ -176,11 +178,7 @@ export function preparingChanges(reply: string): { text: string; paths: string[]
     const end = rest.indexOf(close, open.index + open[0].length);
     rest = end === -1 ? "" : rest.slice(end + close.length);
   }
-  const visible = (text + rest).replace(/<nyra-(edit|create|cells)\b[^>]*$/, "");
-  // The tag's first characters at the very end: "<", "<ny", "<nyra-ed"…
-  const tail = visible.match(/<[a-z-]*$/)?.[0] ?? "";
-  const isTagStart = !!tail && TAG_NAMES.some((tag) => tag.startsWith(tail));
-  return { text: tidy(isTagStart ? visible.slice(0, -tail.length) : visible), paths };
+  return { text: tidy(withoutPartialTag(text + rest, TAG_NAMES)), paths };
 }
 
 // Where a block replaced lines of the original: start counts from 0
@@ -197,6 +195,9 @@ function find(lines: string[], wanted: string[], from: number) {
   return -1;
 }
 
+// The lines a block puts in place of what it finds
+export const addedLinesOf = (block: ChangeBlock) => (block.replace || block.blankLine ? block.replace.split("\n") : []);
+
 // The file with the blocks applied in order, or the first block that doesn't match it. A model may get trailing
 // spaces wrong; anything else has to be as it is in the file.
 export function applyBlocks(
@@ -210,7 +211,7 @@ export function applyBlocks(
     const wanted = block.search.split("\n");
     const at = block.search ? find(lines, wanted, cursor) : -1;
     if (at === -1) return { failedBlock: i };
-    ranges.push({ start: at, removed: lines.slice(at, at + wanted.length), added: block.replace ? block.replace.split("\n") : [] });
+    ranges.push({ start: at, removed: lines.slice(at, at + wanted.length), added: addedLinesOf(block) });
     cursor = at + wanted.length;
   }
   const out: string[] = [];
@@ -292,7 +293,7 @@ export function changeStats(change: ChangeContent) {
   }
   const count = (text: string) => (text ? text.split("\n").length : 0);
   return {
-    added: change.blocks.reduce((sum, b) => sum + count(b.replace), 0),
+    added: change.blocks.reduce((sum, b) => sum + addedLinesOf(b).length, 0),
     removed: change.blocks.reduce((sum, b) => sum + count(b.search), 0),
     blocks: change.blocks.length,
   };
@@ -319,7 +320,9 @@ export function changeAsText(change: ChangeContent & { path: string }) {
   if (change.kind === "cells") {
     return [change.path, "", ...(change.cells ?? []).map((c) => `${c.sheet}!${c.cell}: ${c.value}`)].join("\n");
   }
-  const blocks = change.blocks.map((b) => `<<<<<<< SEARCH\n${b.search}\n=======\n${b.replace}\n>>>>>>> REPLACE`);
+  const blocks = change.blocks.map((b) =>
+    ["<<<<<<< SEARCH", b.search, "=======", ...addedLinesOf(b), ">>>>>>> REPLACE"].join("\n"),
+  );
   return `${change.path}\n\n${blocks.join("\n\n")}`;
 }
 
@@ -328,7 +331,7 @@ export function changeAsText(change: ChangeContent & { path: string }) {
 export function blockRows(blocks: ChangeBlock[]): DiffRow[] {
   return blocks.flatMap((block, i): DiffRow[] => {
     const removed = block.search ? block.search.split("\n") : [];
-    const added = block.replace ? block.replace.split("\n") : [];
+    const added = addedLinesOf(block);
     const pairs = Math.max(removed.length, added.length);
     return [
       { kind: "header", block: i, total: blocks.length, line: 1 },

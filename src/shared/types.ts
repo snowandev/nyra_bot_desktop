@@ -30,6 +30,8 @@ export type Attachment = {
   // it, the id of its transcript, a text file attached next to it
   duration?: number;
   transcript?: string;
+  // A transcript: the id of its audio
+  transcriptOf?: string;
   // Audio only: a meeting Nyra recorded, the user's microphone on one side and the computer's sound on the other
   meeting?: boolean;
 };
@@ -231,7 +233,8 @@ export type WorkspaceSkipReason =
   // A sheet protected in Excel, which Nyra doesn't unprotect
   | "sheetProtected";
 
-export type ChangeBlock = { search: string; replace: string };
+// blankLine: the new text is one empty line, which replace ("") alone can't tell from no lines at all
+export type ChangeBlock = { search: string; replace: string; blankLine?: true };
 
 // One cell of a spreadsheet as the model asked for it: "120", "=SUM(B2:B9)", "Luz", or "" to empty it
 export type CellChangeSpec = { sheet: string; cell: string; value: string };

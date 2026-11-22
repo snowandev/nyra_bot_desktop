@@ -1,6 +1,6 @@
 [package]
 name = "nyra-bot"
-version = "0.9.5"
+version = "0.9.6"
 description = "Nyra Bot"
 authors = ["snowandev"]
 license = "MIT"

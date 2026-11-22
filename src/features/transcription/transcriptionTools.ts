@@ -4,7 +4,7 @@ import { loadPreferences } from "@/shared/storage/settings";
 import type { Attachment, Message } from "@/shared/types";
 import { activeModel, refreshSpeechModels, whenModelReady } from "./speechModels";
 import { extensionOf } from "@/shared/lib/paths";
-import { transcriptAttachment } from "./transcript";
+import { nextTranscriptNumber, transcriptAttachment } from "./transcript";
 import { endTranscription, showTranscription, type TranscriptionState } from "./transcriptionSession";
 import { cancelTranscription, onTranscriptionProgress, transcribeStoredAudio } from "./transcriptionStorage";
 
@@ -43,10 +43,19 @@ const transcriptFor = (name: string, text: string) => {
 const failure = (name: string, error: string) =>
   result(`<transcript-error name="${asAttribute(name)}">${neutralizeAppTags(error)}</transcript-error>`);
 
-// "reunion.m4a | 3": the audio's name, and how many speak when the user said it
+// "reunion.m4a | 3 | again": the audio's name, how many speak when the user said it, and whether to make it again
 export function requestOf(value: string) {
-  const match = value.match(/^([\s\S]*?)\s*\|\s*(\d{1,3})\s*$/);
-  return match ? { name: match[1], speakerCount: Number(match[2]) } : { name: value, speakerCount: null };
+  let name = value;
+  let speakerCount: number | null = null;
+  let again = false;
+  for (;;) {
+    const match = name.match(/^([\s\S]*?)\s*\|\s*(\d{1,3}|again)\s*$/i);
+    if (!match) break;
+    if (match[2].toLowerCase() === "again") again = true;
+    else speakerCount ??= Number(match[2]);
+    name = match[1];
+  }
+  return { name, speakerCount, again };
 }
 
 // The model's way to hear an attached audio: it asks for its transcript, made on this computer when it first asks.
@@ -67,15 +76,19 @@ export function transcriptionTools({ conversationId, history, signal, onTranscri
     const { transcriptionSpeakers: speakers } = loadPreferences();
     const stopping = new AbortController();
     const stop = () => stopping.abort();
+    // Wired before anything is awaited, so no stop falls in a gap; a reply already stopped never starts it
+    if (signal.aborted) stop();
     signal.addEventListener("abort", stop);
+    const run = crypto.randomUUID();
+    const cancel = () => void cancelTranscription(run);
+    stopping.signal.addEventListener("abort", cancel);
     const show = (state: TranscriptionState) =>
       showTranscription(conversationId, { name: audio.name, state, cancel: stop });
-    const unlisten = await onTranscriptionProgress((progress) => {
-      if (progress.id === audio.id) show({ kind: progress.stage, progress: progress.progress });
-    });
-    const cancel = () => void cancelTranscription(audio.id);
-    stopping.signal.addEventListener("abort", cancel);
+    let unlisten = () => {};
     try {
+      unlisten = await onTranscriptionProgress((progress) => {
+        if (progress.id === audio.id) show({ kind: progress.stage, progress: progress.progress });
+      });
       // Without any Whisper it waits for one added in Settings, and goes on by itself
       const chosen = () => loadPreferences().transcriptionModel;
       let whisper = activeModel(await refreshSpeechModels(), chosen());
@@ -84,6 +97,7 @@ export function transcriptionTools({ conversationId, history, signal, onTranscri
         whisper = await whenModelReady(chosen, stopping.signal);
       }
       const model = whisper.id;
+      stopping.signal.throwIfAborted();
       show({ kind: "reading", progress: 0 });
       const lines = await transcribeStoredAudio({
         id: audio.id,
@@ -92,8 +106,9 @@ export function transcriptionTools({ conversationId, history, signal, onTranscri
         speakers,
         speakerCount,
         meeting: audio.meeting === true,
+        run,
       });
-      const transcript = transcriptAttachment(audio.name, lines);
+      const transcript = transcriptAttachment(audio, lines, nextTranscriptNumber(attached, audio));
       made.set(audio.id, transcript);
       onTranscript(audio.id, transcript);
       onShow(transcript.id);
@@ -109,6 +124,7 @@ export function transcriptionTools({ conversationId, history, signal, onTranscri
     } finally {
       unlisten();
       signal.removeEventListener("abort", stop);
+      stopping.signal.removeEventListener("abort", cancel);
       endTranscription(conversationId);
     }
   }
@@ -117,13 +133,15 @@ export function transcriptionTools({ conversationId, history, signal, onTranscri
     // Only a conversation with audio can ask
     hasAudio: audios.length > 0,
     async run(value: string): Promise<Message> {
-      const { name, speakerCount } = requestOf(value);
+      const { name, speakerCount, again } = requestOf(value);
       const audio = audioNamed(name);
       if (!audio) {
         const names = audios.map((a) => `"${asAttribute(a.name)}"`).join(", ");
         return failure(value, `There's no audio by that name. The audio in this conversation: ${names}.`);
       }
-      const done = made.get(audio.id) ?? attached.find((a) => a.id === audio.transcript);
+      // Again means the one made before this reply; one made in it already is the new one
+      const earlier = again ? undefined : attached.find((a) => a.id === audio.transcript);
+      const done = made.get(audio.id) ?? earlier;
       if (done) {
         onShow(done.id);
         return transcriptFor(audio.name, done.data);

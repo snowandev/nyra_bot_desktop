@@ -25,20 +25,66 @@ pub fn plain_key(path: &Path) -> Option<String> {
 }
 
 /// Where the user wants a file saved, asked with the system's dialog, offering a name and, if given, a type with
-/// its extensions. None when they close it without choosing.
-pub fn ask_where_to_save(
+/// its extensions. None when they close it without choosing. The dialog waits for the user in a thread of its own,
+/// never on one of the async threads every command shares.
+pub async fn where_to_save(
     app: &AppHandle,
-    name: impl Into<String>,
-    filter: Option<(&str, &[&str])>,
+    name: String,
+    filter: Option<(String, &'static [&'static str])>,
 ) -> Result<Option<PathBuf>, String> {
-    let mut dialog = app.dialog().file().set_file_name(name);
-    if let Some((label, extensions)) = filter {
-        dialog = dialog.add_filter(label, extensions);
+    let app = app.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        let mut dialog = app.dialog().file().set_file_name(name);
+        if let Some((label, extensions)) = filter {
+            dialog = dialog.add_filter(label, extensions);
+        }
+        dialog
+            .blocking_save_file()
+            .map(|path| path.into_path().map_err(to_message))
+            .transpose()
+    })
+    .await
+    .map_err(to_message)?
+}
+
+/// Asks where to save these bytes and writes them there; false when the dialog is closed. failed: the message for
+/// a write that fails, as each kind of file says it.
+pub async fn save_with_dialog(
+    app: &AppHandle,
+    name: String,
+    filter: Option<(String, &'static [&'static str])>,
+    bytes: &[u8],
+    failed: &str,
+) -> Result<bool, String> {
+    let Some(destination) = where_to_save(app, name, filter).await? else {
+        return Ok(false);
+    };
+    std::fs::write(destination, bytes).map_err(|_| crate::i18n::t(failed))?;
+    Ok(true)
+}
+
+/// The name a save dialog offers for a file whose name came from elsewhere (a model, an attachment): without what
+/// file systems refuse or could make it a path, and with one of these extensions, else the fallback whole name
+pub fn offered_file_name(requested: &str, extensions: &[&str], fallback: &str) -> String {
+    let name: String = requested
+        .chars()
+        .filter(|c| {
+            !c.is_control() && !matches!(c, '/' | '\\' | ':' | '*' | '?' | '"' | '<' | '>' | '|')
+        })
+        .take(150)
+        .collect();
+    let name = name.trim().trim_start_matches('.');
+    let lower = name.to_lowercase();
+    let has_extension = extensions.iter().any(|extension| {
+        lower
+            .strip_suffix(&format!(".{extension}"))
+            .is_some_and(|stem| !stem.trim().is_empty())
+    });
+    if has_extension {
+        name.to_string()
+    } else {
+        fallback.to_string()
     }
-    dialog
-        .blocking_save_file()
-        .map(|path| path.into_path().map_err(to_message))
-        .transpose()
 }
 
 /// The app's data folder (conversations, skills, the API keys file), where each system keeps app data.

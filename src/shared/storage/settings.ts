@@ -398,12 +398,29 @@ export function loadCollapsedSections(): SidebarSection[] {
 export const saveCollapsedSections = (sections: SidebarSection[]) => write(COLLAPSED_SECTIONS_KEY, sections);
 
 // Tokens by model id. Only positive numbers are kept; anything else in storage is dropped.
+// Read on every frame of a reply, so parsed again only when what is stored changes, here or in the other window
+const tokensRead = new Map<string, { raw: string | null; value: Record<string, number> }>();
+
 function readTokensByModel(key: string): Record<string, number> {
+  let raw: string | null = null;
+  try {
+    raw = localStorage.getItem(key);
+  } catch {
+    // Storage can be unavailable: as if nothing were stored
+  }
+  const cached = tokensRead.get(key);
+  if (cached && cached.raw === raw) return cached.value;
   const stored = read<unknown>(key, {});
-  if (typeof stored !== "object" || stored === null) return {};
-  return Object.fromEntries(
-    Object.entries(stored).filter((entry): entry is [string, number] => typeof entry[1] === "number" && entry[1] > 0),
-  );
+  const value =
+    typeof stored !== "object" || stored === null
+      ? {}
+      : Object.fromEntries(
+          Object.entries(stored).filter(
+            (entry): entry is [string, number] => typeof entry[1] === "number" && entry[1] > 0,
+          ),
+        );
+  tokensRead.set(key, { raw, value });
+  return value;
 }
 
 // The context each local model managed on this computer before running out of memory

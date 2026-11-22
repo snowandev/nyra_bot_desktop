@@ -255,11 +255,13 @@ pub async fn dictation_stop(
 
 /// Drops the dictation: stops the recording and forgets what was heard, or stops writing it at the next phrase
 #[tauri::command]
-pub fn dictation_cancel(state: State<'_, Dictation>) {
+pub fn dictation_cancel(app: AppHandle, state: State<'_, Dictation>) {
     match state.take() {
         Some(recording) => {
             let _ = recording.stop.send(());
             std::thread::spawn(move || recording.done.join());
+            // Nothing is written, but Whisper still goes in a while, as after a dictation that is
+            Dictation::release_later(&app);
         }
         None => state.cancelled.store(true, Ordering::SeqCst),
     }

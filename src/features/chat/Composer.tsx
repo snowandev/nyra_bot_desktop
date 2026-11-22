@@ -22,7 +22,6 @@ import { SHORTCUTS } from "@/shared/lib/shortcuts";
 import { errorMessage } from "@/shared/lib/errors";
 import { indexBudget, indexText, plannedWorkspaceContext } from "@/features/workspace/workspace";
 import { getProvider } from "@/providers";
-import { loadLearnedContexts, loadLoadedContexts } from "@/shared/storage/settings";
 import { ACCEPTED_FILES, pastedFiles } from "@/features/attachments/attachments";
 import { hideSecrets, labelsOf } from "@/features/sensitive-data/sensitiveData";
 import { linksIn } from "@/features/web/webLinks";
@@ -271,13 +270,7 @@ export function Composer(props: Props) {
   const configuredContext = model ? optionsFor(model.providerId).contextLength : undefined;
   const folderContext =
     model &&
-    plannedWorkspaceContext(
-      model,
-      !provider?.requiresApiKey,
-      configuredContext,
-      loadLearnedContexts(),
-      loadLoadedContexts(),
-    );
+    plannedWorkspaceContext(model, configuredContext);
   // As the selected model would get it, so the chip and the notices tell whether it fits
   const workspaceIndex = useMemo(
     () =>
@@ -456,6 +449,9 @@ export function Composer(props: Props) {
             if (preferences.readLinks && !isIsolated) addLinks(linksIn(e.clipboardData.getData("text/plain")));
           }}
           onKeyDown={(e) => {
+            // Enter or Tab that confirms text being composed (Japanese, Chinese…) is for the input method, not a
+            // menu pick or a send. WebKit may only say so with keyCode 229.
+            if (e.nativeEvent.isComposing || e.keyCode === 229) return;
             if ((!command.isOpen && mention.handleKey(e)) || command.handleKey(e)) {
               e.preventDefault();
               e.stopPropagation();

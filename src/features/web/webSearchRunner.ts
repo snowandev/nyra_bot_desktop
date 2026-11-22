@@ -11,6 +11,7 @@ import {
   resultsMessage,
   type SearchStepProgress,
   searchFailedMessage,
+  alreadyReadMessage,
 } from "./webSearchAgent";
 import type { WebPage, WebSearchResult } from "./webSearchStorage";
 
@@ -29,9 +30,11 @@ export function webSearchRunner({ search, read, contextWindow, signal, canSearch
   const progress: SearchStepProgress[] = [];
   const usedUrls = new Set<string>();
   let failed = false;
+  // Searches that only found pages already read: they count, so the model can't keep asking the same
+  let repeated = 0;
   let nextNumber = 1;
   const show = () => onProgress(progress.map((step) => ({ ...step, pages: [...step.pages] })));
-  const searchesLeft = () => (canSearch && !failed ? MAX_SEARCHES - steps.length : 0);
+  const searchesLeft = () => (canSearch && !failed ? Math.max(0, MAX_SEARCHES - steps.length - repeated) : 0);
 
   return {
     searchesLeft,
@@ -53,9 +56,13 @@ export function webSearchRunner({ search, read, contextWindow, signal, canSearch
       const chosen = results.filter((r) => !usedUrls.has(r.url)).slice(0, PAGES_PER_SEARCH);
       const asked: Message = { role: "assistant", content: tagged("search", query) };
       if (chosen.length === 0) {
-        failed = true;
         progress.pop();
         show();
+        if (results.length > 0) {
+          repeated++;
+          return [asked, alreadyReadMessage(query, searchesLeft())];
+        }
+        failed = true;
         return [asked, searchFailedMessage(query)];
       }
 

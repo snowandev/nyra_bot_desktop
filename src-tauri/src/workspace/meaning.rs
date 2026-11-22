@@ -201,13 +201,15 @@ fn store(
     transaction.commit()
 }
 
-/// The fragments closest in meaning, at most one per stretch of a file: overlapping fragments say the same
+/// The fragments closest in meaning, at most one per stretch of a file: overlapping fragments say the same. Only
+/// those of files it keeps count toward the limit, so a deleted or grown file doesn't take a better one's place.
 fn closest(
     connection: &Connection,
     root: &str,
     model: &str,
     query: &[f32],
     limit: usize,
+    keeps: impl Fn(&str) -> bool,
 ) -> rusqlite::Result<Vec<(String, usize, usize, f32)>> {
     let mut statement = connection.prepare(
         "SELECT path, start_line, end_line, vector FROM workspace_chunks
@@ -230,7 +232,7 @@ fn closest(
         .collect::<rusqlite::Result<_>>()?;
     scored.sort_by(|a, b| b.3.total_cmp(&a.3));
     let mut chosen: Vec<(String, usize, usize, f32)> = Vec::new();
-    for candidate in scored {
+    for candidate in scored.into_iter().filter(|c| keeps(&c.0)) {
         let overlaps = chosen
             .iter()
             .any(|c| c.0 == candidate.0 && c.1 <= candidate.2 && candidate.1 <= c.2);
@@ -356,22 +358,23 @@ pub async fn meaning_search(
     let indexed = workspaces.indexed(&root)?;
     blocking(move || {
         let reader = Database::open_reader(&app)?;
+        let searchable = |path: &str| {
+            indexed.contains(path)
+                && indexed_file(&root, path).is_some_and(|(_, size)| size <= MAX_SEARCH_FILE_BYTES)
+        };
         let found = closest(
             &reader,
             &root_key(&root),
             &model,
             &vector,
             limit.clamp(1, MAX_MATCHES),
+            searchable,
         )
         .map_err(to_message)?;
         Ok(found
             .into_iter()
-            .filter(|(path, ..)| indexed.contains(path))
             .filter_map(|(path, start_line, end_line, score)| {
-                let (full, size) = indexed_file(&root, &path)?;
-                if size > MAX_SEARCH_FILE_BYTES {
-                    return None;
-                }
+                let (full, _) = indexed_file(&root, &path)?;
                 let text = read_text(&full).ok()?;
                 let lines: Vec<&str> = text.lines().collect();
                 let end = end_line.min(lines.len());
@@ -464,10 +467,13 @@ mod tests {
             ],
         )
         .unwrap();
-        let found = closest(&c, "/r", "m", &[1.0, 0.0], 3).unwrap();
+        let found = closest(&c, "/r", "m", &[1.0, 0.0], 3, |_| true).unwrap();
         let order: Vec<(&str, usize)> = found.iter().map(|f| (f.0.as_str(), f.1)).collect();
         // The second auth.java fragment overlaps the first, so cors.java comes next
         assert_eq!(order, [("auth.java", 1), ("cors.java", 1)]);
+        // A file that can't be searched any more leaves its place to the next one
+        let found = closest(&c, "/r", "m", &[1.0, 0.0], 1, |path| path != "auth.java").unwrap();
+        assert_eq!(found[0].0, "cors.java");
     }
 
     #[test]

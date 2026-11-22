@@ -98,6 +98,17 @@ export function resultsMessage(step: WebSearchStep, pages: ReadPage[], searchesL
   };
 }
 
+// A search that only brought back pages read earlier in the reply: they are there, so it didn't fail
+export const alreadyReadMessage = (query: string, searchesLeft: number): Message => ({
+  role: "user",
+  content: [
+    "<app-instructions>",
+    `The web search for "${asAttribute(query)}" only found pages you already read in this reply: use those ` +
+      `sources. ${searchesLeft > 0 ? `To find others, search with different words (up to ${searchesLeft} more).` : NO_MORE_SEARCHES}`,
+    "</app-instructions>",
+  ].join("\n"),
+});
+
 export const searchFailedMessage = (query: string): Message => ({
   role: "user",
   content: [

@@ -2,6 +2,23 @@
 
 Lo que cambia en cada versión de Nyra Bot. Las mismas notas en inglés están en [CHANGELOG.md](CHANGELOG.md).
 
+## 0.9.6 · 2026-11-22
+
+### Novedades
+- Pídele a Nyra que vuelva a transcribir un audio, en el chat o con el botón que aparece al abrirlo. Las transcripciones anteriores se quedan, para que puedas compararlas.
+
+### Mejoras
+- Las transcripciones ya no se acumulan junto al audio en tu mensaje: están en la respuesta y en el panel de archivos.
+- Nyra usa mucha menos memoria con audios largos y sigue respondiendo mientras hace tareas pesadas.
+
+### Arreglos
+- Al cerrar Nyra ya no se pierde qué transcripción tiene cada audio.
+- Una clave privada pegada a medias ahora se oculta al pulsar «Ocultar antes de enviar».
+- Una skill ya no puede perder su archivo principal si le añades otro con el mismo nombre en minúsculas.
+- En Windows vuelve a salir el aviso cuando un comando usa una ruta fuera de la carpeta.
+- Si escribes en japonés, chino o coreano, el Enter con el que eliges una palabra ya no envía el mensaje.
+- Arreglos en el dictado, la búsqueda en internet, los cambios de archivos que propone Nyra y la importación de skills.
+
 ## 0.9.5 · 2026-11-20
 
 ### Novedades

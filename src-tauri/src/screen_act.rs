@@ -616,14 +616,20 @@ mod input {
         }
 
         pub fn keys(&mut self, held: &[Key], key: Key) -> Result<(), String> {
+            let mut down = 0;
+            let mut pressed = Ok(());
             for modifier in held {
-                self.0
-                    .key(*modifier, Direction::Press)
-                    .map_err(to_message)?;
+                pressed = self.0.key(*modifier, Direction::Press).map_err(to_message);
+                if pressed.is_err() {
+                    break;
+                }
+                down += 1;
             }
-            let pressed = self.0.key(key, Direction::Click).map_err(to_message);
-            // Released even when the key failed, so no modifier stays held down
-            for modifier in held.iter().rev() {
+            if pressed.is_ok() {
+                pressed = self.0.key(key, Direction::Click).map_err(to_message);
+            }
+            // Whatever failed, the modifiers already down are released, so none stays held on the user's computer
+            for modifier in held[..down].iter().rev() {
                 let _ = self.0.key(*modifier, Direction::Release);
             }
             pressed

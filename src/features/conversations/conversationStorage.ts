@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { settledRun } from "@/features/terminal/commandTools";
+import { withTranscriptLinks } from "@/features/transcription/audioFiles";
 import { i18n } from "@/shared/i18n/i18n";
 import type {
   Attachment,
@@ -80,8 +81,8 @@ export async function loadConversationData(id: string): Promise<StoredData | nul
   const choice: unknown = stored.modelChoice;
   const modelChoice = choice === "demanding" || choice === "main" ? choice : undefined;
   // A program left running after its reply was ended with the Nyra that ran it: no card shows it running any more
-  const messages = stored.messages.map((m) => (m.commands ? { ...m, commands: m.commands.map(settledRun) } : m));
-  return { ...stored, messages, workspace, taskSkill, modelChoice };
+  const settled = stored.messages.map((m) => (m.commands ? { ...m, commands: m.commands.map(settledRun) } : m));
+  return { ...stored, messages: withTranscriptLinks(settled), workspace, taskSkill, modelChoice };
 }
 
 // An attachment already on disk is sent as just its id: its content never changes, and sending it again after
@@ -104,7 +105,8 @@ export function toOutgoingData(
     return {
       ...m,
       ...(m.attachments && {
-        attachments: m.attachments.map((a) => (storedAttachmentIds.has(a.id) ? { id: a.id } : a)),
+        // An audio goes whole: it has no content (its sound is a file of its own), and its link to its transcript changes
+        attachments: m.attachments.map((a) => (storedAttachmentIds.has(a.id) && a.kind !== "audio" ? { id: a.id } : a)),
       }),
       ...(m.commands && { commands: m.commands.map((r) => (storedOutputIds.has(r.id) ? withoutOutput(r) : r)) }),
     };

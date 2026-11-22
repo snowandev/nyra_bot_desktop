@@ -69,6 +69,28 @@ describe("applyBlocks", () => {
     );
   });
 
+  it("takes an edit whose tag has an attribute with a dash", () => {
+    const { changes } = takeChanges(
+      '<nyra-edit path="a.ts" old-name="b.ts">\n<<<<<<< SEARCH\n  const a = 1;\n=======\n  const a = 2;\n>>>>>>> REPLACE\n</nyra-edit>',
+    );
+    expect(changes).toHaveLength(1);
+    expect(changes[0].path).toBe("a.ts");
+  });
+
+  it("tells a line made blank from lines taken out", () => {
+    const edit = (replace: string) =>
+      takeChanges(`<nyra-edit path="a.ts">\n<<<<<<< SEARCH\n  const a = 1;\n=======\n${replace}>>>>>>> REPLACE\n</nyra-edit>`)
+        .changes[0];
+    const blank = edit("\n");
+    expect("content" in applyBlocks(original, blank.blocks) && applyBlocks(original, blank.blocks)).toMatchObject({
+      content: "import x;\nfunction App() {\n\n}\nexport default App;\n",
+    });
+    expect(changeStats(blank)).toMatchObject({ added: 1, removed: 1 });
+    const removed = edit("");
+    expect(applyBlocks(original, removed.blocks)).toMatchObject({ content: "import x;\nfunction App() {\n}\nexport default App;\n" });
+    expect(changeStats(removed)).toMatchObject({ added: 0, removed: 1 });
+  });
+
   it("says which block doesn't match", () => {
     expect(applyBlocks(original, [{ search: "  const a = 1;", replace: "x" }, { search: "nope", replace: "" }])).toEqual({
       failedBlock: 1,

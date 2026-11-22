@@ -1,3 +1,4 @@
+import { currentLocale } from "@/shared/i18n/i18n";
 import type { Conversation, Message } from "@/shared/types";
 
 type TreeNode = {
@@ -7,12 +8,17 @@ type TreeNode = {
   children?: TreeNode[];
 };
 
-// One collator for every comparison: creating one per comparison is slow with thousands of files
-const collator = new Intl.Collator("es");
+// One collator per language for every comparison: creating one per comparison is slow with thousands of files
+let sorting = { locale: "", collator: new Intl.Collator() };
+const sortingCollator = () => {
+  const locale = currentLocale();
+  if (sorting.locale !== locale) sorting = { locale, collator: new Intl.Collator(locale) };
+  return sorting.collator;
+};
 
-// Folders first, then files, each alphabetically
-const byKindAndName = (a: TreeNode, b: TreeNode) =>
-  Number(!a.children) - Number(!b.children) || collator.compare(a.name, b.name);
+// Folders first, then files, each alphabetically by the rules of the interface's language
+const byKindAndName = (compare: Intl.Collator) => (a: TreeNode, b: TreeNode) =>
+  Number(!a.children) - Number(!b.children) || compare.compare(a.name, b.name);
 
 // The folder's index as a tree. Folders are found by their path, so a folder with thousands of files isn't searched
 // once for each of them.
@@ -33,7 +39,7 @@ export function buildTree(paths: string[]): TreeNode[] {
     folderAt(cut < 0 ? "" : path.slice(0, cut)).children?.push({ name: path.slice(cut + 1), path });
   }
   const sort = (nodes: TreeNode[]): TreeNode[] =>
-    nodes.sort(byKindAndName).map((n) => (n.children ? { ...n, children: sort(n.children) } : n));
+    nodes.sort(byKindAndName(sortingCollator())).map((n) => (n.children ? { ...n, children: sort(n.children) } : n));
   return sort(root.children ?? []);
 }
 

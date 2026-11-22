@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { errorMessage } from "@/shared/lib/errors";
 import {
   type InstalledModel,
@@ -10,6 +10,9 @@ import {
 import type { ProviderConfig } from "@/shared/types";
 import { useStableCallback } from "@/shared/hooks/useStableCallback";
 
+// How long the address has to stay as it is before Ollama is asked again
+const ADDRESS_PAUSE_MS = 600;
+
 type Inventory = {
   status: "loading" | "loaded" | "error";
   installed: InstalledModel[];
@@ -19,7 +22,7 @@ type Inventory = {
 };
 
 // What is installed in Ollama and what is in memory. Read when the panel opens, after every change made here,
-// and whenever refreshKey changes (a download that finished in the background)
+// whenever refreshKey changes (a download that finished in the background) and when its address changes
 export function useOllamaInventory(
   config: ProviderConfig,
   onInstalled: (installed: InstalledModel[]) => void,
@@ -47,15 +50,27 @@ export function useOllamaInventory(
     }
   });
 
+  // A new address is read once the user stops typing it: until then, what was read was another server's
+  const baseUrl = config.baseUrl;
+  const readAddress = useRef(baseUrl);
   useEffect(() => {
     let cancelled = false;
-    fetchInventory().then((next) => {
-      if (!cancelled) setInventory(next);
-    });
+    const isNewAddress = readAddress.current !== baseUrl;
+    const timer = setTimeout(
+      () => {
+        readAddress.current = baseUrl;
+        if (isNewAddress) setInventory((current) => ({ ...current, status: "loading" }));
+        void fetchInventory().then((next) => {
+          if (!cancelled) setInventory(next);
+        });
+      },
+      isNewAddress ? ADDRESS_PAUSE_MS : 0,
+    );
     return () => {
       cancelled = true;
+      clearTimeout(timer);
     };
-  }, [fetchInventory, refreshKey]);
+  }, [fetchInventory, refreshKey, baseUrl]);
 
   async function reload() {
     setInventory((current) => ({ ...current, status: current.status === "error" ? "loading" : current.status }));

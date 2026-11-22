@@ -10,7 +10,7 @@ import {
   deleteMcpServer,
   disconnectMcpServer,
   importFromClaudeDesktop,
-  newImportCandidates,
+  importCandidateNames,
   mcpServerTools,
   mcpServers,
   saveMcpServer,
@@ -28,7 +28,7 @@ export function McpSettings() {
   const [servers, setServers] = useState<McpServer[]>([]);
   const [selected, setSelected] = useState<string>(NEW);
   const [tools, setTools] = useState<Record<string, ServerTools>>({});
-  const [imports, setImports] = useState(0);
+  const [inClaudeDesktop, setInClaudeDesktop] = useState<string[]>([]);
   const [notice, setNotice] = useState<string | null>(null);
   const icons = useMcpIcons();
 
@@ -56,12 +56,14 @@ export function McpSettings() {
       .catch((e) => setNotice(errorMessage(e)));
   }, [load]);
 
-  // What Claude Desktop has that isn't here yet
+  // Claude Desktop's servers are read once: what it has that isn't here yet follows the list, which changes with each
+  // tool turned on or off, without reading its settings (and their secret values) again each time
   useEffect(() => {
-    newImportCandidates()
-      .then((fresh) => setImports(fresh.length))
-      .catch(() => setImports(0));
-  }, [servers]);
+    importCandidateNames()
+      .then(setInClaudeDesktop)
+      .catch(() => setInClaudeDesktop([]));
+  }, []);
+  const imports = inClaudeDesktop.filter((name) => !servers.some((s) => s.name === name)).length;
 
   const server = servers.find((s) => s.id === selected) ?? null;
 

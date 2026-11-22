@@ -1,5 +1,4 @@
 use std::collections::HashSet;
-use std::fs;
 use std::io::{Cursor, Write};
 
 use base64::Engine;
@@ -9,7 +8,7 @@ use zip::{CompressionMethod, ZipWriter};
 
 use crate::i18n::t;
 use crate::spreadsheet::table::{table_xlsx, TableCell};
-use crate::util::{ask_where_to_save, to_message};
+use crate::util::{offered_file_name, save_with_dialog, to_message};
 use tauri::image::Image;
 use tauri::ipc::{InvokeBody, Request};
 use tauri::AppHandle;
@@ -43,32 +42,23 @@ pub async fn copy_image(app: AppHandle, request: Request<'_>) -> Result<(), Stri
 #[tauri::command]
 pub async fn save_image(app: AppHandle, request: Request<'_>) -> Result<bool, String> {
     let bytes = png_of(&request)?;
-    let Some(destination) = ask_where_to_save(
+    save_with_dialog(
         &app,
         t("native.share.imageFile"),
-        Some((&t("native.share.pngFilter"), &["png"])),
-    )?
-    else {
-        return Ok(false);
-    };
-    fs::write(destination, bytes).map_err(|_| t("native.share.saveImageFailed"))?;
-    Ok(true)
+        Some((t("native.share.pngFilter"), &["png"])),
+        bytes,
+        "native.share.saveImageFailed",
+    )
+    .await
 }
 
-/// Only a plain `name.<extension>` is offered as the default name; it comes from a model, so anything else is replaced.
+/// The name a model gave a document, as the save dialog offers it, with its extension or else a default name
 pub(crate) fn document_filename(requested: &str, extension: &str) -> String {
-    // Letters of any script: a document titled in Chinese or Japanese keeps its name
-    let plain = requested.ends_with(&format!(".{extension}"))
-        && requested.chars().count() <= 100
-        && requested
-            .chars()
-            .all(|c| c.is_alphanumeric() || c == '-' || c == '.')
-        && !requested.starts_with('.');
-    if plain {
-        requested.to_string()
-    } else {
-        format!("{}.{extension}", t("native.share.fallbackName"))
-    }
+    offered_file_name(
+        requested,
+        &[extension],
+        &format!("{}.{extension}", t("native.share.fallbackName")),
+    )
 }
 
 const PDF_SIGNATURE: &[u8] = b"%PDF-";
@@ -92,16 +82,14 @@ pub async fn save_pdf(app: AppHandle, request: Request<'_>) -> Result<bool, Stri
         .get("x-filename")
         .and_then(|value| value.to_str().ok())
         .unwrap_or_default();
-    let Some(destination) = ask_where_to_save(
+    save_with_dialog(
         &app,
         document_filename(requested, "pdf"),
-        Some(("PDF", &["pdf"])),
-    )?
-    else {
-        return Ok(false);
-    };
-    fs::write(destination, bytes).map_err(|_| t("native.share.savePdfFailed"))?;
-    Ok(true)
+        Some(("PDF".into(), &["pdf"])),
+        bytes,
+        "native.share.savePdfFailed",
+    )
+    .await
 }
 
 /// false when the user closes the save dialog without choosing a place.
@@ -111,16 +99,14 @@ pub async fn save_markdown(
     filename: String,
     content: String,
 ) -> Result<bool, String> {
-    let Some(destination) = ask_where_to_save(
+    save_with_dialog(
         &app,
         document_filename(&filename, "md"),
-        Some(("Markdown", &["md"])),
-    )?
-    else {
-        return Ok(false);
-    };
-    fs::write(destination, content).map_err(|_| t("native.share.saveDocumentFailed"))?;
-    Ok(true)
+        Some(("Markdown".into(), &["md"])),
+        content.as_bytes(),
+        "native.share.saveDocumentFailed",
+    )
+    .await
 }
 
 // Many screenshots at their highest quality fit well below this
@@ -189,11 +175,14 @@ pub async fn save_markdown_zip(
     let markdown_name = document_filename(&filename, "md");
     let zip = markdown_zip(&markdown_name, &content, &images)?;
     let suggested = format!("{}.zip", markdown_name.trim_end_matches(".md"));
-    let Some(destination) = ask_where_to_save(&app, suggested, Some(("ZIP", &["zip"])))? else {
-        return Ok(false);
-    };
-    fs::write(destination, zip).map_err(|_| t("native.share.saveDocumentFailed"))?;
-    Ok(true)
+    save_with_dialog(
+        &app,
+        suggested,
+        Some(("ZIP".into(), &["zip"])),
+        &zip,
+        "native.share.saveDocumentFailed",
+    )
+    .await
 }
 
 /// A table from a reply as an Excel workbook, its first row the header. false when the user closes the save dialog.
@@ -206,16 +195,14 @@ pub async fn save_table(
     let xlsx = table_xlsx(&t("native.share.tableSheet"), &rows)
         .ok_or_else(|| t("native.share.invalidTable"))?
         .map_err(|_| t("native.share.saveTableFailed"))?;
-    let Some(destination) = ask_where_to_save(
+    save_with_dialog(
         &app,
         document_filename(&filename, "xlsx"),
-        Some((&t("native.share.excelFilter"), &["xlsx"])),
-    )?
-    else {
-        return Ok(false);
-    };
-    fs::write(destination, xlsx).map_err(|_| t("native.share.saveTableFailed"))?;
-    Ok(true)
+        Some((t("native.share.excelFilter"), &["xlsx"])),
+        &xlsx,
+        "native.share.saveTableFailed",
+    )
+    .await
 }
 
 #[cfg(test)]
@@ -229,12 +216,17 @@ mod tests {
             "instalar-python.md"
         );
         let fallback = |extension: &str| format!("{}.{extension}", t("native.share.fallbackName"));
-        assert_eq!(document_filename("../secreto.md", "md"), fallback("md"));
+        // Never a path: what could make it one goes, the name stays
+        assert_eq!(document_filename("../secreto.md", "md"), "secreto.md");
         assert_eq!(document_filename("notas.sh", "md"), fallback("md"));
         assert_eq!(document_filename(".md", "md"), fallback("md"));
         assert_eq!(document_filename("informe.pdf", "pdf"), "informe.pdf");
         assert_eq!(document_filename("东京会议.md", "md"), "东京会议.md");
-        assert_eq!(document_filename("会議/メモ.md", "md"), fallback("md"));
+        assert_eq!(document_filename("会議/メモ.md", "md"), "会議メモ.md");
+        assert_eq!(
+            document_filename("Informe final.MD", "md"),
+            "Informe final.MD"
+        );
         assert_eq!(document_filename("informe.md", "pdf"), fallback("pdf"));
     }
 

@@ -22,7 +22,7 @@ describe("findSensitiveData", () => {
   it("finds secrets in .env files and quoted values", () => {
     expect(labels("DB_HOST=localhost\nDB_PASSWORD=s3cr3t-Pa55")).toEqual(["Contraseña o secreto"]);
     expect(labels('{ "password": "hunter2hunter2" }')).toEqual(["Contraseña o secreto"]);
-    expect(labels("contraseña: 'MiClaveSegura9'")).toEqual(["Contraseña o secreto"]);
+    expect(labels("password: 'MiClaveSegura9'")).toEqual(["Contraseña o secreto"]);
   });
 
   it("leaves out placeholders and code that only names a secret", () => {
@@ -120,6 +120,24 @@ describe("withSecretsHidden", () => {
       "-----END RSA PRIVATE KEY-----",
     ]);
     expect(count).toBe(3);
+  });
+
+  it("hides a key cut in two, whichever half arrives", () => {
+    const begin = withSecretsHidden(["usuario: marta", "-----BEGIN OPENSSH PRIVATE KEY-----", "b3BlbnNzaC1rZXk", "AAAAB3NzaC1yc2E"].join("\n"));
+    expect(begin.text.split("\n")).toEqual(["usuario: marta", "-----BEGIN OPENSSH PRIVATE KEY-----", "[hidden]", "[hidden]"]);
+    expect(begin.hidden).toBe(1);
+    const end = withSecretsHidden(["MIIEpAIBAAKCAQEA1", "Zm9vYmFy==", "-----END RSA PRIVATE KEY-----", "", "puerto: 22"].join("\n"));
+    expect(end.text.split("\n")).toEqual(["[hidden]", "[hidden]", "-----END RSA PRIVATE KEY-----", "", "puerto: 22"]);
+  });
+
+  it("doesn't take a whole key and what follows it for a cut one", () => {
+    const text = ["-----BEGIN EC PRIVATE KEY-----", "MHcCAQEEI", "-----END EC PRIVATE KEY-----", "puerto: 22"].join("\n");
+    expect(withSecretsHidden(text).text.split("\n")).toEqual([
+      "-----BEGIN EC PRIVATE KEY-----",
+      "[hidden]",
+      "-----END EC PRIVATE KEY-----",
+      "puerto: 22",
+    ]);
   });
 
   it("leaves a file without secrets as it is", () => {

@@ -2,10 +2,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   loadCollapsedSections,
   loadDefaultSkills,
+  loadLearnedContexts,
   loadPreferences,
   loadProviderOptions,
   saveCollapsedSections,
   saveDefaultSkills,
+  saveLearnedContext,
 } from "./settings";
 
 describe("settings in localStorage", () => {
@@ -22,6 +24,15 @@ describe("settings in localStorage", () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+  });
+
+  it("parses the contexts learned once, and again when they change here or in the other window", () => {
+    saveLearnedContext("qwen", 8192);
+    const first = loadLearnedContexts();
+    expect(first).toEqual({ qwen: 8192 });
+    expect(loadLearnedContexts()).toBe(first);
+    store.set("nyrabot.learnedContexts", JSON.stringify({ qwen: 4096, malo: "x" }));
+    expect(loadLearnedContexts()).toEqual({ qwen: 4096 });
   });
 
   it("fills in defaults and drops personalization values that aren't text", () => {

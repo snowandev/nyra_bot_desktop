@@ -3120,6 +3120,7 @@
     "you": "You",
     "others": "The others",
     "fileName": "{{name}} (transcript).md",
+    "fileNameAgain": "{{name}} (transcript {{number}}).md",
     "empty": "Nobody can be heard speaking in {{name}}.",
     "disabled": "Audio transcription is turned off in Settings → General → Nyra's features.",
     "providers": {
@@ -3143,11 +3144,16 @@
     },
     "viewer": {
       "pending": "Nyra transcribes it when it needs to: ask it to “transcribe it”, “summarize it” or “what was decided?”.",
-      "done": "Its transcript is in “{{name}}”.",
+      "done": "It's already transcribed. If you want another transcript to compare, ask Nyra.",
       "play": "Play {{name}}",
-      "cannotPlay": "This format can't be played here, but Nyra can still transcribe it."
+      "cannotPlay": "This format can't be played here, but Nyra can still transcribe it.",
+      "transcribe": "Transcribe",
+      "again": "Transcribe again",
+      "transcribeMessage": "Transcribe “{{name}}”",
+      "againMessage": "Transcribe “{{name}}” again"
     },
     "title": "Transcript of {{name}}",
+    "titleAgain": "Transcript {{number}} of {{name}}",
     "aboutSpeakers_one": "{{duration}} · {{count, number}} speaker",
     "aboutSpeakers_other": "{{duration}} · {{count, number}} speakers",
     "fileWord": "transcript"

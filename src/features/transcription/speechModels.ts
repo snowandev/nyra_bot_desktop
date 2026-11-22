@@ -106,6 +106,7 @@ export function whenModelReady(chosen: () => string | null, signal: AbortSignal)
       unsubscribe();
       signal.removeEventListener("abort", abort);
     };
+    if (signal.aborted) return reject(new DOMException("Stopped", "AbortError"));
     signal.addEventListener("abort", abort);
     check();
   });

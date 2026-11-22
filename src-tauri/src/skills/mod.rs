@@ -19,7 +19,7 @@ use yaml_rust2::{Yaml, YamlEmitter, YamlLoader};
 
 use crate::i18n::{t, t_with};
 use crate::storage::now_millis;
-use crate::util::{ask_where_to_save, data_dir, plain_key, to_message};
+use crate::util::{data_dir, plain_key, to_message, where_to_save};
 
 mod builtins;
 mod bundles;
@@ -398,8 +398,12 @@ pub async fn delete_skill(app: AppHandle, name: String) -> Result<(), String> {
 #[tauri::command]
 pub async fn export_skill(app: AppHandle, name: String) -> Result<Option<String>, String> {
     let dir = installed_dir(&app, &name)?;
-    let Some(destination) =
-        ask_where_to_save(&app, format!("{name}.zip"), Some(("Skill", &["zip"])))?
+    let Some(destination) = where_to_save(
+        &app,
+        format!("{name}.zip"),
+        Some(("Skill".into(), &["zip"])),
+    )
+    .await?
     else {
         return Ok(None);
     };
@@ -437,7 +441,14 @@ mod tests {
             "print(1)"
         );
         assert!(!dir.join("references/viejo.md").exists());
-        for refused in [SKILL_FILE, "../fuera.py", RECORD_FILE] {
+        for refused in [
+            SKILL_FILE,
+            "skill.md",
+            "Skill.MD. ",
+            "../fuera.py",
+            RECORD_FILE,
+            ".NYRA-SKILL.json",
+        ] {
             let file = DroppedFile {
                 path: refused.into(),
                 data: encode("x"),
@@ -448,6 +459,7 @@ mod tests {
             );
         }
         assert!(apply_file_changes(&dir, vec![], &[SKILL_FILE.into()]).is_err());
+        assert!(apply_file_changes(&dir, vec![], &["skill.md".into()]).is_err());
         assert!(dir.join(SKILL_FILE).exists());
         fs::remove_dir_all(dir).unwrap();
     }

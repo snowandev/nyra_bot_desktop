@@ -405,6 +405,42 @@ fn whisper_files(names: &[String]) -> Option<(String, String, String)> {
     Some((encoder, decoder, tokens))
 }
 
+/// One copy of the weights: the whole file ("model.safetensors"), else its parts ("model-00001-of-00002.safetensors"),
+/// else the first other variant. A repository may keep several (in fp16 and fp32): bringing them all would be
+/// gigabytes more, and loaded together, one would overwrite the other.
+fn one_set_of_weights(top: &[&String], base: &str, extension: &str) -> Vec<String> {
+    let whole = format!("{base}{extension}");
+    if top.iter().any(|n| **n == whole) {
+        return vec![whole];
+    }
+    let is_part = |name: &str| {
+        name.strip_prefix(&format!("{base}-"))
+            .and_then(|rest| rest.strip_suffix(extension))
+            .and_then(|rest| rest.split_once("-of-"))
+            .is_some_and(|(part, of)| {
+                [part, of]
+                    .iter()
+                    .all(|n| !n.is_empty() && n.chars().all(|c| c.is_ascii_digit()))
+            })
+    };
+    let mut parts: Vec<String> = top
+        .iter()
+        .filter(|n| is_part(n))
+        .map(|n| n.to_string())
+        .collect();
+    if !parts.is_empty() {
+        parts.sort();
+        return parts;
+    }
+    let mut others: Vec<String> = top
+        .iter()
+        .filter(|n| n.starts_with(base) && n.ends_with(extension))
+        .map(|n| n.to_string())
+        .collect();
+    others.sort();
+    others.into_iter().take(1).collect()
+}
+
 /// A model in Transformers' format, by its files at the top of it: its config, its tokenizer and its weights, in
 /// safetensors (maybe in parts) or else in PyTorch's older file; and whether they are the older one
 fn transformers_files(names: &[String]) -> Option<(Vec<String>, bool)> {
@@ -413,15 +449,9 @@ fn transformers_files(names: &[String]) -> Option<(Vec<String>, bool)> {
     if !has(whisper_transformers::CONFIG) || !has(whisper_transformers::TOKENIZER) {
         return None;
     }
-    let named = |prefix: &str, extension: &str| -> Vec<String> {
-        top.iter()
-            .filter(|n| n.starts_with(prefix) && n.ends_with(extension))
-            .map(|n| n.to_string())
-            .collect()
-    };
-    let safetensors = named("model", ".safetensors");
+    let safetensors = one_set_of_weights(&top, "model", ".safetensors");
     let (weights, pytorch) = if safetensors.is_empty() {
-        (named("pytorch_model", ".bin"), true)
+        (one_set_of_weights(&top, "pytorch_model", ".bin"), true)
     } else {
         (safetensors, false)
     };
@@ -502,6 +532,20 @@ fn new_id(dir: &Path, name: &str) -> String {
         n += 1;
     }
     id
+}
+
+/// An empty folder to put a new model's files in. Called while adding, the only add running: any other staging
+/// folder was left by one cut short (Nyra closed halfway) and goes, so its files never mix with these.
+fn new_staging(dir: &Path, id: &str) -> Result<PathBuf, String> {
+    let root = dir.join(WHISPER_DIR);
+    for entry in fs::read_dir(&root).into_iter().flatten().flatten() {
+        if entry.file_name().to_string_lossy().ends_with(STAGING) {
+            let _ = fs::remove_dir_all(entry.path());
+        }
+    }
+    let staging = root.join(format!("{id}{STAGING}"));
+    fs::create_dir_all(&staging).map_err(to_message)?;
+    Ok(staging)
 }
 
 /// Runs one way of adding a model: only one at a time, and whatever it leaves half done goes
@@ -621,8 +665,7 @@ pub async fn speech_model_add_from_huggingface(
         let name = repo.split('/').next_back().unwrap_or(&repo).to_string();
         let id = new_id(&dir, &name);
         let target = dir.join(WHISPER_DIR).join(&id);
-        let staging = dir.join(WHISPER_DIR).join(format!("{id}{STAGING}"));
-        fs::create_dir_all(&staging).map_err(to_message)?;
+        let staging = new_staging(&dir, &id)?;
         let mut done = 0u64;
         let mut on_bytes = |bytes: u64| {
             done += bytes;
@@ -640,7 +683,9 @@ pub async fn speech_model_add_from_huggingface(
                 .await?;
             }
             if pytorch {
-                convert_weights(&staging)?;
+                // Gigabytes read and written again: off the async threads, as the folder path does
+                let into = staging.clone();
+                crate::workspace::blocking(move || convert_weights(&into)).await??;
             }
             download_shared(&client, &dir, &state, &mut on_bytes).await?;
             let model = WhisperModel {
@@ -702,8 +747,7 @@ pub async fn speech_model_add_from_folder(
             .unwrap_or_else(|| "whisper".to_string());
         let id = new_id(&dir, &name);
         let target = dir.join(WHISPER_DIR).join(&id);
-        let staging = dir.join(WHISPER_DIR).join(format!("{id}{STAGING}"));
-        fs::create_dir_all(&staging).map_err(to_message)?;
+        let staging = new_staging(&dir, &id)?;
         let total: u64 = shared_missing(&dir).iter().map(|f| f.bytes).sum();
         let mut done = 0u64;
         let mut on_bytes = |bytes: u64| {
@@ -924,5 +968,48 @@ mod tests {
         );
         // Without its tokenizer it can't be read either
         assert!(plan_of(&names(&["config.json", "model.safetensors"]), why).is_err());
+    }
+
+    #[test]
+    fn brings_one_copy_of_the_weights() {
+        let names = |list: &[&str]| list.iter().map(|s| s.to_string()).collect::<Vec<_>>();
+        let files_of = |list: &[&str]| {
+            plan_of(&names(list), |key: &str| key.to_string())
+                .unwrap()
+                .0
+                .into_iter()
+                .map(|(file, _)| file)
+                .filter(|file| file.contains("model"))
+                .collect::<Vec<_>>()
+        };
+        let both = [
+            "config.json",
+            "tokenizer.json",
+            "model.safetensors",
+            "model.fp32-00001-of-00002.safetensors",
+            "model.fp32-00002-of-00002.safetensors",
+        ];
+        assert_eq!(files_of(&both), ["model.safetensors"]);
+        let parts = [
+            "config.json",
+            "tokenizer.json",
+            "model-00002-of-00002.safetensors",
+            "model-00001-of-00002.safetensors",
+            "model.fp16.safetensors",
+        ];
+        assert_eq!(
+            files_of(&parts),
+            [
+                "model-00001-of-00002.safetensors",
+                "model-00002-of-00002.safetensors"
+            ]
+        );
+        let variants = [
+            "config.json",
+            "tokenizer.json",
+            "model.fp32.safetensors",
+            "model.fp16.safetensors",
+        ];
+        assert_eq!(files_of(&variants), ["model.fp16.safetensors"]);
     }
 }

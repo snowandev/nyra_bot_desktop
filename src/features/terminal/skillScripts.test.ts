@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Skill } from "@/features/skills/skills";
+import { commandRisk } from "./commandRisks";
 import { skillScriptIn, withoutSkillFolders } from "./skillScripts";
 
 const pdf = {
@@ -33,4 +34,17 @@ describe("skillScriptIn", () => {
 
 it("makes the skills' folders relative before looking for paths outside the connected folder", () => {
   expect(withoutSkillFolders('python3 "/datos/nyra/skills/pdf/scripts/extraer.py" a.pdf', [pdf])).toBe('python3 "./scripts/extraer.py" a.pdf');
+  expect(withoutSkillFolders("python C:/Datos/nyra/skills/pdf/scripts/extraer.py", [windows])).toBe(
+    "python ./scripts/extraer.py",
+  );
+});
+
+it("still sees a Windows path outside the connected folder when skills are around", () => {
+  for (const command of ["type C:\\Users\\Marta\\notas.txt", "type C:/Users/Marta/notas.txt"]) {
+    const risk = commandRisk(command, withoutSkillFolders(command, [windows, pdf]));
+    expect(risk?.kind, command).toBe("outside");
+    expect(risk?.mark, command).toMatch(/^C:/);
+  }
+  const ownScript = "python C:\\Datos\\nyra\\skills\\pdf\\scripts\\extraer.py";
+  expect(commandRisk(ownScript, withoutSkillFolders(ownScript, [windows]))).toBeNull();
 });

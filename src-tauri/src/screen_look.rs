@@ -355,16 +355,20 @@ pub async fn screen_zoom(
     fit: Option<Fit>,
 ) -> Result<Zoom, String> {
     let shot = shot_of(&looks, &conversation_id)?;
-    let (width, height) = shot.image.dimensions();
-    let (left, top, zoom_width, zoom_height) = zoom_area(width, height, x, y);
-    let part = imageops::crop_imm(&shot.image, left, top, zoom_width, zoom_height).to_image();
-    let view = scaled_to_view(&part, fit);
-    Ok(Zoom {
-        image: as_base64(&view)?,
-        area: fraction_of(left, top, zoom_width, zoom_height, &shot.image),
-        width: view.width(),
-        height: view.height(),
+    // Cropping, scaling and encoding a 5K capture takes a while: off the async threads, like the overview
+    crate::workspace::blocking(move || {
+        let (width, height) = shot.image.dimensions();
+        let (left, top, zoom_width, zoom_height) = zoom_area(width, height, x, y);
+        let part = imageops::crop_imm(&shot.image, left, top, zoom_width, zoom_height).to_image();
+        let view = scaled_to_view(&part, fit);
+        Ok(Zoom {
+            image: as_base64(&view)?,
+            area: fraction_of(left, top, zoom_width, zoom_height, &shot.image),
+            width: view.width(),
+            height: view.height(),
+        })
     })
+    .await?
 }
 
 /// A box drawn on an image, `thickness` pixels wide, inside its edges
@@ -394,6 +398,10 @@ pub async fn screen_close_up(
     fit: Option<Fit>,
 ) -> Result<String, String> {
     let shot = shot_of(&looks, &conversation_id)?;
+    crate::workspace::blocking(move || close_up(&shot, area, fit)).await?
+}
+
+fn close_up(shot: &Shot, area: Area, fit: Option<Fit>) -> Result<String, String> {
     let (width, height) = shot.image.dimensions();
     let center = (area.x + area.width / 2.0, area.y + area.height / 2.0);
     let (left, top, zoom_width, zoom_height) = zoom_area(width, height, center.0, center.1);

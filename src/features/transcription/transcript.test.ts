@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import "@/shared/i18n/i18n";
 import { applyLanguage } from "@/shared/i18n/i18n";
-import { isAudio, transcriptAttachment, transcriptFileName, transcriptText } from "./transcript";
+import type { Attachment } from "@/shared/types";
+import { isAudio, nextTranscriptNumber, transcriptAttachment, transcriptFileName, transcriptText } from "./transcript";
 
 applyLanguage("es");
 
@@ -39,8 +40,25 @@ describe("transcripts", () => {
   });
 
   it("goes as a Markdown file named after the audio, saved under a plain name", () => {
-    expect(transcriptAttachment("reunion.m4a", [])).toMatchObject({ kind: "text", name: "reunion (transcripción).md" });
+    const audio: Attachment = { id: "a1", kind: "audio", name: "reunion.m4a", mimeType: "audio/mp4", data: "" };
+    const first = transcriptAttachment(audio, []);
+    expect(first).toMatchObject({ kind: "text", name: "reunion (transcripción).md", transcriptOf: "a1" });
+    const second = transcriptAttachment(audio, [], 2);
+    expect(second.name).toBe("reunion (transcripción 2).md");
+    expect(second.data).toMatch(/^# Transcripción 2 de reunion\.m4a/);
     expect(transcriptFileName("Reunión del lunes.m4a")).toBe("reunion-del-lunes-transcripcion.md");
+    expect(transcriptFileName("会議 3月.m4a")).toBe("会議-3月-transcripcion.md");
+    expect(transcriptFileName("Встреча.m4a")).toBe("встреча-transcripcion.md");
+    expect(transcriptFileName("बैठक.m4a")).toBe("बैठक-transcripcion.md");
+  });
+
+  it("numbers a new transcript after the ones the audio already has", () => {
+    const audio: Attachment = { id: "a1", kind: "audio", name: "reunion.m4a", mimeType: "audio/mp4", data: "" };
+    expect(nextTranscriptNumber([audio], audio)).toBe(1);
+    const first = transcriptAttachment(audio, []);
+    expect(nextTranscriptNumber([{ ...audio, transcript: first.id }, first], { ...audio, transcript: first.id })).toBe(2);
+    // Made before they were counted: only the audio knows it has one
+    expect(nextTranscriptNumber([], { ...audio, transcript: "old" })).toBe(2);
   });
 
   it("knows the audio it can read, and not voice notes in Opus", () => {

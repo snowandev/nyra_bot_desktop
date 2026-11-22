@@ -64,6 +64,7 @@ describe("transcriptionTools", () => {
       speakers: true,
       speakerCount: null,
       meeting: false,
+      run: expect.any(String),
     });
     expect(result.content).toContain('<audio-transcript name="reunion.m4a">');
     expect(result.content).toContain("**[00:00] Hablante 1:** Agrupamos los envíos los viernes.");
@@ -87,6 +88,25 @@ describe("transcriptionTools", () => {
     expect(storage.transcribeStoredAudio).not.toHaveBeenCalled();
   });
 
+  it("makes it again when the model asks for it again, once per reply", async () => {
+    const transcript: Attachment = { id: "t1", kind: "text", name: "reunion (transcripción).txt", mimeType: "text/plain", data: "Ya hecha" };
+    const onTranscript = vi.fn();
+    const tools = transcriptionTools({
+      conversationId: "c5",
+      history: history([{ ...audio, transcript: "t1" }, transcript]),
+      signal: new AbortController().signal,
+      onTranscript,
+      onShow: vi.fn(),
+    });
+    const result = await tools.run("reunion.m4a | 3 | again");
+    expect(result.content).toContain("Agrupamos los envíos los viernes.");
+    expect(result.content).not.toContain("Ya hecha");
+    expect(storage.transcribeStoredAudio).toHaveBeenCalledWith(expect.objectContaining({ speakerCount: 3 }));
+    expect(onTranscript).toHaveBeenCalledWith("a1", expect.objectContaining({ name: "reunion (transcripción 2).md" }));
+    await tools.run("reunion.m4a | again");
+    expect(storage.transcribeStoredAudio).toHaveBeenCalledTimes(1);
+  });
+
   it("names the audio there is when asked for one that isn't, and says when transcription is off", async () => {
     const other: Attachment = { ...audio, id: "a2", name: "clase.mp3" };
     const tools = transcriptionTools({
@@ -107,10 +127,12 @@ describe("transcriptionTools", () => {
 
 describe("requestOf", () => {
   it("reads how many speak when the user said it, also in a name with a |", () => {
-    expect(requestOf("reunion.m4a | 3")).toEqual({ name: "reunion.m4a", speakerCount: 3 });
-    expect(requestOf("nota de voz.mp3|1")).toEqual({ name: "nota de voz.mp3", speakerCount: 1 });
-    expect(requestOf("a | b.mp3")).toEqual({ name: "a | b.mp3", speakerCount: null });
-    expect(requestOf("clase.wav")).toEqual({ name: "clase.wav", speakerCount: null });
+    expect(requestOf("reunion.m4a | 3")).toEqual({ name: "reunion.m4a", speakerCount: 3, again: false });
+    expect(requestOf("nota de voz.mp3|1")).toEqual({ name: "nota de voz.mp3", speakerCount: 1, again: false });
+    expect(requestOf("a | b.mp3")).toEqual({ name: "a | b.mp3", speakerCount: null, again: false });
+    expect(requestOf("clase.wav")).toEqual({ name: "clase.wav", speakerCount: null, again: false });
+    expect(requestOf("clase.wav | again")).toEqual({ name: "clase.wav", speakerCount: null, again: true });
+    expect(requestOf("clase.wav | 2 | Again")).toEqual({ name: "clase.wav", speakerCount: 2, again: true });
   });
 
   it("passes the number on to the transcription", async () => {
@@ -138,8 +160,8 @@ describe("an audio in a message", () => {
       content: "Resúmelo",
       attachments: [{ ...audio, transcript: "t1" }, transcript],
     });
-    expect(done).toContain('its transcript is the file "reunion (transcripción).txt"');
-    expect(done).not.toContain("<nyra-transcribe>");
+    expect(done).toContain('its latest transcript is the file "reunion (transcripción).txt"');
+    expect(done).toContain("<nyra-transcribe>reunion.m4a | again</nyra-transcribe>");
   });
 });
 

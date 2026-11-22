@@ -13,7 +13,6 @@ import { CodeViewSwitch } from "@/features/markdown/CodeViewSwitch";
 import { useCodeViews } from "@/features/markdown/useCodeViews";
 import { PdfDocumentView } from "./PdfDocumentView";
 import { SaveDocumentButton } from "@/features/documents/SaveDocumentButton";
-import { transcriptNameOf } from "@/features/transcription/transcript";
 import { AudioPlayer } from "@/features/transcription/AudioPlayer";
 
 type Props = {
@@ -34,11 +33,7 @@ export function AttachmentViewer({ attachment, onClose, actions }: Props) {
   // A code file can be read reformatted, a JSON one also on one line; copying copies what is shown
   const views = useCodeViews(text, attachment.kind === "text" ? fileType : null);
   const lineCount = views.shown.split("\n").length;
-  // Where its transcript is, once Nyra made it; the file itself isn't shown, only what it says
-  const transcriptName = isAudio && attachment.transcript ? transcriptNameOf(attachment.name) : null;
-  const audioNote = transcriptName
-    ? t("transcription.viewer.done", { name: transcriptName })
-    : t("transcription.viewer.pending");
+  const audioNote = attachment.transcript ? t("transcription.viewer.done") : t("transcription.viewer.pending");
   const pages = attachment.pages ?? [];
 
   const details = [

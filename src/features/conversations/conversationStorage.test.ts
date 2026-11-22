@@ -55,6 +55,12 @@ describe("toOutgoingData", () => {
     expect(conversation.messages[0].attachments?.[0]).toBe(image);
   });
 
+  it("sends a stored audio whole, so its link to its transcript is kept", () => {
+    const audio = { id: "a1", kind: "audio" as const, name: "reunion.wav", mimeType: "audio/wav", data: "", transcript: "t1" };
+    const withAudio: Conversation = { ...conversation, messages: [{ role: "user", content: "", attachments: [audio] }] };
+    expect(toOutgoingData(withAudio, new Set(["a1"])).messages[0].attachments).toEqual([audio]);
+  });
+
   it("sends a stored command without its output, and a new one whole", () => {
     const run = (id: string) => ({
       ...{ id, command: "npm test", root: "/p", folder: "p", at: 0, n: 1 },

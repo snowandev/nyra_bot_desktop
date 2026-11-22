@@ -60,3 +60,25 @@ export const neutralizeAppTags = (text: string) => text.replace(APP_TAG, "[$1$2"
 
 // For an attribute (a query, a file's name): no tags and no quote that would end it early
 export const asAttribute = (text: string) => neutralizeAppTags(text).replace(/"/g, "'");
+
+// The attributes of a tag the model writes, as a regular expression's source: name="value" pairs, the names with
+// letters, digits, "_" or "-". Every tag reads them the same, so one written by any of them is never half understood.
+export const TAG_ATTRIBUTES = String.raw`(?:\s+[\w-]+\s*=\s*"[^"]*")*`;
+
+export function tagAttributes(text: string): Record<string, string> {
+  return Object.fromEntries([...text.matchAll(/([\w-]+)\s*=\s*"([^"]*)"/g)].map((m) => [m[1], m[2].trim()]));
+}
+
+// While a reply arrives, one of these tags (names without "<") cut at the end isn't text yet: its first characters
+// ("<", "<nyra-ed") or its opening without the ">"
+export function withoutPartialTag(text: string, names: readonly string[]) {
+  const start = text.lastIndexOf("<");
+  if (start === -1) return text;
+  const tail = text.slice(start);
+  const isCut = names.some((name) => {
+    const open = `<${name}`;
+    const after = tail.slice(open.length);
+    return open.startsWith(tail) || (tail.startsWith(open) && /^\s/.test(after) && !tail.includes(">"));
+  });
+  return isCut ? text.slice(0, start) : text;
+}

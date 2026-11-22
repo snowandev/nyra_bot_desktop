@@ -164,6 +164,11 @@ pub async fn scan_claude_code_skills(
     app: AppHandle,
     imports: State<'_, SkillImports>,
 ) -> Result<Vec<Candidate>, String> {
+    // The import dialog asks for this when it opens: what an earlier one found and didn't import goes, so skills read
+    // whole don't pile up in memory with every opening
+    if let Ok(mut pending) = imports.pending.lock() {
+        pending.clear();
+    }
     let claude = claude_dir(&app)?;
     let projects = crate::claude_code::project_paths(&app);
     let found = tauri::async_runtime::spawn_blocking(move || {
@@ -188,24 +193,32 @@ pub async fn pick_skill_folder(
     imports: State<'_, SkillImports>,
     from_claude_code: bool,
 ) -> Result<Option<Vec<Candidate>>, String> {
-    let Some(folder) = app.dialog().file().blocking_pick_folder() else {
-        return Ok(None);
-    };
-    let folder = folder.into_path().map_err(to_message)?;
-    let found = if folder.join(SKILL_FILE).is_file() {
-        vec![(bundles_in_folder(&folder), folder.display().to_string())]
-    } else {
-        let dirs = skill_dirs(&folder, 3);
-        if dirs.is_empty() {
-            vec![(
-                Err(t("native.skills.skillFileMissing")),
-                folder.display().to_string(),
-            )]
+    // The dialog waits for the user, and the folder is read whole after: neither holds an async thread
+    let picking = app.clone();
+    let found = crate::workspace::blocking(move || {
+        let Some(folder) = picking.dialog().file().blocking_pick_folder() else {
+            return Ok(None);
+        };
+        let folder = folder.into_path().map_err(to_message)?;
+        Ok::<_, String>(Some(if folder.join(SKILL_FILE).is_file() {
+            vec![(bundles_in_folder(&folder), folder.display().to_string())]
         } else {
-            dirs.into_iter()
-                .map(|dir| (bundles_in_folder(&dir), dir.display().to_string()))
-                .collect()
-        }
+            let dirs = skill_dirs(&folder, 3);
+            if dirs.is_empty() {
+                vec![(
+                    Err(t("native.skills.skillFileMissing")),
+                    folder.display().to_string(),
+                )]
+            } else {
+                dirs.into_iter()
+                    .map(|dir| (bundles_in_folder(&dir), dir.display().to_string()))
+                    .collect()
+            }
+        }))
+    })
+    .await??;
+    let Some(found) = found else {
+        return Ok(None);
     };
     let source = if from_claude_code {
         Source::ClaudeCode
@@ -220,25 +233,31 @@ pub async fn pick_skill_archives(
     app: AppHandle,
     imports: State<'_, SkillImports>,
 ) -> Result<Option<Vec<Candidate>>, String> {
-    let Some(paths) = app
-        .dialog()
-        .file()
-        .add_filter("Skill", &["zip", "skill"])
-        .blocking_pick_files()
-    else {
+    let picking = app.clone();
+    let found = crate::workspace::blocking(move || {
+        let paths = picking
+            .dialog()
+            .file()
+            .add_filter("Skill", &["zip", "skill"])
+            .blocking_pick_files()?;
+        Some(
+            paths
+                .into_iter()
+                .filter_map(|path| path.into_path().ok())
+                .map(|path| {
+                    let label = path.display().to_string();
+                    let bundles = fs::read(&path)
+                        .map_err(to_message)
+                        .and_then(|bytes| bundles_from_files(files_in_zip(&bytes)?, &label));
+                    (bundles, label)
+                })
+                .collect(),
+        )
+    })
+    .await?;
+    let Some(found) = found else {
         return Ok(None);
     };
-    let found = paths
-        .into_iter()
-        .filter_map(|path| path.into_path().ok())
-        .map(|path| {
-            let label = path.display().to_string();
-            let bundles = fs::read(&path)
-                .map_err(to_message)
-                .and_then(|bytes| bundles_from_files(files_in_zip(&bytes)?, &label));
-            (bundles, label)
-        })
-        .collect();
     stage(&app, &imports, found, Source::File).map(Some)
 }
 

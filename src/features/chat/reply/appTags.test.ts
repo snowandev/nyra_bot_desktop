@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { neutralizeAppTags } from "./appTags";
+import { neutralizeAppTags, tagAttributes, withoutPartialTag } from "./appTags";
 
 describe("neutralizeAppTags", () => {
   it("catches the tags of commands and programs, the longest name whole", () => {
@@ -31,5 +31,25 @@ describe("neutralizeAppTags", () => {
     for (const text of ["let v: Vec<String> = vec![]; <div class=\"profile\"> <filename> a<b", "<div><file-list><Vec<String>>"]) {
       expect(neutralizeAppTags(text)).toBe(text);
     }
+  });
+});
+
+describe("the attributes and the cut end of a tag", () => {
+  it("reads every attribute the same way, also names with a dash", () => {
+    expect(tagAttributes(' path="src\\a.ts" new-file="yes"  title=" Informe "')).toEqual({
+      path: "src\\a.ts",
+      "new-file": "yes",
+      title: "Informe",
+    });
+  });
+
+  it("hides a tag cut at the end of a reply still arriving, and nothing else", () => {
+    const names = ["nyra-edit", "nyra-document"];
+    expect(withoutPartialTag("Voy:\n<ny", names)).toBe("Voy:\n");
+    expect(withoutPartialTag('Voy:\n<nyra-edit path="a', names)).toBe("Voy:\n");
+    expect(withoutPartialTag("Voy:\n<nyra-document", names)).toBe("Voy:\n");
+    expect(withoutPartialTag("a <b> c", names)).toBe("a <b> c");
+    expect(withoutPartialTag("Usa <nyra-editor x", names)).toBe("Usa <nyra-editor x");
+    expect(withoutPartialTag("si x < 3", names)).toBe("si x < 3");
   });
 });

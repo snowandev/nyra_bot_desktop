@@ -13,7 +13,7 @@ use tauri::{AppHandle, Manager, State};
 
 use crate::i18n::{t, t_with};
 use crate::storage::now_millis;
-use crate::util::{ask_where_to_save, conversation_file_name, to_message};
+use crate::util::{conversation_file_name, to_message, where_to_save};
 
 const RUNS_DIR: &str = "code-runs";
 // The files a conversation hands its programs, and the largest file a program's result can be shown from
@@ -133,8 +133,13 @@ pub async fn code_space(
     conversation_id: String,
     inputs: Vec<InputFile>,
 ) -> Result<String, String> {
-    use base64::Engine;
     let dir = space_of(&app, &conversation_id)?;
+    // Up to tens of megabytes decoded and written: off the async threads
+    crate::workspace::blocking(move || write_inputs(dir, inputs)).await?
+}
+
+fn write_inputs(dir: PathBuf, inputs: Vec<InputFile>) -> Result<String, String> {
+    use base64::Engine;
     let mut total = 0;
     for input in inputs {
         let Some(name) = input_name(&input.name) else {
@@ -375,12 +380,16 @@ fn list(dir: &Path, base: &Path, out: &mut Vec<CodeFile>) {
 #[tauri::command]
 pub async fn code_files(app: AppHandle, conversation_id: String) -> Result<Vec<CodeFile>, String> {
     let dir = space_of(&app, &conversation_id)?;
-    let mut files = Vec::new();
-    list(&dir, &dir, &mut files);
-    // The newest first, so a long conversation's old files never push out what a program just made
-    files.sort_by_key(|file| std::cmp::Reverse(file.modified));
-    files.truncate(MAX_LISTED_FILES);
-    Ok(files)
+    // Thousands of entries may be walked: off the async threads
+    crate::workspace::blocking(move || {
+        let mut files = Vec::new();
+        list(&dir, &dir, &mut files);
+        // The newest first, so a long conversation's old files never push out what a program just made
+        files.sort_by_key(|file| std::cmp::Reverse(file.modified));
+        files.truncate(MAX_LISTED_FILES);
+        files
+    })
+    .await
 }
 
 /// A file a program created, to show it (an image) in its card
@@ -392,12 +401,15 @@ pub async fn read_code_file(
 ) -> Result<String, String> {
     use base64::Engine;
     let file = inside(&space_of(&app, &conversation_id)?, &path)?;
-    let meta = fs::symlink_metadata(&file).map_err(|_| t("native.code.fileGone"))?;
-    if !meta.is_file() || meta.len() > MAX_SHOWN_BYTES {
-        return Err(t("native.code.fileTooLarge"));
-    }
-    let bytes = fs::read(file).map_err(to_message)?;
-    Ok(base64::engine::general_purpose::STANDARD.encode(bytes))
+    crate::workspace::blocking(move || {
+        let meta = fs::symlink_metadata(&file).map_err(|_| t("native.code.fileGone"))?;
+        if !meta.is_file() || meta.len() > MAX_SHOWN_BYTES {
+            return Err(t("native.code.fileTooLarge"));
+        }
+        let bytes = fs::read(file).map_err(to_message)?;
+        Ok(base64::engine::general_purpose::STANDARD.encode(bytes))
+    })
+    .await?
 }
 
 /// "Guardar…" on a file a program created: a copy wherever the user chooses. false when they close the dialog.
@@ -415,7 +427,7 @@ pub async fn save_code_file(
         .file_name()
         .map(|n| n.to_string_lossy().into_owned())
         .unwrap_or_default();
-    let Some(destination) = ask_where_to_save(&app, name, None)? else {
+    let Some(destination) = where_to_save(&app, name, None).await? else {
         return Ok(false);
     };
     fs::copy(file, destination).map_err(|_| t("native.code.saveFailed"))?;

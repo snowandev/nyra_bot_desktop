@@ -3224,6 +3224,7 @@
     "you": "Tú",
     "others": "Los demás",
     "fileName": "{{name}} (transcripción).md",
+    "fileNameAgain": "{{name}} (transcripción {{number}}).md",
     "empty": "No se oye a nadie hablar en {{name}}.",
     "disabled": "La transcripción de audio está desactivada en Configuración → General → Funciones de Nyra.",
     "providers": {
@@ -3247,11 +3248,16 @@
     },
     "viewer": {
       "pending": "Nyra lo transcribe cuando lo necesita: pídele «transcríbelo», «resúmelo» o «¿qué se decidió?».",
-      "done": "Su transcripción está en «{{name}}».",
+      "done": "Ya está transcrito. Si quieres otra transcripción para comparar, pídesela a Nyra.",
       "play": "Reproducir {{name}}",
-      "cannotPlay": "Este formato no se puede reproducir aquí, pero Nyra puede transcribirlo igual."
+      "cannotPlay": "Este formato no se puede reproducir aquí, pero Nyra puede transcribirlo igual.",
+      "transcribe": "Transcribir",
+      "again": "Transcribir de nuevo",
+      "transcribeMessage": "Transcribe «{{name}}»",
+      "againMessage": "Transcribe de nuevo «{{name}}»"
     },
     "title": "Transcripción de {{name}}",
+    "titleAgain": "Transcripción {{number}} de {{name}}",
     "aboutSpeakers_one": "{{duration}} · {{count, number}} hablante",
     "aboutSpeakers_many": "{{duration}} · {{count, number}} hablantes",
     "aboutSpeakers_other": "{{duration}} · {{count, number}} hablantes",

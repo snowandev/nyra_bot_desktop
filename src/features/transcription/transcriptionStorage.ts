@@ -62,9 +62,11 @@ export const transcribeStoredAudio = (options: {
   speakers: boolean;
   speakerCount: number | null;
   meeting: boolean;
+  // This run's own id, the one it is stopped by
+  run: string;
 }) => invoke<TranscriptLine[]>("transcribe_stored_audio", options);
 
-export const cancelTranscription = (id: string) => invoke<void>("transcription_cancel", { id });
+export const cancelTranscription = (run: string) => invoke<void>("transcription_cancel", { run });
 
 export const onTranscriptionProgress = (
   handler: (progress: { id: string; stage: TranscriptionStage; progress: number }) => void,

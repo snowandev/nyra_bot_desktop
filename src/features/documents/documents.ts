@@ -2,12 +2,13 @@ import type { Attachment, Message } from "@/shared/types";
 import { i18n } from "@/shared/i18n/i18n";
 import { fileSlug } from "@/shared/lib/format";
 import { appendToLastUserMessage } from "@/features/chat/reply/messageNotes";
+import { TAG_ATTRIBUTES, tagAttributes, withoutPartialTag } from "@/features/chat/reply/appTags";
 
 // Markdown documents the model writes on request. Any model can follow a plain text convention, unlike tool
 // calling, so the reply wraps the document in a tag the app recognizes and shows as a file.
 
 // Quoted attribute values may contain ">" (a title like "A > B"), so they are matched whole
-const OPEN_TAG = /<nyra-document((?:\s+[\w-]+\s*=\s*"[^"]*")*)\s*>\n?/;
+const OPEN_TAG = new RegExp(`<nyra-document(${TAG_ATTRIBUTES})\\s*>\\n?`);
 const CLOSE_TAG = "</nyra-document>";
 
 // In English, which models follow most reliably. It travels with every user message and the model decides when a
@@ -45,10 +46,6 @@ export type MarkdownDocument = {
 
 type ReplySegment = { kind: "text"; text: string } | { kind: "document"; document: MarkdownDocument };
 
-function attribute(attributes: string, name: string) {
-  return attributes.match(new RegExp(`${name}\\s*=\\s*"([^"]*)"`))?.[1]?.trim() ?? "";
-}
-
 // The model chooses the name, so only a safe slug of it is kept
 function filenameOf(requested: string, title: string) {
   const base =
@@ -66,30 +63,22 @@ export function splitReply(content: string, isWriting = false): ReplySegment[] {
     const bodyStart = open.index + open[0].length;
     const close = rest.indexOf(CLOSE_TAG, bodyStart);
     const body = close === -1 ? rest.slice(bodyStart) : rest.slice(bodyStart, close);
-    const title = attribute(attributes, "title") || i18n.t("documents.defaultTitle");
+    const named = tagAttributes(attributes);
+    const title = named.title || i18n.t("documents.defaultTitle");
     segments.push({
       kind: "document",
       document: {
         title,
-        filename: filenameOf(attribute(attributes, "filename"), title),
+        filename: filenameOf(named.filename ?? "", title),
         content: body.trim(),
         isComplete: close !== -1,
       },
     });
     rest = close === -1 ? "" : rest.slice(close + CLOSE_TAG.length);
   }
-  if (isWriting) rest = withoutPartialTag(rest);
+  if (isWriting) rest = withoutPartialTag(rest, ["nyra-document"]);
   if (rest.trim() || segments.length === 0) segments.push({ kind: "text", text: rest });
   return segments;
-}
-
-// While streaming, the opening tag arrives a few characters at a time; until it is whole it isn't shown as text
-function withoutPartialTag(text: string) {
-  const start = text.lastIndexOf("<");
-  if (start === -1) return text;
-  const tail = text.slice(start);
-  const isOpening = "<nyra-document".startsWith(tail) || (tail.startsWith("<nyra-document") && !tail.includes(">"));
-  return isOpening ? text.slice(0, start) : text;
 }
 
 // The whole reply as one Markdown file: documents keep only their content, without the tags

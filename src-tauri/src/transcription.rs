@@ -4,7 +4,6 @@
 
 use std::collections::{HashMap, HashSet};
 use std::fs;
-use std::io::Cursor;
 use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 use std::thread::JoinHandle;
@@ -132,9 +131,10 @@ pub struct TranscriptLine {
 }
 
 /// A phrase the detector found, by its samples
-struct Phrase {
+/// A stretch of the audio with speech: a view of it, not a copy, as a long recording is hundreds of megabytes
+struct Phrase<'a> {
     start: usize,
-    samples: Vec<f32>,
+    samples: &'a [f32],
 }
 
 fn path(path: &std::path::Path) -> Option<String> {
@@ -158,10 +158,12 @@ fn shared_threads() -> (i32, i32) {
     (writing, (all - writing).max(1))
 }
 
-/// The audio of a file as 16 kHz mono samples. extension: the file's, which helps tell its format.
+/// The audio of a file as 16 kHz mono samples. extension: the file's, which helps tell its format. Only tests have
+/// the bytes in memory: the app reads its audio from files (`read_audio_file`).
+#[cfg(test)]
 pub fn read_audio(bytes: Vec<u8>, extension: Option<&str>) -> Result<Vec<f32>, String> {
     mono(decode_audio(
-        Box::new(Cursor::new(bytes)),
+        Box::new(std::io::Cursor::new(bytes)),
         extension,
         Channels::Mixed,
     )?)
@@ -323,7 +325,7 @@ pub fn at_model_rate(mono: Vec<f32>, rate: u32) -> Result<Vec<f32>, String> {
 }
 
 /// Where someone speaks, cut into phrases Whisper can take whole
-fn phrases(samples: &[f32], models: &SpeechModels) -> Result<Vec<Phrase>, String> {
+fn phrases<'a>(samples: &'a [f32], models: &SpeechModels) -> Result<Vec<Phrase<'a>>, String> {
     let config = VadModelConfig {
         silero_vad: SileroVadModelConfig {
             model: path(&models.vad),
@@ -346,10 +348,18 @@ fn phrases(samples: &[f32], models: &SpeechModels) -> Result<Vec<Phrase>, String
     let mut found = Vec::new();
     let mut take = |detector: &VoiceActivityDetector| {
         while let Some(segment) = detector.front() {
-            found.push(Phrase {
-                start: (segment.start().max(0) as usize).saturating_sub(lead_in),
-                samples: segment.samples().to_vec(),
-            });
+            // The detector's times include the silence fed before the audio
+            let from = segment.start().max(0) as usize;
+            let start = from.saturating_sub(lead_in).min(samples.len());
+            let end = (from + segment.samples().len())
+                .saturating_sub(lead_in)
+                .min(samples.len());
+            if end > start {
+                found.push(Phrase {
+                    start,
+                    samples: &samples[start..end],
+                });
+            }
             detector.pop();
         }
     };
@@ -390,12 +400,12 @@ fn language_in(identifier: &SpokenLanguageIdentification, samples: &[f32]) -> Op
 
 /// The languages spoken in the audio, by its longest phrases, each counting for its length, most heard first; empty if
 /// they can't be told
-fn languages_of(found: &[Phrase], identifier: &SpokenLanguageIdentification) -> Vec<String> {
-    let mut longest: Vec<&Phrase> = found.iter().collect();
+fn languages_of(found: &[Phrase<'_>], identifier: &SpokenLanguageIdentification) -> Vec<String> {
+    let mut longest: Vec<&Phrase<'_>> = found.iter().collect();
     longest.sort_by_key(|phrase| std::cmp::Reverse(phrase.samples.len()));
     let mut votes: HashMap<String, usize> = HashMap::new();
     for phrase in longest.into_iter().take(LANGUAGE_SAMPLES) {
-        if let Some(language) = language_in(identifier, &phrase.samples) {
+        if let Some(language) = language_in(identifier, phrase.samples) {
             *votes.entry(language).or_default() += phrase.samples.len();
         }
     }
@@ -723,6 +733,11 @@ fn transcribe_meeting(
         Speakers::Off,
         |stage, done| progress(stage, done / 2.0),
     )?;
+    // Telling the others apart may write with several Whispers of their own: the one that wrote the user's side would
+    // sit idle in memory meanwhile
+    if others != Speakers::Off && writers_for(models) > 1 {
+        loaded.recognizers.clear();
+    }
     let theirs = transcribe(Arc::new(computer), models, loaded, others, |stage, done| {
         progress(stage, 0.5 + done / 2.0)
     })?;
@@ -789,17 +804,23 @@ struct Plan {
     threads: i32,
 }
 
+/// The Whisper that writes this language, loaded the first time. sherpa-onnx fixes the language when it loads, so it
+/// keeps one per language; a Transformers model is told the language with each phrase, so one does for all.
 fn recognizer_for<'a>(
     recognizers: &'a mut HashMap<String, Writer>,
     models: &SpeechModels,
     language: &str,
     threads: i32,
 ) -> Result<&'a mut Writer, String> {
-    if !recognizers.contains_key(language) {
-        recognizers.insert(language.to_string(), recognizer(models, language, threads)?);
+    let key = match models.whisper {
+        WhisperFiles::Transformers(_) => "",
+        WhisperFiles::Onnx { .. } => language,
+    };
+    if !recognizers.contains_key(key) {
+        recognizers.insert(key.to_string(), recognizer(models, language, threads)?);
     }
     recognizers
-        .get_mut(language)
+        .get_mut(key)
         .ok_or_else(|| t("native.transcription.modelFailed"))
 }
 
@@ -820,7 +841,7 @@ fn written_text(writer: &mut Writer, samples: &[f32], language: &str) -> Result<
 
 /// One phrase after another, with the recognizers kept in loaded
 fn write_in_turn(
-    found: &[Phrase],
+    found: &[Phrase<'_>],
     spoken: &[String],
     models: &SpeechModels,
     recognizers: &mut HashMap<String, Writer>,
@@ -833,7 +854,7 @@ fn write_in_turn(
             return Err(t("native.transcription.cancelled"));
         }
         let recognizer = recognizer_for(recognizers, models, language, threads)?;
-        texts.push(written_text(recognizer, &phrase.samples, language)?);
+        texts.push(written_text(recognizer, phrase.samples, language)?);
     }
     Ok(texts)
 }
@@ -841,7 +862,7 @@ fn write_in_turn(
 /// Several Whispers at once, each on every n-th phrase: one gains little from more threads, so two use the cores
 /// better. Each loads its own, so this is only for a whole transcription, never kept.
 fn write_side_by_side(
-    found: &[Phrase],
+    found: &[Phrase<'_>],
     spoken: &[String],
     models: &SpeechModels,
     plan: Plan,
@@ -863,7 +884,7 @@ fn write_side_by_side(
                         }
                         let recognizer =
                             recognizer_for(&mut recognizers, models, &spoken[i], plan.threads)?;
-                        texts.push((i, written_text(recognizer, &found[i].samples, &spoken[i])?));
+                        texts.push((i, written_text(recognizer, found[i].samples, &spoken[i])?));
                         done.fetch_add(1, Ordering::Relaxed);
                     }
                     Ok(texts)
@@ -896,7 +917,7 @@ fn write_side_by_side(
 
 /// Each phrase in its language, as Whisper writes it
 fn write_phrases(
-    found: &[Phrase],
+    found: &[Phrase<'_>],
     models: &SpeechModels,
     loaded: &mut Loaded,
     plan: Plan,
@@ -909,11 +930,11 @@ fn write_phrases(
         .unwrap_or_default();
     let main = languages.first().cloned().unwrap_or_default();
     // Each phrase's language first, so the phrases can be shared out
-    let language_of = |phrase: &Phrase| {
+    let language_of = |phrase: &Phrase<'_>| {
         let long_enough = phrase.samples.len() as f32 / SAMPLE_RATE as f32 >= MIN_SECONDS_TO_TELL;
         match identifier {
             Some(identifier) if languages.len() > 1 && long_enough => {
-                language_in(identifier, &phrase.samples)
+                language_in(identifier, phrase.samples)
                     .filter(|language| languages.contains(language))
                     .unwrap_or_else(|| main.clone())
             }
@@ -991,11 +1012,9 @@ pub(crate) fn audio_file(app: &AppHandle, id: &str, extension: &str) -> Result<P
 }
 
 /// How long an audio lasts, from what its container says, or else by reading it whole
-fn duration_of(bytes: Vec<u8>, extension: &str) -> Result<f32, String> {
-    let stream = MediaSourceStream::new(
-        Box::new(Cursor::new(bytes.clone())),
-        MediaSourceStreamOptions::default(),
-    );
+fn duration_of(path: &std::path::Path, extension: &str) -> Result<f32, String> {
+    let file = fs::File::open(path).map_err(|_| t("native.transcription.unreadable"))?;
+    let stream = MediaSourceStream::new(Box::new(file), MediaSourceStreamOptions::default());
     let mut hint = Hint::new();
     hint.with_extension(extension);
     let said = symphonia::default::get_probe()
@@ -1013,7 +1032,7 @@ fn duration_of(bytes: Vec<u8>, extension: &str) -> Result<f32, String> {
         });
     match said {
         Some(seconds) if seconds > 0.0 => Ok(seconds),
-        _ => Ok(read_audio(bytes, Some(extension))?.len() as f32 / SAMPLE_RATE as f32),
+        _ => Ok(read_audio_file(path, Some(extension))?.len() as f32 / SAMPLE_RATE as f32),
     }
 }
 
@@ -1037,17 +1056,28 @@ pub async fn store_audio(app: AppHandle, request: Request<'_>) -> Result<f32, St
     };
     let (id, extension) = (header("x-id"), plain_extension(&header("x-extension")));
     let path = audio_file(&app, &id, &extension)?;
+    let dir = audio_dir(&app)?;
+    // The one copy the body needs to leave this call: written first and measured from the file, so a long audio
+    // isn't held twice more while it is checked. Off the async threads, as the write can be a gigabyte.
     let bytes = bytes.clone();
-    let (seconds, bytes) = tauri::async_runtime::spawn_blocking(move || {
-        duration_of(bytes.clone(), &extension).map(|seconds| (seconds, bytes))
+    let seconds = tauri::async_runtime::spawn_blocking(move || {
+        fs::create_dir_all(&dir).map_err(to_message)?;
+        fs::write(&path, &bytes).map_err(to_message)?;
+        drop(bytes);
+        let measured = duration_of(&path, &extension).and_then(|seconds| {
+            if seconds > MAX_SECONDS {
+                Err(t("native.transcription.tooLong"))
+            } else {
+                Ok(seconds)
+            }
+        });
+        if measured.is_err() {
+            let _ = fs::remove_file(&path);
+        }
+        measured
     })
     .await
     .map_err(|_| t("native.transcription.unreadable"))??;
-    if seconds > MAX_SECONDS {
-        return Err(t("native.transcription.tooLong"));
-    }
-    fs::create_dir_all(audio_dir(&app)?).map_err(to_message)?;
-    fs::write(&path, &bytes).map_err(to_message)?;
     stored_now(&app, id);
     Ok(seconds)
 }
@@ -1062,6 +1092,8 @@ pub(crate) fn stored_now(app: &AppHandle, id: String) {
 /// A stored audio as its transcript, with the Whisper size asked and its speakers told apart or not. Its progress goes
 /// out as events under the audio's id. meeting: one Nyra recorded, the user on one side and the others on the other.
 #[tauri::command]
+// Each is a named argument the frontend sends, as with every command
+#[allow(clippy::too_many_arguments)]
 pub async fn transcribe_stored_audio(
     app: AppHandle,
     id: String,
@@ -1070,7 +1102,12 @@ pub async fn transcribe_stored_audio(
     speakers: bool,
     speaker_count: Option<u32>,
     meeting: Option<bool>,
+    // This run's own id, to stop it: a stop that came before it started can't stop a later one of the same audio
+    run: String,
 ) -> Result<Vec<TranscriptLine>, String> {
+    if !is_plain_id(&run) {
+        return Err(t("native.transcription.unreadable"));
+    }
     let meeting = meeting.unwrap_or(false);
     // In a meeting the count the user gave includes them, who are on a side of their own
     let others = speaker_count.map(|count| {
@@ -1088,7 +1125,7 @@ pub async fn transcribe_stored_audio(
     let models = models_for(&app, &model)?;
     tauri::async_runtime::spawn_blocking(move || {
         let state = app.state::<Transcriptions>();
-        let is_cancelled = || state.cancelled.lock().is_ok_and(|ids| ids.contains(&id));
+        let is_cancelled = || state.cancelled.lock().is_ok_and(|runs| runs.contains(&run));
         let send = |stage: Stage, progress: f32| {
             let _ = app.emit(
                 PROGRESS_EVENT,
@@ -1117,8 +1154,8 @@ pub async fn transcribe_stored_audio(
             let samples = read_audio_file(&path, Some(&extension))?;
             transcribe(Arc::new(samples), &models, &mut loaded, speakers, send)
         })();
-        if let Ok(mut ids) = state.cancelled.lock() {
-            ids.remove(&id);
+        if let Ok(mut runs) = state.cancelled.lock() {
+            runs.remove(&run);
         }
         result
     })
@@ -1127,9 +1164,12 @@ pub async fn transcribe_stored_audio(
 }
 
 #[tauri::command]
-pub fn transcription_cancel(app: AppHandle, id: String) {
-    if let Ok(mut ids) = app.state::<Transcriptions>().cancelled.lock() {
-        ids.insert(id);
+pub fn transcription_cancel(app: AppHandle, run: String) {
+    if !is_plain_id(&run) {
+        return;
+    }
+    if let Ok(mut runs) = app.state::<Transcriptions>().cancelled.lock() {
+        runs.insert(run);
     }
 }
 
@@ -1170,18 +1210,19 @@ pub fn sweep_audio(app: &AppHandle) {
     let Ok(entries) = fs::read_dir(&dir) else {
         return;
     };
-    let kept: HashSet<String> = app
-        .state::<Database>()
-        .with(|c| {
-            let mut statement = c.prepare(
-                "SELECT id FROM attachments WHERE json_extract(data, '$.kind') = 'audio'",
-            )?;
-            let ids = statement
-                .query_map([], |row| row.get::<_, String>(0))?
-                .collect::<rusqlite::Result<HashSet<_>>>()?;
-            Ok(ids)
-        })
-        .unwrap_or_default();
+    // Not knowing which are in use is no reason to delete them all: they wait for the next start. A damaged row
+    // may be an audio, so its file stays too.
+    let Ok(kept) = app.state::<Database>().with(|c| {
+        let mut statement = c.prepare(
+            "SELECT id FROM attachments WHERE NOT json_valid(data) OR json_extract(data, '$.kind') = 'audio'",
+        )?;
+        let ids = statement
+            .query_map([], |row| row.get::<_, String>(0))?
+            .collect::<rusqlite::Result<HashSet<_>>>()?;
+        Ok(ids)
+    }) else {
+        return;
+    };
     let fresh = app
         .state::<Transcriptions>()
         .stored_now

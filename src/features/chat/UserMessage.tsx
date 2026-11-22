@@ -7,6 +7,7 @@ import { referencedAttachments } from "@/features/attachments/attachments";
 import { findSensitiveData, labelsOf } from "@/features/sensitive-data/sensitiveData";
 import type { Attachment, Message } from "@/shared/types";
 import { AttachmentChip } from "@/features/attachments/AttachmentChip";
+import { isTranscript } from "@/features/transcription/audioFiles";
 import { SensitiveDataIndicator } from "@/features/sensitive-data/SensitiveDataIndicator";
 import { SensitiveSentMark } from "@/features/sensitive-data/SensitiveSentMark";
 
@@ -39,9 +40,14 @@ export function UserMessage(props: Props) {
   const [removedFiles, setRemovedFiles] = useState<string[]>([]);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const isEditing = draft !== null;
-  const hasFiles = !!message.attachments?.length || references.length > 0;
+  // Transcripts are shown in the replies that made them and in the files panel, not piled up next to their audio
+  const attached = useMemo(
+    () => message.attachments?.filter((a) => !isTranscript(a, message.attachments ?? [])) ?? [],
+    [message.attachments],
+  );
+  const hasFiles = attached.length > 0 || references.length > 0;
   const keptFiles =
-    (message.attachments?.filter((a) => !removedFiles.includes(a.id)).length ?? 0) +
+    attached.filter((a) => !removedFiles.includes(a.id)).length +
     references.filter((a) => !removedFiles.includes(a.id)).length;
   const canSave = isEditing && (draft.trim().length > 0 || keptFiles > 0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -67,7 +73,12 @@ export function UserMessage(props: Props) {
 
   function save() {
     if (!canSave || !onEdit) return;
-    onEdit(draft.trim(), removedFiles);
+    // An audio taken out takes its hidden transcripts with it
+    const removedAudio = attached.filter((a) => a.kind === "audio" && removedFiles.includes(a.id));
+    const theirTranscripts = (message.attachments ?? []).filter(
+      (a) => isTranscript(a, removedAudio) && (!a.transcriptOf || removedAudio.some((audio) => audio.id === a.transcriptOf)),
+    );
+    onEdit(draft.trim(), [...removedFiles, ...theirTranscripts.map((a) => a.id)]);
     stopEditing();
   }
 
@@ -90,8 +101,8 @@ export function UserMessage(props: Props) {
     <div className="user-message" data-message-index={index}>
       {hasFiles && (
         <div className="attachment-list">
-          {message.attachments
-            ?.filter((a) => !removedFiles.includes(a.id))
+          {attached
+            .filter((a) => !removedFiles.includes(a.id))
             .map((a) => (
               <AttachmentChip
                 key={a.id}

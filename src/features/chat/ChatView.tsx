@@ -1,4 +1,4 @@
-import { Activity, FolderOpen, Lock, ShieldCheck, X } from "lucide-react";
+import { Activity, AudioLines, FolderOpen, Lock, ShieldCheck, X } from "lucide-react";
 import { Fragment, type ReactNode, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { createPortal } from "react-dom";
@@ -338,6 +338,19 @@ export function ChatView(props: Props) {
     </span>
   );
   const isBusy = isStreaming || isSummarizing || isLoading;
+  // An audio is transcribed again by asking for it, so it shows its progress and lands in a reply like the first time
+  function transcribe(audio: Attachment) {
+    const key = audio.transcript ? "transcription.viewer.againMessage" : "transcription.viewer.transcribeMessage";
+    closeViewer();
+    scroll.pin();
+    onSend(t(key, { name: audio.name }), [], [], { skill: taskSkill?.name });
+  }
+  const transcribeButton = openAttachment?.kind === "audio" && !isBusy && (
+    <button type="button" className="outline-button small" onClick={() => transcribe(openAttachment)}>
+      <AudioLines size={14} strokeWidth={2} aria-hidden="true" />
+      {t(openAttachment.transcript ? "transcription.viewer.again" : "transcription.viewer.transcribe")}
+    </button>
+  );
   const answersCommand = useAwaitingCommand(conversation.id);
   const reviews = useChatReviews({
     conversation,
@@ -856,7 +869,13 @@ export function ChatView(props: Props) {
           onClose={() => setIsFilesPanelOpen(false)}
         />
       )}
-      {openAttachment && <LazyAttachmentViewer attachment={openAttachment} onClose={closeViewer} />}
+      {openAttachment && (
+        <LazyAttachmentViewer
+          attachment={openAttachment}
+          onClose={closeViewer}
+          actions={transcribeButton || undefined}
+        />
+      )}
       {workspaceFiles.file && <LazyAttachmentViewer attachment={workspaceFiles.file} onClose={workspaceFiles.close} />}
       {shareCard &&
         createPortal(

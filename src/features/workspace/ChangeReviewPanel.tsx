@@ -126,7 +126,8 @@ export function ChangeReviewPanel({ changes, change, review, onSelect, onAction,
     }
   }
 
-  const totalLines = review ? review.original.split("\n").length : undefined;
+  // Once per file under review, not on every hover or move: a large file is tens of thousands of lines
+  const totalLines = useMemo(() => (review ? review.original.split("\n").length : undefined), [review]);
 
   return (
     <aside ref={panelRef} className="change-review" aria-label={t("changes.review.label")} onKeyDown={handleKey}>

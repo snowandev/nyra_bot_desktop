@@ -86,7 +86,12 @@ export function useSummarizer({ configFor, reservedTokens, updateConversation }:
       updateConversation(id, (c) => ({
         ...c,
         summary: nextSummary,
-        messages: c.messages.map((m) => ({ ...m, usage: undefined })),
+        // Only the messages that had it change: the others stay the same objects, so they aren't drawn again
+        messages: c.messages.map((m) => {
+          if (!m.usage) return m;
+          const { usage: _, ...rest } = m;
+          return rest;
+        }),
       }));
     } catch (e) {
       if (stalled) setError({ conversationId: id, message: i18n.t("reply.summaryStalled") });

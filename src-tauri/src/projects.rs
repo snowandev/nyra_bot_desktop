@@ -10,7 +10,7 @@ use tauri::{AppHandle, Manager, State};
 use crate::git::{self, GitState};
 use crate::i18n::{t, t_with};
 use crate::storage::{now_millis, Database};
-use crate::util::{is_plain_id, limited_name};
+use crate::util::{is_plain_id, limited_name, to_message};
 use crate::workspace::{allowed_root, blocking, remember_root, remembered_root, Workspaces};
 
 pub const SCHEMA: &str = "
@@ -426,9 +426,11 @@ fn pending(connection: &Connection) -> rusqlite::Result<Vec<PendingItem>> {
     rows.collect()
 }
 
+/// On a reader of its own, off the async threads: it walks every project conversation, and on the shared connection
+/// each save would wait for it
 #[tauri::command]
-pub async fn projects_pending(db: State<'_, Database>) -> Result<Vec<PendingItem>, String> {
-    db.with(pending)
+pub async fn projects_pending(app: AppHandle) -> Result<Vec<PendingItem>, String> {
+    blocking(move || pending(&Database::open_reader(&app)?).map_err(to_message)).await?
 }
 
 #[tauri::command]

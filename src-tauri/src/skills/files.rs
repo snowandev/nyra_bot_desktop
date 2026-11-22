@@ -17,7 +17,16 @@ pub(super) fn plain_relative(path: &str) -> bool {
 
 /// A file the user may add, replace or remove from Nyra: anything but its SKILL.md and Nyra's own record
 pub(super) fn editable_file(path: &str) -> bool {
-    plain_relative(path) && path != SKILL_FILE && !is_ignored(path)
+    plain_relative(path) && !is_reserved(path) && !is_ignored(path)
+}
+
+/// macOS and Windows don't tell "skill.md" from "SKILL.md", and Windows drops a name's trailing dots and spaces: any
+/// of those would be the skill's own file
+fn is_reserved(path: &str) -> bool {
+    let name = path.trim_end_matches(['.', ' ']);
+    [SKILL_FILE, RECORD_FILE]
+        .iter()
+        .any(|reserved| name.eq_ignore_ascii_case(reserved))
 }
 
 /// A file of an installed skill, only by a plain relative path that stays inside it and isn't a link elsewhere
@@ -60,9 +69,9 @@ pub(super) fn apply_file_changes(
     }
     // What the skill will hold: what stays plus what comes, replacing a file of the same path
     let mut limits = Limits::new();
-    for (path, bytes) in files_in_dir(dir)? {
+    for (path, size) in file_sizes_in_dir(dir)? {
         if !removed.contains(&path) && !decoded.iter().any(|(added, _)| added == &path) {
-            limits.take(bytes.len() as u64)?;
+            limits.take(size)?;
         }
     }
     for (_, bytes) in &decoded {

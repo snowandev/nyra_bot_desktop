@@ -16,7 +16,6 @@ import { buildUserRules, withoutPersonalData } from "./userRules";
 import { indexBudget, plannedWorkspaceContext } from "@/features/workspace/workspace";
 import { fixChange } from "@/features/workspace/workspaceChanges";
 import { getProvider } from "@/providers";
-import { loadLearnedContexts, loadLoadedContexts } from "@/shared/storage/settings";
 import type { Personalization } from "@/shared/storage/settings";
 import type { Attachment, CommitProposal, Conversation, Message, Model, ProposedChange, ProviderConfig, WorkspaceFolder } from "@/shared/types";
 import { useConversationStorage } from "@/features/conversations/useConversationStorage";
@@ -104,6 +103,8 @@ export type SendOptions = {
 };
 
 type ReserveOf = Pick<Conversation, "isPrivate" | "isIsolated" | "skills" | "workspace">;
+// What routing a reply needs to know of its conversation, which may not be the one open
+type RoutedOf = ReserveOf & Pick<Conversation, "modelChoice" | "projectId">;
 
 // The conversations and what can be done with them; the reply being written is useReplyStream's
 export function useChat(settings: ChatSettings) {
@@ -130,13 +131,7 @@ export function useChat(settings: ChatSettings) {
   // The index of a connected folder is collapsed to fit this share of the model's context
   const indexTokensOf = (replyModel: Model) =>
     indexBudget(
-      plannedWorkspaceContext(
-        replyModel,
-        !getProvider(replyModel.providerId)?.requiresApiKey,
-        configFor(replyModel.providerId).contextLength,
-        loadLearnedContexts(),
-        loadLoadedContexts(),
-      ),
+      plannedWorkspaceContext(replyModel, configFor(replyModel.providerId).contextLength),
     );
   // What every request of a conversation carries besides its history and a folder's index. Room for the memories
   // and the instruction to save them, which a private conversation doesn't get.
@@ -291,13 +286,15 @@ export function useChat(settings: ChatSettings) {
 
   // With «Automático», which model answers the last message of history; null when a model is picked by hand
   function routeFor(
-    conversation: Pick<Conversation, "modelChoice" | "isPrivate" | "workspace" | "projectId">,
+    conversation: RoutedOf,
     history: Message[],
     summary: Conversation["summary"],
     asked = false,
   ) {
     if (!routing || settings.pinnedModelFor?.(conversation)) return null;
-    const tokens = estimateTokens(messagesForModel(historyForModel(history, summary), routing.main)) + reservedTokens;
+    const tokens =
+      estimateTokens(messagesForModel(historyForModel(history, summary), routing.main)) +
+      reservedTokensOf(conversation, routing.main);
     return routeReply({
       ...routing,
       conversation,
@@ -325,7 +322,7 @@ export function useChat(settings: ChatSettings) {
   // The main model said the task is beyond it: the other one answers, once the user agrees if it is in a cloud
   function handOver(
     conversationId: string,
-    conversation: Pick<Conversation, "modelChoice" | "isPrivate" | "workspace" | "projectId">,
+    conversation: RoutedOf,
     history: Message[],
     summary: Conversation["summary"],
     context: ReturnType<typeof contextOf>,
@@ -411,7 +408,7 @@ export function useChat(settings: ChatSettings) {
     const skillNames = current ? (current.skills ?? []) : newSkills;
     const workspace = current ? current.workspace : newWorkspace;
     const routed = {
-      ...(current ?? { isPrivate, workspace, projectId }),
+      ...(current ?? { isPrivate, isIsolated, skills: newSkills, workspace, projectId }),
       ...(answered && { modelChoice: answered }),
     };
     const route = chosenModel ? null : routeFor(routed, history, current?.summary);

@@ -32,7 +32,7 @@ const PATTERNS: { kind: CommandRiskKind; pattern: RegExp }[] = [
   { kind: "gitHistory", pattern: /\bgit\s+push\b[^;|&]*(--force\b|--force-with-lease\b|\s-f\b)/ },
   { kind: "gitHistory", pattern: /\bgit\s+reset\s+--hard\b/ },
   // A path that leaves the folder: going up, the home folder, or an absolute path (also C:\ on Windows)
-  { kind: "outside", pattern: /(^|\s)["']?(\.\.([/\\]|\s|$)|~([/\\]|\s|$)|\/(?!dev\/null\b)[\w.-]+\/|[A-Za-z]:\\)/ },
+  { kind: "outside", pattern: /(^|\s)["']?(\.\.([/\\]|\s|$)|~([/\\]|\s|$)|\/(?!dev\/null\b)[\w.-]+\/|[A-Za-z]:[/\\])/ },
 ];
 
 // A path that goes up past where it starts somewhere in the middle ("src/../../x"); "src/../lib" stays inside

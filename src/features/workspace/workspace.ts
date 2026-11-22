@@ -4,6 +4,8 @@ import { appendToLastUserMessage } from "@/features/chat/reply/messageNotes";
 import { tagged } from "@/features/chat/reply/replyTags";
 import { estimateTextTokens } from "@/features/chat/reply/summary";
 import { i18n } from "@/shared/i18n/i18n";
+import { getProvider } from "@/providers";
+import { loadLearnedContexts, loadLoadedContexts } from "@/shared/storage/settings";
 import { asAttribute, neutralizeAppTags } from "@/features/chat/reply/appTags";
 
 // A folder connected to a conversation. The model never gets the folder: it gets an index of its paths (collapsed
@@ -144,6 +146,9 @@ export function workspacePrompt(name: string, index: WorkspaceIndexText, truncat
   ].join("\n");
 }
 
+// A path the model wrote as the index keys it: Windows separators or a leading "./" name the same file
+export const folderPath = (path: string) => path.trim().replaceAll("\\", "/").replace(/^(\.\/)+/, "");
+
 type ReadRequest = { path: string; from?: number; to?: number };
 
 // "src/App.tsx" or "src/App.tsx:120-260", one per line (or separated by commas)
@@ -155,9 +160,9 @@ export function parseReadRequest(value: string): ReadRequest[] {
     .slice(0, MAX_FILES_PER_READ)
     .map((line) => {
       const range = line.match(/^(.+?):(\d+)(?:-(\d+))?$/);
-      if (!range) return { path: line };
+      if (!range) return { path: folderPath(line) };
       const from = Number(range[2]);
-      return { path: range[1], from, to: range[3] ? Number(range[3]) : from };
+      return { path: folderPath(range[1]), from, to: range[3] ? Number(range[3]) : from };
     });
 }
 
@@ -220,10 +225,12 @@ const MAX_NOTED_FILES = 40;
 // Files a reply read earlier in the conversation that are different now, the latest read last. A read with no time
 // (0: imported from Claude Code, which doesn't keep it) can't tell, so it's left out; the earlier reads note still
 // names it.
-export function changedSinceRead(history: Message[], files: IndexedFile[]) {
+export function changedSinceRead(history: Message[], files: IndexedFile[], root: string) {
   const lastRead = new Map<string, number>();
   for (const message of history) {
-    for (const file of message.workspaceConsult?.read ?? []) {
+    // Only this folder's: another one connected before may have a file of the same name
+    if (message.workspaceConsult?.root !== root) continue;
+    for (const file of message.workspaceConsult.read) {
       lastRead.delete(file.path);
       lastRead.set(file.path, file.modified);
     }
@@ -298,13 +305,16 @@ export function earlierReadsPrompt(history: Message[], root: string) {
   );
 }
 
-// For estimates made before a reply (the composer's chip, the summary's room), with the last context Ollama loaded
+// For estimates made before a reply (the composer's chip, the room a conversation keeps), with what this computer
+// learned of the model and the last context Ollama loaded it with. configured: the provider's context setting.
 export function plannedWorkspaceContext(
-  model: { id: string; contextWindow?: number },
-  isLocal: boolean,
+  model: { id: string; providerId: string; contextWindow?: number },
   configured: number | undefined,
-  learned: Record<string, number>,
-  loaded: Record<string, number>,
 ) {
-  return workspaceContext(model.contextWindow, { isLocal, configured, learned: learned[model.id], loaded: loaded[model.id] });
+  return workspaceContext(model.contextWindow, {
+    isLocal: !getProvider(model.providerId)?.requiresApiKey,
+    configured,
+    learned: loadLearnedContexts()[model.id],
+    loaded: loadLoadedContexts()[model.id],
+  });
 }

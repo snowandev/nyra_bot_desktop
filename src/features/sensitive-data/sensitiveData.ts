@@ -81,10 +81,11 @@ const DETECTORS: Detector[] = [
     accept: secretValue,
   },
   {
-    // A quoted value, as in JSON, YAML or code: "password": "…", contraseña: '…'
+    // A quoted value, as in JSON, YAML or code: "password": "…". By the names settings take in code, never by
+    // words of one language
     kind: "password",
     label: "password",
-    pattern: /\b(?:password|passwd|contraseña|secret|api[_-]?key|access[_-]?token)["']?[ \t]*[:=][ \t]*["'][^"'\s]{8,}["']/gi,
+    pattern: /\b(?:password|passwd|secret|api[_-]?key|access[_-]?token)["']?[ \t]*[:=][ \t]*["'][^"'\s]{8,}["']/gi,
     accept: secretValue,
   },
   { kind: "card", label: "card", pattern: /\b\d(?:[ -]?\d){12,18}\b/g, accept: isCardNumber },
@@ -154,6 +155,32 @@ function hiddenValue(kind: SensitiveKind, value: string, words: HiddenWords) {
   return words.key;
 }
 
+const KEY_BEGIN = /^\s*-----BEGIN (?:[A-Z]+ )*PRIVATE KEY-----\s*$/;
+const KEY_END = /^\s*-----END (?:[A-Z]+ )*PRIVATE KEY-----\s*$/;
+// A line of a key's body: base64, or one of the headers an encrypted key has ("Proc-Type: 4,ENCRYPTED")
+const KEY_BODY = /^\s*([A-Za-z0-9+/=]+|[A-Za-z-]+:.*)\s*$/;
+
+// A key cut in two (a pasted part, or part of a file): with no end, all that follows its first line is hidden; with no
+// beginning, the lines of its body before its end.
+function withCutKeyHidden(text: string, value: string) {
+  // Whole keys were hidden before: only a beginning after the last end, or an end before the first beginning, is cut
+  const lines = text.split("\n");
+  const begins = lines.flatMap((line, i) => (KEY_BEGIN.test(line) ? [i] : []));
+  const ends = lines.flatMap((line, i) => (KEY_END.test(line) ? [i] : []));
+  let hidden = 0;
+  const lastBegin = begins.at(-1) ?? -1;
+  if (lastBegin !== -1 && lastBegin > (ends.at(-1) ?? -1)) {
+    for (let i = lastBegin + 1; i < lines.length; i++) lines[i] = value;
+    hidden++;
+  }
+  const firstEnd = ends[0] ?? -1;
+  if (firstEnd !== -1 && firstEnd < (begins[0] ?? Infinity)) {
+    for (let i = firstEnd - 1; i >= 0 && lines[i].trim() && KEY_BODY.test(lines[i]); i--) lines[i] = value;
+    hidden++;
+  }
+  return { text: lines.join("\n"), hidden };
+}
+
 // The text of a file with its secrets hidden, for what the model reads of a folder: the name of each setting stays,
 // its value doesn't. Every line stays where it was, so line numbers still point to the right place.
 export function withSecretsHidden(text: string, words = FOR_MODEL): { text: string; hidden: number } {
@@ -164,6 +191,9 @@ export function withSecretsHidden(text: string, words = FOR_MODEL): { text: stri
     const lines = block.split("\n");
     return lines.map((line, i) => (i === 0 || i === lines.length - 1 ? line : words.value)).join("\n");
   });
+  const cut = withCutKeyHidden(out, words.value);
+  out = cut.text;
+  hidden += cut.hidden;
   const found = matchesIn(out).filter((m) => m.kind !== "private-key");
   for (const m of [...found].reverse()) {
     out = out.slice(0, m.index) + hiddenValue(m.kind, m.value, words) + out.slice(m.index + m.value.length);

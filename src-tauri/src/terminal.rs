@@ -3,7 +3,6 @@
 //! There is no time limit: a command runs until it ends or the user stops it.
 
 use std::collections::HashMap;
-use std::fs;
 use std::io::{Read, Write};
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex, MutexGuard};
@@ -19,7 +18,7 @@ use crate::code_runs;
 use crate::i18n::{t, t_with};
 use crate::share::document_filename;
 use crate::storage::Database;
-use crate::util::{ask_where_to_save, is_plain_id, to_message};
+use crate::util::{is_plain_id, save_with_dialog, to_message};
 use crate::workspace::{allowed_root, blocking, Workspaces};
 
 const MAX_COMMAND_CHARS: usize = 10_000;
@@ -381,16 +380,14 @@ pub async fn save_command_output(
     filename: String,
     content: String,
 ) -> Result<bool, String> {
-    let Some(destination) = ask_where_to_save(
+    save_with_dialog(
         &app,
         document_filename(&filename, "txt"),
-        Some((&t("native.terminal.textFilter"), &["txt"])),
-    )?
-    else {
-        return Ok(false);
-    };
-    fs::write(destination, content).map_err(|_| t("native.terminal.saveFailed"))?;
-    Ok(true)
+        Some((t("native.terminal.textFilter"), &["txt"])),
+        content.as_bytes(),
+        "native.terminal.saveFailed",
+    )
+    .await
 }
 
 #[cfg(test)]

@@ -264,16 +264,18 @@ impl Database {
         Ok(Some(data.to_string()))
     }
 
+    /// All or nothing: a conversation left without its attachments would lose them for good
     pub fn delete(&self, id: &str) -> Result<(), String> {
         self.with(|c| {
-            c.execute(
+            let transaction = c.unchecked_transaction()?;
+            transaction.execute(
                 "DELETE FROM attachments WHERE conversation_id = ?1",
                 params![id],
             )?;
-            command_outputs::forget(c, id)?;
-            search::forget(c, id)?;
-            c.execute("DELETE FROM conversations WHERE id = ?1", params![id])
-                .map(|_| ())
+            command_outputs::forget(&transaction, id)?;
+            search::forget(&transaction, id)?;
+            transaction.execute("DELETE FROM conversations WHERE id = ?1", params![id])?;
+            transaction.commit()
         })
     }
 
@@ -406,10 +408,13 @@ pub async fn delete_all_conversations(
     db: State<'_, Database>,
 ) -> Result<usize, String> {
     let deleted = db.with(|c| {
-        c.execute("DELETE FROM attachments", [])?;
-        c.execute("DELETE FROM command_outputs", [])?;
-        search::forget_all(c)?;
-        c.execute("DELETE FROM conversations", [])
+        let transaction = c.unchecked_transaction()?;
+        transaction.execute("DELETE FROM attachments", [])?;
+        transaction.execute("DELETE FROM command_outputs", [])?;
+        search::forget_all(&transaction)?;
+        let deleted = transaction.execute("DELETE FROM conversations", [])?;
+        transaction.commit()?;
+        Ok(deleted)
     })?;
     code_runs::forget_all(&app);
     crate::browser::close_all(&app);

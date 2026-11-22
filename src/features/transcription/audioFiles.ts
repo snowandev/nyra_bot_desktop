@@ -4,7 +4,7 @@ import type { Attachment, Message } from "@/shared/types";
 import { tagged } from "@/features/chat/reply/replyTags";
 import { asAttribute } from "@/features/chat/reply/appTags";
 import { extensionOf } from "@/shared/lib/paths";
-import { clock } from "./transcript";
+import { clock, isTranscriptNameOf } from "./transcript";
 import { storeAudio } from "./transcriptionStorage";
 
 // An attached audio, kept as a file in Nyra's data folder: the message only carries its name and length. Nothing is
@@ -23,12 +23,65 @@ export const audioIdsOf = (messages: Message[]) =>
     .filter((a) => a.kind === "audio")
     .map((a) => a.id);
 
+// The messages with this transcript as the audio's latest; the earlier ones stay, to compare them
+export const withTranscript = (messages: Message[], audioId: string, transcript: Attachment): Message[] =>
+  messages.map((m) =>
+    m.attachments?.some((a) => a.id === audioId)
+      ? {
+          ...m,
+          attachments: [
+            ...m.attachments.map((a) => (a.id === audioId ? { ...a, transcript: transcript.id } : a)),
+            transcript,
+          ],
+        }
+      : m,
+  );
+
+// A transcript made before transcripts knew their audio: only its name tells, exactly as Nyra writes it
+const namedAfter = (file: Attachment, audio: Attachment) =>
+  !file.transcriptOf && isTranscriptNameOf(file.name, audio.name);
+
+// One of the transcripts Nyra made of an audio in these attachments, not a file the user attached
+export const isTranscript = (file: Attachment, attached: Attachment[]) =>
+  file.kind === "text" &&
+  (!!file.transcriptOf || attached.some((a) => a.kind === "audio" && (a.transcript === file.id || namedAfter(file, a))));
+
+// Each audio linked to its latest transcript. Before the link was kept, conversations lost it when saved: their
+// transcript is the last file in the audio's message named after it, "reunion (…).md" in any language.
+export function withTranscriptLinks(messages: Message[]): Message[] {
+  return messages.map((m) => {
+    const attached = m.attachments ?? [];
+    if (!attached.some((a) => a.kind === "audio" && !a.transcript)) return m;
+    const latestOf = (audio: Attachment) => {
+      const files = attached.filter((a) => a.kind === "text").reverse();
+      return files.find((a) => a.transcriptOf === audio.id) ?? files.find((a) => namedAfter(a, audio));
+    };
+    return {
+      ...m,
+      attachments: attached.map((a) => {
+        if (a.kind !== "audio" || a.transcript) return a;
+        const transcript = latestOf(a);
+        return transcript ? { ...a, transcript: transcript.id } : a;
+      }),
+    };
+  });
+}
+
 // What the model knows of an audio in a message: that it is there, how long it lasts, and how to have it transcribed,
 // or which file holds its transcript. In English, like every instruction for it.
 export function audioForModel(audio: Attachment, transcript: Attachment | undefined) {
   const name = asAttribute(audio.name);
   const open = `<audio name="${name}" duration="${clock(audio.duration ?? 0)}">`;
-  if (transcript) return `${open}Already transcribed: its transcript is the file "${asAttribute(transcript.name)}".</audio>`;
+  if (transcript) {
+    return (
+      `${open}Already transcribed: its latest transcript is the file "${asAttribute(transcript.name)}". If the user ` +
+      "wants it transcribed again (to redo it, because it came out wrong or missed parts), write " +
+      `${tagged("transcribe", `${audio.name} | again`)} and you get a new one, kept next to the earlier ones so they ` +
+      "can be compared; add the number of " +
+      `people before it if they said it (${tagged("transcribe", `${audio.name} | 2 | again`)}). Otherwise use the ` +
+      "transcript you have.</audio>"
+    );
+  }
   if (!loadPreferences().transcription) {
     const feature = i18n.t("settings.features.transcription.title");
     return (

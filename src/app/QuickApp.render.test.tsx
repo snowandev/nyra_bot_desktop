@@ -28,7 +28,11 @@ vi.mock("@tauri-apps/api/event", () => ({
   emitTo: () => Promise.resolve(),
 }));
 vi.mock("@tauri-apps/api/window", () => ({
-  getCurrentWindow: () => ({ setTheme: () => Promise.resolve(), isFocused: () => Promise.resolve(true) }),
+  getCurrentWindow: () => ({
+    setTheme: () => Promise.resolve(),
+    isFocused: () => Promise.resolve(true),
+    onFocusChanged: () => Promise.resolve(() => {}),
+  }),
 }));
 vi.mock("@tauri-apps/plugin-http", () => ({ fetch: () => Promise.reject(new Error("sin red en los tests")) }));
 

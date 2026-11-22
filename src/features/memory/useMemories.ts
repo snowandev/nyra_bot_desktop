@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { stopListening } from "@/shared/hooks/useAppEvent";
 import { errorMessage } from "@/shared/lib/errors";
+import { onWindowFocused } from "@/shared/lib/windowFocus";
 import {
   addMemory,
   deleteAllMemories,
@@ -29,8 +31,9 @@ export function useMemories() {
         })
         .catch((e) => setLoadError(errorMessage(e)));
     read();
-    window.addEventListener("focus", read);
-    return () => window.removeEventListener("focus", read);
+    // Tauri's focus event, not the page's: that one doesn't fire the same in every system's WebView
+    const listening = onWindowFocused(read);
+    return () => stopListening(listening);
   }, []);
 
   // The facts a reply asked to save; those saved before a failure stay saved

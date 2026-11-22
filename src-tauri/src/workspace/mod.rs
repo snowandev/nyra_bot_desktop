@@ -288,7 +288,11 @@ pub(crate) fn is_in_vcs_dir(key: &str) -> bool {
 pub(crate) fn safe_relative(path: &str) -> Option<(PathBuf, String)> {
     let path = path.trim().replace('\\', "/");
     let path = path.trim_start_matches("./");
-    if path.contains(':') {
+    // A drive ("C:/…") is never inside the folder. On Windows no ":" is: "a.txt:x" names a hidden stream of a.txt,
+    // past the checks on its name. Elsewhere it is a plain character, as in "notas 10:30.md".
+    let is_drive =
+        path.len() >= 2 && path.as_bytes()[1] == b':' && path.as_bytes()[0].is_ascii_alphabetic();
+    if is_drive || (cfg!(windows) && path.contains(':')) {
         return None;
     }
     let candidate = Path::new(path);
@@ -1036,6 +1040,11 @@ mod tests {
         assert!(safe_relative("\\raiz.txt").is_none());
         assert!(safe_relative("C:\\Windows\\x").is_none());
         assert!(safe_relative("\\\\servidor\\carpeta").is_none());
+        assert!(safe_relative("C:/Windows/x").is_none());
+        assert_eq!(
+            safe_relative("notas 10:30.md").map(|(_, key)| key),
+            (!cfg!(windows)).then(|| "notas 10:30.md".to_string())
+        );
     }
 
     fn folder(label: &str) -> PathBuf {

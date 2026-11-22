@@ -23,7 +23,7 @@ use tokio::sync::Mutex;
 
 use crate::i18n::{t, t_with};
 use crate::secrets::{forget_api_key, load_api_key, save_api_key};
-use crate::util::{data_dir, to_message};
+use crate::util::{data_dir, to_message, write_atomically};
 
 const CONFIG_FILE: &str = "mcp_servers.json";
 // The tools each server offered the last time it ran, so a reply can offer them without starting it
@@ -186,27 +186,47 @@ fn write_servers(app: &AppHandle, servers: &[McpServer]) -> Result<(), String> {
         fs::create_dir_all(dir).map_err(to_message)?;
     }
     let text = serde_json::to_string_pretty(servers).map_err(to_message)?;
-    fs::write(path, text).map_err(to_message)
+    // A crash halfway through would leave every server unreadable
+    write_atomically(&path, text.as_bytes(), None).map_err(to_message)
 }
 
-// Only a copy: unreadable, it is as if no server had run yet
-fn read_known_tools(app: &AppHandle) -> HashMap<String, Vec<McpTool>> {
+// Only a copy: unreadable, it is as if it were empty
+fn read_map<V: serde::de::DeserializeOwned>(app: &AppHandle, file: &str) -> HashMap<String, V> {
     data_dir(app)
         .ok()
-        .and_then(|dir| fs::read_to_string(dir.join(TOOLS_FILE)).ok())
+        .and_then(|dir| fs::read_to_string(dir.join(file)).ok())
         .and_then(|text| serde_json::from_str(&text).ok())
         .unwrap_or_default()
 }
 
+/// One entry of a map kept in a file, changed under a lock: servers connecting at once each write theirs
+fn update_map<V: Serialize + serde::de::DeserializeOwned>(
+    app: &AppHandle,
+    file: &str,
+    id: &str,
+    value: Option<V>,
+) -> Result<(), String> {
+    static WRITING: StdMutex<()> = StdMutex::new(());
+    let _guard = WRITING
+        .lock()
+        .unwrap_or_else(|poisoned| poisoned.into_inner());
+    let mut map = read_map::<V>(app, file);
+    match value {
+        Some(value) => map.insert(id.to_string(), value),
+        None => map.remove(id),
+    };
+    let text = serde_json::to_string(&map).map_err(to_message)?;
+    write_atomically(&data_dir(app)?.join(file), text.as_bytes(), None).map_err(to_message)
+}
+
+// Unreadable, it is as if no server had run yet
+fn read_known_tools(app: &AppHandle) -> HashMap<String, Vec<McpTool>> {
+    read_map(app, TOOLS_FILE)
+}
+
 /// A server's tools as it offers them now, or None when they may have changed (its command, its variables)
 fn remember_tools(app: &AppHandle, id: &str, tools: Option<&[McpTool]>) -> Result<(), String> {
-    let mut known = read_known_tools(app);
-    match tools {
-        Some(tools) => known.insert(id.to_string(), tools.to_vec()),
-        None => known.remove(id),
-    };
-    let text = serde_json::to_string(&known).map_err(to_message)?;
-    fs::write(data_dir(app)?.join(TOOLS_FILE), text).map_err(to_message)
+    update_map(app, TOOLS_FILE, id, tools.map(<[McpTool]>::to_vec))
 }
 
 /// A server's icon, ready for an <img>
@@ -221,21 +241,11 @@ pub struct ServerIcon {
 }
 
 fn read_icons(app: &AppHandle) -> HashMap<String, ServerIcon> {
-    data_dir(app)
-        .ok()
-        .and_then(|dir| fs::read_to_string(dir.join(ICONS_FILE)).ok())
-        .and_then(|text| serde_json::from_str(&text).ok())
-        .unwrap_or_default()
+    read_map(app, ICONS_FILE)
 }
 
 fn write_icon(app: &AppHandle, id: &str, icon: Option<ServerIcon>) -> Result<(), String> {
-    let mut icons = read_icons(app);
-    match icon {
-        Some(icon) => icons.insert(id.to_string(), icon),
-        None => icons.remove(id),
-    };
-    let text = serde_json::to_string(&icons).map_err(to_message)?;
-    fs::write(data_dir(app)?.join(ICONS_FILE), text).map_err(to_message)
+    update_map(app, ICONS_FILE, id, icon)
 }
 
 /// Where to look, in order: the icons the server names for each background, then its website's own icon

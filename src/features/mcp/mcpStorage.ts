@@ -71,6 +71,9 @@ export const callMcpTool = (id: string, tool: string, args: unknown) =>
 const mcpImportCandidates = () =>
   invoke<{ server: McpServer; env: Record<string, string> }[]>("mcp_import_candidates");
 
+// The names of the servers set up in Claude Desktop
+export const importCandidateNames = async () => (await mcpImportCandidates()).map((f) => f.server.name);
+
 // Those of Claude Desktop that Nyra doesn't have yet, by name
 export async function newImportCandidates() {
   const [found, existing] = await Promise.all([mcpImportCandidates(), mcpServers()]);

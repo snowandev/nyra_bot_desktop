@@ -1303,11 +1303,17 @@ pub async fn browser_snapshot(
     .await
 }
 
+/// Async, and closing in a thread of its own: a sync command runs on the main thread, which would wait for the browser
+/// to end
 #[tauri::command]
-pub fn browser_close(state: State<'_, Browsers>, conversation_id: String) {
+pub async fn browser_close(
+    state: State<'_, Browsers>,
+    conversation_id: String,
+) -> Result<(), String> {
     if let Some(session) = state.remove(&conversation_id) {
-        session.close();
+        crate::workspace::blocking(move || session.close()).await?;
     }
+    Ok(())
 }
 
 /// A deleted conversation takes its browser with it

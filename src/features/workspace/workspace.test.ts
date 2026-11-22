@@ -62,6 +62,13 @@ describe("parseReadRequest", () => {
     ]);
     expect(parseReadRequest("notes.txt:7")).toEqual([{ path: "notes.txt", from: 7, to: 7 }]);
   });
+
+  it("names the file as the index does however the model wrote it", () => {
+    expect(parseReadRequest("./src/App.tsx\nsrc\\lib\\a.ts:3-9")).toEqual([
+      { path: "src/App.tsx" },
+      { path: "src/lib/a.ts", from: 3, to: 9 },
+    ]);
+  });
 });
 
 describe("readBudget", () => {
@@ -96,18 +103,23 @@ describe("changes", () => {
 
   it("finds files read earlier that changed since", () => {
     const history = [readIn({ path: "a.ts", modified: 1 }, { path: "b.ts", modified: 1 })];
-    expect(changedSinceRead(history, [file("a.ts"), file("b.ts", 5)])).toEqual(["b.ts"]);
+    expect(changedSinceRead(history, [file("a.ts"), file("b.ts", 5)], "/app")).toEqual(["b.ts"]);
+  });
+
+  it("leaves out files read in another folder connected before", () => {
+    const history = [readIn({ path: "a.ts", modified: 1 })];
+    expect(changedSinceRead(history, [file("a.ts", 5)], "/otra")).toEqual([]);
   });
 
   it("leaves out reads with no time, as those imported from Claude Code", () => {
     const history = [readIn({ path: "importado.ts", modified: 0 }, { path: "propio.ts", modified: 1 })];
-    expect(changedSinceRead(history, [file("importado.ts", 9), file("propio.ts", 9)])).toEqual(["propio.ts"]);
+    expect(changedSinceRead(history, [file("importado.ts", 9), file("propio.ts", 9)], "/app")).toEqual(["propio.ts"]);
   });
 
   it("names only the latest files read, however many changed", () => {
     const paths = Array.from({ length: 60 }, (_, i) => `f${i}.ts`);
     const history = [readIn(...paths.map((path) => ({ path, modified: 1 }))), readIn({ path: "f0.ts", modified: 1 })];
-    const changed = changedSinceRead(history, paths.map((path) => file(path, 2)));
+    const changed = changedSinceRead(history, paths.map((path) => file(path, 2)), "/app");
     expect(changed).toHaveLength(40);
     // Read again last, so it is among the latest
     expect(changed.at(-1)).toBe("f0.ts");

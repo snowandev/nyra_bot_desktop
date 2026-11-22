@@ -42,6 +42,7 @@ import {
 import { type CommandNeed, commandTools, settledRun, withCommandNotes } from "@/features/terminal/commandTools";
 import { codePrompt, commandsPrompt } from "@/features/terminal/commandPrompts";
 import { openPageNote } from "@/features/browser/browserTools";
+import { withTranscript } from "@/features/transcription/audioFiles";
 import { transcriptionTools } from "@/features/transcription/transcriptionTools";
 import { platformName } from "@/shared/lib/platform";
 import { type MeaningMatch, meaningSearch, outlineWorkspace, searchWorkspace } from "@/features/workspace/workspaceStorage";
@@ -186,7 +187,7 @@ function workspaceSetup(setup: WorkspaceSetup) {
     contextWindow,
     usedTokens + index.tokens + estimateTextTokens(guideText) + estimateTextTokens(earlierReads ?? ""),
   );
-  const changed = changedSinceRead(history, files);
+  const changed = changedSinceRead(history, files, folder.path);
   const tools = workspaceTools({
     name: folder.name,
     root: folder.path,
@@ -421,19 +422,7 @@ export function useReplyStream(options: Options) {
         history,
         signal: controller.signal,
         onTranscript: (audioId, transcript) =>
-          updateMessages(conversationId, (messages) =>
-            messages.map((m) =>
-              m.attachments?.some((a) => a.id === audioId)
-                ? {
-                    ...m,
-                    attachments: [
-                      ...m.attachments.map((a) => (a.id === audioId ? { ...a, transcript: transcript.id } : a)),
-                      transcript,
-                    ],
-                  }
-                : m,
-            ),
-          ),
+          updateMessages(conversationId, (messages) => withTranscript(messages, audioId, transcript)),
         onShow: (id) =>
           updateReply(conversationId, (reply) => ({
             ...reply,

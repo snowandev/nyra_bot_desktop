@@ -7,7 +7,7 @@
 use std::collections::{BTreeSet, HashMap};
 use std::fs;
 use std::path::{Path, PathBuf};
-use std::sync::OnceLock;
+use std::sync::{Mutex, OnceLock};
 
 use crate::i18n::{t, t_with};
 use crate::util::{data_dir, to_message};
@@ -78,7 +78,15 @@ fn write_saved(path: &Path, saved: &BTreeSet<String>) -> Result<(), String> {
         fs::create_dir_all(dir).map_err(to_message)?;
     }
     let json = serde_json::to_string(saved).map_err(to_message)?;
-    fs::write(path, json).map_err(to_message)
+    crate::util::write_atomically(path, json.as_bytes(), None).map_err(to_message)
+}
+
+/// Held while the key files are read and written again: two providers saved at once would each drop the other's
+fn writing() -> std::sync::MutexGuard<'static, ()> {
+    static WRITING: Mutex<()> = Mutex::new(());
+    WRITING
+        .lock()
+        .unwrap_or_else(|poisoned| poisoned.into_inner())
 }
 
 fn mark_saved(path: &Path, provider: &str, is_saved: bool) -> Result<(), String> {
@@ -157,6 +165,7 @@ pub async fn saved_api_keys(app: AppHandle, providers: Vec<String>) -> Result<Ve
     let keys_path = keys_file(&app)?;
     let saved_path = saved_file(&app)?;
     tauri::async_runtime::spawn_blocking(move || {
+        let _writing = writing();
         let saved = match read_saved(&saved_path)? {
             Some(saved) => saved,
             None => {
@@ -194,6 +203,7 @@ pub async fn save_api_key(app: AppHandle, provider: String, key: String) -> Resu
     let path = keys_file(&app)?;
     let saved_path = saved_file(&app)?;
     tauri::async_runtime::spawn_blocking(move || {
+        let _writing = writing();
         let key = key.trim();
         if key.is_empty() {
             return forget(&path, &saved_path, &provider);
@@ -234,9 +244,12 @@ pub async fn forget_api_key(app: AppHandle, provider: String) -> Result<(), Stri
     valid_provider(&provider)?;
     let path = keys_file(&app)?;
     let saved_path = saved_file(&app)?;
-    tauri::async_runtime::spawn_blocking(move || forget(&path, &saved_path, &provider))
-        .await
-        .map_err(to_message)?
+    tauri::async_runtime::spawn_blocking(move || {
+        let _writing = writing();
+        forget(&path, &saved_path, &provider)
+    })
+    .await
+    .map_err(to_message)?
 }
 
 #[cfg(test)]

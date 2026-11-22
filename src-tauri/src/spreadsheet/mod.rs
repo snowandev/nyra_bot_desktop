@@ -14,7 +14,6 @@ use calamine::{
 };
 use serde::Serialize;
 use tauri::AppHandle;
-use tauri_plugin_dialog::DialogExt;
 
 use crate::i18n::t;
 use crate::util::to_message;
@@ -415,19 +414,11 @@ pub async fn attached_workbook_view(
 
 /// The default name in the save dialog: the attachment's own, without anything that would make it a path
 fn save_name(requested: &str) -> String {
-    let name: String = requested
-        .chars()
-        .filter(|c| {
-            !c.is_control() && !matches!(c, '/' | '\\' | ':' | '*' | '?' | '"' | '<' | '>' | '|')
-        })
-        .take(150)
-        .collect();
-    let name = name.trim().trim_start_matches('.');
-    if name.to_lowercase().ends_with(".xlsx") || name.to_lowercase().ends_with(".xlsm") {
-        name.to_string()
-    } else {
-        t("native.spreadsheet.defaultName")
-    }
+    crate::util::offered_file_name(
+        requested,
+        &["xlsx", "xlsm"],
+        &t("native.spreadsheet.defaultName"),
+    )
 }
 
 /// false when the user closes the dialog without choosing a place
@@ -444,18 +435,19 @@ pub async fn save_spreadsheet(
     } else {
         "xlsx"
     };
-    let Some(destination) = app
-        .dialog()
-        .file()
-        .set_file_name(name)
-        .add_filter("Excel", &[extension])
-        .blocking_save_file()
-    else {
-        return Ok(false);
+    let extensions: &'static [&'static str] = if extension == "xlsm" {
+        &["xlsm"]
+    } else {
+        &["xlsx"]
     };
-    let destination = destination.into_path().map_err(to_message)?;
-    std::fs::write(destination, bytes).map_err(|_| t("native.spreadsheet.saveFailed"))?;
-    Ok(true)
+    crate::util::save_with_dialog(
+        &app,
+        name,
+        Some(("Excel".into(), extensions)),
+        &bytes,
+        "native.spreadsheet.saveFailed",
+    )
+    .await
 }
 
 /// An attached spreadsheet, as the raw request body so megabytes don't go through JSON
